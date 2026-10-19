@@ -1,0 +1,68 @@
+{
+    "type":  "apotheosis:gem",
+    "weights":  {
+                    "quality":  0.1,
+                    "weight":  100
+                },
+    "bonuses":  [
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "apothic_attributes:mining_speed",
+                        "gem_class":  {
+                                          "key":  "tensura_tool",
+                                          "types":  [
+                                                        "apotheosis:breaker",
+                                                        "apotheosis:shears"
+                                                    ]
+                                      },
+                        "operation":  "add_multiplied_total",
+                        "values":  {
+                                       "cracked":  0.05,
+                                       "chipped":  0.1,
+                                       "flawed":  0.15,
+                                       "normal":  0.22,
+                                       "flawless":  0.3,
+                                       "perfect":  0.4
+                                   }
+                    },
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "apothic_attributes:experience_gained",
+                        "gem_class":  {
+                                          "key":  "tensura_helmet",
+                                          "types":  [
+                                                        "apotheosis:helmet"
+                                                    ]
+                                      },
+                        "operation":  "add_multiplied_total",
+                        "values":  {
+                                       "cracked":  0.05,
+                                       "chipped":  0.08,
+                                       "flawed":  0.12,
+                                       "normal":  0.18,
+                                       "flawless":  0.25,
+                                       "perfect":  0.35
+                                   }
+                    },
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "apothic_attributes:cooldown_reduction",
+                        "gem_class":  {
+                                          "key":  "tensura_body",
+                                          "types":  [
+                                                        "apotheosis:chestplate",
+                                                        "apotheosis:leggings"
+                                                    ]
+                                      },
+                        "operation":  "add_value",
+                        "values":  {
+                                       "cracked":  0.01,
+                                       "chipped":  0.015,
+                                       "flawed":  0.02,
+                                       "normal":  0.03,
+                                       "flawless":  0.04,
+                                       "perfect":  0.05
+                                   }
+                    }
+                ]
+}

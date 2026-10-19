@@ -1,0 +1,33 @@
+{
+    "type":  "apotheosis:attribute",
+    "attribute":  "tensura:max_magicule",
+    "categories":  [
+                       "apotheosis:chestplate",
+                       "apotheosis:leggings"
+                   ],
+    "definition":  {
+                       "affix_type":  "stat",
+                       "exclusive_set":  [
+
+                                         ],
+                       "weights":  {
+                                       "quality":  0.1,
+                                       "weight":  25
+                                   }
+                   },
+    "operation":  "add_value",
+    "values":  {
+                   "apotheosis:rare":  {
+                                           "min":  30,
+                                           "max":  60
+                                       },
+                   "apotheosis:epic":  {
+                                           "min":  50,
+                                           "max":  100
+                                       },
+                   "apotheosis:mythic":  {
+                                             "min":  80,
+                                             "max":  160
+                                         }
+               }
+}

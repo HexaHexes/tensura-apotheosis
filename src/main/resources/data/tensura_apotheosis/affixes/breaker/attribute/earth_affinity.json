@@ -1,0 +1,32 @@
+{
+    "type":  "apotheosis:attribute",
+    "attribute":  "tensura:earth_boost",
+    "categories":  [
+                       "apotheosis:breaker"
+                   ],
+    "definition":  {
+                       "affix_type":  "stat",
+                       "exclusive_set":  [
+
+                                         ],
+                       "weights":  {
+                                       "quality":  0.1,
+                                       "weight":  25
+                                   }
+                   },
+    "operation":  "add_value",
+    "values":  {
+                   "apotheosis:rare":  {
+                                           "min":  2,
+                                           "max":  5
+                                       },
+                   "apotheosis:epic":  {
+                                           "min":  3,
+                                           "max":  7
+                                       },
+                   "apotheosis:mythic":  {
+                                             "min":  5,
+                                             "max":  10
+                                         }
+               }
+}

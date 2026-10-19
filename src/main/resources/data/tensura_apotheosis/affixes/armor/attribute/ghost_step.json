@@ -1,0 +1,33 @@
+{
+    "type":  "apotheosis:attribute",
+    "attribute":  "tensura:projectile_dodge_chance",
+    "categories":  [
+                       "apotheosis:leggings",
+                       "apotheosis:boots"
+                   ],
+    "definition":  {
+                       "affix_type":  "stat",
+                       "exclusive_set":  [
+
+                                         ],
+                       "weights":  {
+                                       "quality":  0.1,
+                                       "weight":  25
+                                   }
+                   },
+    "operation":  "add_value",
+    "values":  {
+                   "apotheosis:rare":  {
+                                           "min":  2,
+                                           "max":  4
+                                       },
+                   "apotheosis:epic":  {
+                                           "min":  3,
+                                           "max":  6
+                                       },
+                   "apotheosis:mythic":  {
+                                             "min":  5,
+                                             "max":  9
+                                         }
+               }
+}

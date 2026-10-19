@@ -1,0 +1,41 @@
+{
+    "type":  "apotheosis:attribute",
+    "attribute":  "tensura:presence_sense_radius",
+    "categories":  [
+                       "apotheosis:bow",
+                       "apotheosis:breaker",
+                       "apotheosis:helmet",
+                       "apotheosis:chestplate",
+                       "apotheosis:leggings",
+                       "apotheosis:boots",
+                       "apotheosis:shield",
+                       "apotheosis:trident",
+                       "apotheosis:melee_weapon",
+                       "apotheosis:shears"
+                   ],
+    "definition":  {
+                       "affix_type":  "stat",
+                       "exclusive_set":  [
+
+                                         ],
+                       "weights":  {
+                                       "quality":  0.1,
+                                       "weight":  25
+                                   }
+                   },
+    "operation":  "add_value",
+    "values":  {
+                   "apotheosis:rare":  {
+                                           "min":  3,
+                                           "max":  8
+                                       },
+                   "apotheosis:epic":  {
+                                           "min":  5,
+                                           "max":  12
+                                       },
+                   "apotheosis:mythic":  {
+                                             "min":  8,
+                                             "max":  16
+                                         }
+               }
+}

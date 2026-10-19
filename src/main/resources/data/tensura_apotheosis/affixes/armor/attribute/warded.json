@@ -1,0 +1,35 @@
+{
+    "type":  "apotheosis:attribute",
+    "attribute":  "tensura:magic_resistance",
+    "categories":  [
+                       "apotheosis:helmet",
+                       "apotheosis:chestplate",
+                       "apotheosis:leggings",
+                       "apotheosis:boots"
+                   ],
+    "definition":  {
+                       "affix_type":  "stat",
+                       "exclusive_set":  [
+
+                                         ],
+                       "weights":  {
+                                       "quality":  0.1,
+                                       "weight":  25
+                                   }
+                   },
+    "operation":  "add_value",
+    "values":  {
+                   "apotheosis:rare":  {
+                                           "min":  3,
+                                           "max":  6
+                                       },
+                   "apotheosis:epic":  {
+                                           "min":  4,
+                                           "max":  9
+                                       },
+                   "apotheosis:mythic":  {
+                                             "min":  6,
+                                             "max":  12
+                                         }
+               }
+}

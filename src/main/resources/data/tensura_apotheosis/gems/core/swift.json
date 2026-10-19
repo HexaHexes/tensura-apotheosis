@@ -1,0 +1,68 @@
+{
+    "type":  "apotheosis:gem",
+    "weights":  {
+                    "quality":  0.1,
+                    "weight":  100
+                },
+    "bonuses":  [
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "tensura:chant_speed",
+                        "gem_class":  {
+                                          "key":  "tensura_body",
+                                          "types":  [
+                                                        "apotheosis:chestplate",
+                                                        "apotheosis:leggings"
+                                                    ]
+                                      },
+                        "operation":  "add_multiplied_total",
+                        "values":  {
+                                       "cracked":  0.03,
+                                       "chipped":  0.05,
+                                       "flawed":  0.08,
+                                       "normal":  0.12,
+                                       "flawless":  0.16,
+                                       "perfect":  0.22
+                                   }
+                    },
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "tensura:magic_cost_multiplier",
+                        "gem_class":  {
+                                          "key":  "tensura_weapon",
+                                          "types":  [
+                                                        "apotheosis:melee_weapon",
+                                                        "apotheosis:trident"
+                                                    ]
+                                      },
+                        "operation":  "add_value",
+                        "values":  {
+                                       "cracked":  -0.05,
+                                       "chipped":  -0.07,
+                                       "flawed":  -0.09,
+                                       "normal":  -0.12,
+                                       "flawless":  -0.15,
+                                       "perfect":  -0.18
+                                   }
+                    },
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "apothic_attributes:draw_speed",
+                        "gem_class":  {
+                                          "key":  "tensura_bow",
+                                          "types":  [
+                                                        "apotheosis:bow"
+                                                    ]
+                                      },
+                        "operation":  "add_multiplied_total",
+                        "values":  {
+                                       "cracked":  0.05,
+                                       "chipped":  0.08,
+                                       "flawed":  0.12,
+                                       "normal":  0.16,
+                                       "flawless":  0.22,
+                                       "perfect":  0.3
+                                   }
+                    }
+                ]
+}

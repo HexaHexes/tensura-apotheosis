@@ -1,0 +1,33 @@
+{
+    "type":  "apotheosis:attribute",
+    "attribute":  "tensura:spiritual_health_regeneration",
+    "categories":  [
+                       "apotheosis:chestplate",
+                       "apotheosis:leggings"
+                   ],
+    "definition":  {
+                       "affix_type":  "stat",
+                       "exclusive_set":  [
+
+                                         ],
+                       "weights":  {
+                                       "quality":  0.1,
+                                       "weight":  25
+                                   }
+                   },
+    "operation":  "add_value",
+    "values":  {
+                   "apotheosis:rare":  {
+                                           "min":  0.5,
+                                           "max":  1
+                                       },
+                   "apotheosis:epic":  {
+                                           "min":  0.75,
+                                           "max":  1.5
+                                       },
+                   "apotheosis:mythic":  {
+                                             "min":  1,
+                                             "max":  2
+                                         }
+               }
+}

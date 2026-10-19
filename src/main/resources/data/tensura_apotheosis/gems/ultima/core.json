@@ -1,0 +1,103 @@
+{
+    "type":  "apotheosis:gem",
+    "weights":  {
+                    "frontier":  {
+                                     "quality":  0.05,
+                                     "weight":  2
+                                 },
+                    "ascent":  {
+                                   "quality":  0.08,
+                                   "weight":  6
+                               },
+                    "summit":  {
+                                   "quality":  0.1,
+                                   "weight":  15
+                               },
+                    "pinnacle":  {
+                                     "quality":  0.15,
+                                     "weight":  30
+                                 }
+                },
+    "min_purity":  "flawless",
+    "unique":  true,
+    "bonuses":  [
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "apothic_attributes:crit_chance",
+                        "gem_class":  {
+                                          "key":  "tensura_weapon",
+                                          "types":  [
+                                                        "apotheosis:melee_weapon",
+                                                        "apotheosis:trident"
+                                                    ]
+                                      },
+                        "operation":  "add_value",
+                        "values":  {
+                                       "cracked":  0.1,
+                                       "chipped":  0.14,
+                                       "flawed":  0.18,
+                                       "normal":  0.24,
+                                       "flawless":  0.3,
+                                       "perfect":  0.38
+                                   }
+                    },
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "tensura:magic_barrier",
+                        "gem_class":  {
+                                          "key":  "tensura_body",
+                                          "types":  [
+                                                        "apotheosis:chestplate",
+                                                        "apotheosis:leggings"
+                                                    ]
+                                      },
+                        "operation":  "add_value",
+                        "values":  {
+                                       "cracked":  5,
+                                       "chipped":  7,
+                                       "flawed":  9,
+                                       "normal":  12,
+                                       "flawless":  15,
+                                       "perfect":  19
+                                   }
+                    },
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "tensura:ability_mastery_gain",
+                        "gem_class":  {
+                                          "key":  "tensura_helmet",
+                                          "types":  [
+                                                        "apotheosis:helmet"
+                                                    ]
+                                      },
+                        "operation":  "add_value",
+                        "values":  {
+                                       "cracked":  0.1,
+                                       "chipped":  0.15,
+                                       "flawed":  0.2,
+                                       "normal":  0.3,
+                                       "flawless":  0.4,
+                                       "perfect":  0.55
+                                   }
+                    },
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "apothic_attributes:cooldown_reduction",
+                        "gem_class":  {
+                                          "key":  "tensura_shield",
+                                          "types":  [
+                                                        "apotheosis:shield"
+                                                    ]
+                                      },
+                        "operation":  "add_value",
+                        "values":  {
+                                       "cracked":  0.02,
+                                       "chipped":  0.025,
+                                       "flawed":  0.03,
+                                       "normal":  0.04,
+                                       "flawless":  0.05,
+                                       "perfect":  0.06
+                                   }
+                    }
+                ]
+}

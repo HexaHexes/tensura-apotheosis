@@ -1,0 +1,57 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+license = "All Rights Reserved"
+
+[[mods]]
+modId = "tensura_apotheosis"
+version = "1.0.0"
+displayName = "Tensura Apotheosis"
+authors = "kurok"
+description = '''
+Tensura-themed Apotheosis content pack: affixes and socket gems delivered as
+pure datapack data (Placebo dynamic registries) - no mixins, no gameplay code.
+
+- 51 affixes across melee, ranged, armor, shield, breaker and generic slots,
+  using Tensura elements, dodge suite, magicule/aura economy and Tensura mob
+  effects (frost, infection, severance, petrification, ...) as proc lines.
+- 14 socket gems (8 core + 5 unique dragonscale/spirit/holy + ultima) with
+  cracked-to-perfect purity scaling over Tensura and Apothic attributes.
+- Gem models resolve through Apotheosis' hardcoded model namespace, so gem
+  model JSONs ship under assets/apotheosis/models/item/gems/ while textures
+  and lang stay in this mod's own namespace.
+'''
+
+[[dependencies.tensura_apotheosis]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.1,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.tensura_apotheosis]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21.1,1.21.2)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.tensura_apotheosis]]
+modId = "apotheosis"
+type = "required"
+versionRange = "[8.8,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.tensura_apotheosis]]
+modId = "apothic_attributes"
+type = "required"
+versionRange = "[2.10,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.tensura_apotheosis]]
+modId = "tensura"
+type = "required"
+versionRange = "[2.0,)"
+ordering = "AFTER"
+side = "BOTH"

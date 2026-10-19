@@ -1,0 +1,7 @@
+build/
+.gradle/
+out/
+libs/
+*.iml
+run/
+testmods/

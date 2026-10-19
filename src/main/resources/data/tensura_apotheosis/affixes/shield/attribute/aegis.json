@@ -1,0 +1,32 @@
+{
+    "type":  "apotheosis:attribute",
+    "attribute":  "tensura:physical_barrier",
+    "categories":  [
+                       "apotheosis:shield"
+                   ],
+    "definition":  {
+                       "affix_type":  "stat",
+                       "exclusive_set":  [
+
+                                         ],
+                       "weights":  {
+                                       "quality":  0.1,
+                                       "weight":  25
+                                   }
+                   },
+    "operation":  "add_value",
+    "values":  {
+                   "apotheosis:rare":  {
+                                           "min":  3,
+                                           "max":  6
+                                       },
+                   "apotheosis:epic":  {
+                                           "min":  4,
+                                           "max":  8
+                                       },
+                   "apotheosis:mythic":  {
+                                             "min":  6,
+                                             "max":  12
+                                         }
+               }
+}

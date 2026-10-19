@@ -1,0 +1,41 @@
+{
+    "type":  "apotheosis:attribute",
+    "attribute":  "tensura:analysis_level",
+    "categories":  [
+                       "apotheosis:bow",
+                       "apotheosis:breaker",
+                       "apotheosis:helmet",
+                       "apotheosis:chestplate",
+                       "apotheosis:leggings",
+                       "apotheosis:boots",
+                       "apotheosis:shield",
+                       "apotheosis:trident",
+                       "apotheosis:melee_weapon",
+                       "apotheosis:shears"
+                   ],
+    "definition":  {
+                       "affix_type":  "stat",
+                       "exclusive_set":  [
+
+                                         ],
+                       "weights":  {
+                                       "quality":  0.1,
+                                       "weight":  25
+                                   }
+                   },
+    "operation":  "add_value",
+    "values":  {
+                   "apotheosis:rare":  {
+                                           "min":  1,
+                                           "max":  2
+                                       },
+                   "apotheosis:epic":  {
+                                           "min":  2,
+                                           "max":  3
+                                       },
+                   "apotheosis:mythic":  {
+                                             "min":  3,
+                                             "max":  5
+                                         }
+               }
+}

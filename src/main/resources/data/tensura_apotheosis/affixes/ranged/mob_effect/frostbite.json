@@ -1,0 +1,57 @@
+{
+    "type":  "apotheosis:mob_effect",
+    "definition":  {
+                       "affix_type":  "basic_effect",
+                       "exclusive_set":  [
+
+                                         ],
+                       "weights":  {
+                                       "quality":  0.1,
+                                       "weight":  25
+                                   }
+                   },
+    "mob_effect":  "tensura:frost",
+    "stack_on_reapply":  true,
+    "stacking_limit":  3,
+    "target":  "arrow_target",
+    "types":  [
+                  "apotheosis:bow"
+              ],
+    "values":  {
+                   "apotheosis:rare":  {
+                                           "duration":  {
+                                                            "min":  100,
+                                                            "max":  120,
+                                                            "step":  20
+                                                        },
+                                           "amplifier":  0,
+                                           "cooldown":  80
+                                       },
+                   "apotheosis:epic":  {
+                                           "duration":  {
+                                                            "min":  120,
+                                                            "max":  160,
+                                                            "step":  20
+                                                        },
+                                           "amplifier":  {
+                                                             "min":  0,
+                                                             "max":  1,
+                                                             "step":  0.5
+                                                         },
+                                           "cooldown":  70
+                                       },
+                   "apotheosis:mythic":  {
+                                             "duration":  {
+                                                              "min":  140,
+                                                              "max":  200,
+                                                              "step":  20
+                                                          },
+                                             "amplifier":  {
+                                                               "min":  0,
+                                                               "max":  1,
+                                                               "step":  0.5
+                                                           },
+                                             "cooldown":  60
+                                         }
+               }
+}

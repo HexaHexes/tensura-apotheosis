@@ -1,0 +1,35 @@
+{
+    "type":  "apotheosis:attribute",
+    "attribute":  "tensura:presence_concealment",
+    "categories":  [
+                       "apotheosis:helmet",
+                       "apotheosis:chestplate",
+                       "apotheosis:leggings",
+                       "apotheosis:boots"
+                   ],
+    "definition":  {
+                       "affix_type":  "stat",
+                       "exclusive_set":  [
+
+                                         ],
+                       "weights":  {
+                                       "quality":  0.1,
+                                       "weight":  25
+                                   }
+                   },
+    "operation":  "add_value",
+    "values":  {
+                   "apotheosis:rare":  {
+                                           "min":  5,
+                                           "max":  12
+                                       },
+                   "apotheosis:epic":  {
+                                           "min":  8,
+                                           "max":  18
+                                       },
+                   "apotheosis:mythic":  {
+                                             "min":  12,
+                                             "max":  25
+                                         }
+               }
+}

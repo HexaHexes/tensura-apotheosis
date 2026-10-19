@@ -1,0 +1,49 @@
+{
+    "type":  "apotheosis:gem",
+    "weights":  {
+                    "quality":  0.1,
+                    "weight":  100
+                },
+    "bonuses":  [
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "tensura:max_magicule",
+                        "gem_class":  {
+                                          "key":  "tensura_body",
+                                          "types":  [
+                                                        "apotheosis:chestplate",
+                                                        "apotheosis:leggings"
+                                                    ]
+                                      },
+                        "operation":  "add_value",
+                        "values":  {
+                                       "cracked":  20,
+                                       "chipped":  35,
+                                       "flawed":  55,
+                                       "normal":  90,
+                                       "flawless":  140,
+                                       "perfect":  210
+                                   }
+                    },
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "tensura:magicule_gain",
+                        "gem_class":  {
+                                          "key":  "tensura_weapon",
+                                          "types":  [
+                                                        "apotheosis:melee_weapon",
+                                                        "apotheosis:trident"
+                                                    ]
+                                      },
+                        "operation":  "add_value",
+                        "values":  {
+                                       "cracked":  0.05,
+                                       "chipped":  0.08,
+                                       "flawed":  0.12,
+                                       "normal":  0.18,
+                                       "flawless":  0.25,
+                                       "perfect":  0.35
+                                   }
+                    }
+                ]
+}

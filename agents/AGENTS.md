@@ -19,7 +19,7 @@ happens in the generator, not by hand-editing JSON** — regenerate after any ch
 
 **Gotchas (all caught by the gametest; do not regress them)**
 - Affix `min`/`max` ranges decode as **step functions** with an implicit step of `0.01`;
-  `(max − min)` must be a multiple of that step. Mob-effect `duration`/`amplifier`
+  `(max - min)` must be a multiple of that step. Mob-effect `duration`/`amplifier`
   objects accept an explicit `step`.
 - Every `tensura:` attribute id must exist in Tensura's registry — there is **no**
   `tensura:lightning_resistance` (storm dragonscale uses `space_resistance`). Verify
@@ -88,6 +88,7 @@ Before starting any new development in this repo:
 ## House style
 
 - **No icons** unless the user explicitly asks. Icons are being removed across all repos.
+- **No emojis, ever.** Prohibited in all code, docs, configs, and commit messages.
 - READMEs are **player-facing only**: pitch, mechanics in plain terms, in-game usage,
   required/optional dependencies, credits, license. No build internals, no class names.
 - All repos are **LGPL v2.1**, copyright Bitwise Madness. `NOTICE` / attribution files

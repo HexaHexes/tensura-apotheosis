@@ -1,6 +1,6 @@
-modLoader = "javafml"
+﻿modLoader = "javafml"
 loaderVersion = "[4,)"
-license = "All Rights Reserved"
+license = "GNU Lesser General Public License v2.1"
 
 [[mods]]
 modId = "tensura_apotheosis"

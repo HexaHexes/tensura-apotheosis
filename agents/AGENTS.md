@@ -1,4 +1,4 @@
-﻿# Agent rules and conventions â€” Tensura Apotheosis
+# Agent rules and conventions â€” Tensura Apotheosis
 
 **Repo:** `HexaHexes/tensura-apotheosis` Â· **Mod ID:** `tensura_apotheosis` Â· **Branch:** `master`
 **Platform:** Minecraft 1.21.1 / NeoForge 21.1.259 / JDK 21 Â· **Jar:** `build/libs/tensura-apotheosis-<version>.jar`

@@ -60,7 +60,7 @@ Three GameTests (graded by the build, `expectedTests = 3`):
 3. `allGemsLoad` — all 14 gems parse into `GemRegistry`, stack onto
    `apotheosis:gem`, and respect `min_purity`.
 
-Client cosmetics (gem textures, icon) can't be proven headless — check in-game.
+Client cosmetics (gem textures) can't be proven headless — check in-game.
 
 ## In-game checklist
 
@@ -83,7 +83,6 @@ Content is generated from single-source tables:
 ```
 powershell -File tools/generate-content.ps1   # affixes + gems + lang + models
 powershell -File tools/generate-textures.ps1  # 14 gem PNGs
-powershell -File tools/generate-icon.ps1      # icon.png
 ```
 
 Schema gotchas (both caught by the gametest, don't regress them):

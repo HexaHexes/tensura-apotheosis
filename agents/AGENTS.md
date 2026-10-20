@@ -1,27 +1,27 @@
-# Agent rules and conventions â€” Tensura Apotheosis
+# Agent rules and conventions — Tensura Apotheosis
 
-**Repo:** `HexaHexes/tensura-apotheosis` Â· **Mod ID:** `tensura_apotheosis` Â· **Branch:** `master`
-**Platform:** Minecraft 1.21.1 / NeoForge 21.1.259 / JDK 21 Â· **Jar:** `build/libs/tensura-apotheosis-<version>.jar`
+**Repo:** `HexaHexes/tensura-apotheosis` · **Mod ID:** `tensura_apotheosis` · **Branch:** `master`
+**Platform:** Minecraft 1.21.1 / NeoForge 21.1.259 / JDK 21 · **Jar:** `build/libs/tensura-apotheosis-<version>.jar`
 
 Tensura-themed affixes and socket gems for Apotheosis 8.8, delivered as **pure
-datapack data** (Placebo dynamic registries) â€” no mixins, no gameplay code. The Java
+datapack data** (Placebo dynamic registries) — no mixins, no gameplay code. The Java
 side exists only for the in-repo gametest harness.
 
 **Dependencies (all required)**
 - Apotheosis (`apotheosis`), Apothic Attributes (`apothic_attributes`), Tensura (`tensura`).
 
-**Test:** `./gradlew runGametest` â€” 3 tests (`twoHandedWeaponsCategorizeAsMelee`,
+**Test:** `./gradlew runGametest` — 3 tests (`twoHandedWeaponsCategorizeAsMelee`,
 `allAffixesLoad`, `allGemsLoad`). `expectedTests = 3`.
 
 **Single source of truth:** `tools/generate-content.ps1` produces all affixes, gems,
 lang and models; `tools/generate-textures.ps1` produces the 14 gem PNGs. **Value tuning
-happens in the generator, not by hand-editing JSON** â€” regenerate after any change.
+happens in the generator, not by hand-editing JSON** — regenerate after any change.
 
 **Gotchas (all caught by the gametest; do not regress them)**
 - Affix `min`/`max` ranges decode as **step functions** with an implicit step of `0.01`;
-  `(max âˆ’ min)` must be a multiple of that step. Mob-effect `duration`/`amplifier`
+  `(max − min)` must be a multiple of that step. Mob-effect `duration`/`amplifier`
   objects accept an explicit `step`.
-- Every `tensura:` attribute id must exist in Tensura's registry â€” there is **no**
+- Every `tensura:` attribute id must exist in Tensura's registry — there is **no**
   `tensura:lightning_resistance` (storm dragonscale uses `space_resistance`). Verify
   new ids against `TensuraAttributes` before shipping.
 - Within one gem, the bonuses' `gem_class` category sets must be **disjoint** or
@@ -30,7 +30,7 @@ happens in the generator, not by hand-editing JSON** â€” regenerate after a
   through Apotheosis' hardcoded namespace, so model JSONs ship under
   `assets/apotheosis/models/item/gems/`, while textures and lang stay in this mod's own
   `assets/tensura_apotheosis/`.
-- Client cosmetics (gem textures) cannot be proven headless â€” the user checks in-game.
+- Client cosmetics (gem textures) cannot be proven headless — the user checks in-game.
 
 ---
 
@@ -38,8 +38,8 @@ happens in the generator, not by hand-editing JSON** â€” regenerate after a
 
 Before starting any new development in this repo:
 
-1. `git status` â€” confirm what uncommitted work exists. Never disturb or sweep it.
-2. `git pull --ff-only` â€” sync with the remote. A fast-forward is the normal case,
+1. `git status` — confirm what uncommitted work exists. Never disturb or sweep it.
+2. `git pull --ff-only` — sync with the remote. A fast-forward is the normal case,
    because we push straight to the shared branch.
 3. If the pull would **not** fast-forward (the branch has diverged), or if it would
    collide with local uncommitted work, **stop and ask** rather than merging, rebasing
@@ -48,17 +48,19 @@ Before starting any new development in this repo:
 ## Scope doctrine
 
 - **One mod + bundled datapack.** No KubeJS scripts.
-- **Data-driven over code** â€” prefer JSON/datapack content to Java when both work.
+- **Data-driven over code** — prefer JSON/datapack content to Java when both work.
 - **Public API only, no mixins** in the colony-gear-style addon mods. Sanctioned
   exception: `ds-tensura-fix` (tensura-dragon-skin-rebalance), a mixin fix mod by design.
 
 ## Verification
 
-- The in-repo GameTest run is the **only** CI gate. Never verify against a live
+- Verify with the in-repo GameTest run (`./gradlew runGametest`, or `runGameTestServer`).
+  Repos without GameTests verify with `./gradlew build`. Never verify against a live
   CurseForge instance.
 - Keep `expectedTests` in `build.gradle` in sync with the `@GameTest` methods.
 - **Client-render features cannot be proven headless.** The honest scope is
-  "build green + the user's in-game check" â€” say so rather than overclaiming.
+  "build green + the user's in-game check" - say so rather than overclaiming.
+
 
 ## Build environment
 
@@ -71,16 +73,16 @@ Before starting any new development in this repo:
 
 ## PowerShell quirks (this org is developed on Windows)
 
-- A `git push` "error" in PowerShell is usually stderr passthrough â€” success is the
+- A `git push` "error" in PowerShell is usually stderr passthrough — success is the
   `hash..hash  branch -> branch` line, not the absence of red text.
-- `New-Object Type(args)` breaks on arithmetic â€” use `::new()` or a parenthesized
+- `New-Object Type(args)` breaks on arithmetic — use `::new()` or a parenthesized
   argument.
 
 ## Git & release
 
 - Remote is SSH: `git@github.com:HexaHexes/<name>.git`.
 - Push only after tests are green **and** the user has given the go.
-- Never sweep the user's uncommitted work into a commit â€” commit only what is intended.
+- Never sweep the user's uncommitted work into a commit — commit only what is intended.
 - Commit subjects: concise, imperative.
 
 ## House style
@@ -94,15 +96,21 @@ Before starting any new development in this repo:
 
 ## CI & release model
 
-- `ci.yml` runs on pull requests: a build job and a GameTest job. Both assert a
-  non-zero result â€” a run that passes vacuously (0 tests) is a failure.
-- `release.yml` runs on every push to the default branch, re-runs the tests, and â€” only
-  when the version was bumped â€” tags and publishes a GitHub release with a cumulative
-  changelog. Alpha/nightly publishing is opt-in via the `ALPHA_RELEASES` repo variable
-  and is **off** by default.
+- `ci.yml` currently enforces the **version-bump guard only**: a beta or stable bump must
+  change the version file and nothing else; an `-alpha` bump may bundle work; a PR labelled
+  `breaking` forces the next clean bump to raise the major or minor version.
+- **Build and GameTest jobs are deferred.** Some dependencies (ManasCore's jar-in-jar
+  sub-modules, plus a few pack mods) are not resolvable from a clean checkout via
+  CurseMaven alone, so compiling in CI would fail every run. They land once a jar-fetch
+  step exists. Until then, run `./gradlew build` and the GameTest task locally before
+  pushing.
+- `release.yml` is **not yet enabled for the gradle mod repos** - it needs a CI-built jar
+  to attach. The datapack repo is the exception: its "build" is a zip, so it has a working
+  `release.yml` that tags and publishes on a version bump.
 - `version-bump.yml` opens an isolated version-bump PR (only the version file changes).
-  Beta/stable bumps must not carry other changes; `-alpha` bumps may bundle work.
 - CurseForge publishing (`curseforge.yml`) is **deferred** until a mod has a CurseForge
   listing and the `CURSEFORGE_PROJECT_ID` / `CURSEFORGE_API_KEY` secrets. Do not add it
   speculatively.
+- Where a release workflow exists, alpha/nightly publishing is opt-in via the
+  `ALPHA_RELEASES` repo variable and is **off** by default.
 

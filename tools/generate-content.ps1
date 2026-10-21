@@ -1074,12 +1074,17 @@ foreach ($t in $tiers) {
 # at haven. `size` mirrors their tier->size mapping (small/medium/large),
 # which is what actually varies a gateway's base texture - the gate pearl
 # model selects gate_pearl_small/med/large by the gateway's settings.size.
+# `soundtrack` mirrors their per-tier music (frontier..pinnacle are the four
+# discs Apotheosis' tiered gateways use; haven has no Apotheosis equivalent,
+# so it takes a calm vanilla disc). `recipeDiamonds`/`recipeDust` ramp the
+# crafting cost with the tier - pearls stay fixed at 2, and the diamonds
+# carry the ramp since a 3x3 grid only has 9 slots in total.
 $tierProfile = [ordered]@{
-    haven    = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:common', 'apotheosis:uncommon'); affixChance = 0.45; rewardRarities = @('apotheosis:common', 'apotheosis:uncommon'); purities = @('cracked', 'normal');        dust = 8;  heraldXp = 100; bossXp = 300; finalXp = 500;  stackCount = 4;  itemCount = 2; gemCount = 3;  size = 'small'  }
-    frontier = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:uncommon', 'apotheosis:rare');  affixChance = 0.5;  rewardRarities = @('apotheosis:uncommon', 'apotheosis:rare');  purities = @('normal');                 dust = 16; heraldXp = 150; bossXp = 400; finalXp = 650;  stackCount = 8;  itemCount = 3; gemCount = 5;  size = 'small'  }
-    ascent   = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:rare', 'apotheosis:epic');      affixChance = 0.55; rewardRarities = @('apotheosis:rare', 'apotheosis:epic');      purities = @('flawless');               dust = 24; heraldXp = 200; bossXp = 500; finalXp = 800;  stackCount = 12; itemCount = 3; gemCount = 5;  size = 'medium' }
-    summit   = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:epic', 'apotheosis:mythic');    affixChance = 0.65; rewardRarities = @('apotheosis:epic', 'apotheosis:mythic');    purities = @('flawless', 'perfect');    dust = 48; heraldXp = 250; bossXp = 650; finalXp = 950;  stackCount = 24; itemCount = 3; gemCount = 5;  size = 'medium' }
-    pinnacle = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:epic', 'apotheosis:mythic');    affixChance = 0.8;  rewardRarities = @('apotheosis:mythic');                     purities = @('perfect');                dust = 64; heraldXp = 300; bossXp = 800; finalXp = 1200; stackCount = 48; itemCount = 5; gemCount = 10; size = 'large'  }
+    haven    = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:common', 'apotheosis:uncommon'); affixChance = 0.45; rewardRarities = @('apotheosis:common', 'apotheosis:uncommon'); purities = @('cracked', 'normal');        dust = 8;  heraldXp = 100; bossXp = 300; finalXp = 500;  stackCount = 4;  itemCount = 2; gemCount = 3;  size = 'small';  soundtrack = 'minecraft:music_disc.cat';           recipeDiamonds = 1; recipeDust = 1 }
+    frontier = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:uncommon', 'apotheosis:rare');  affixChance = 0.5;  rewardRarities = @('apotheosis:uncommon', 'apotheosis:rare');  purities = @('normal');                 dust = 16; heraldXp = 150; bossXp = 400; finalXp = 650;  stackCount = 8;  itemCount = 3; gemCount = 5;  size = 'small';  soundtrack = 'apotheosis:music_disc_shimmer';       recipeDiamonds = 2; recipeDust = 2 }
+    ascent   = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:rare', 'apotheosis:epic');      affixChance = 0.55; rewardRarities = @('apotheosis:rare', 'apotheosis:epic');      purities = @('flawless');               dust = 24; heraldXp = 200; bossXp = 500; finalXp = 800;  stackCount = 12; itemCount = 3; gemCount = 5;  size = 'medium'; soundtrack = 'apotheosis:music_disc_flash';         recipeDiamonds = 2; recipeDust = 3 }
+    summit   = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:epic', 'apotheosis:mythic');    affixChance = 0.65; rewardRarities = @('apotheosis:epic', 'apotheosis:mythic');    purities = @('flawless', 'perfect');    dust = 48; heraldXp = 250; bossXp = 650; finalXp = 950;  stackCount = 24; itemCount = 3; gemCount = 5;  size = 'medium'; soundtrack = 'apotheosis:soundtrack_summit';        recipeDiamonds = 3; recipeDust = 3 }
+    pinnacle = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:epic', 'apotheosis:mythic');    affixChance = 0.8;  rewardRarities = @('apotheosis:mythic');                     purities = @('perfect');                dust = 64; heraldXp = 300; bossXp = 800; finalXp = 1200; stackCount = 48; itemCount = 5; gemCount = 10; size = 'large';  soundtrack = 'apotheosis:soundtrack_pinnacle';     recipeDiamonds = 4; recipeDust = 3 }
 }
 
 # Theme identity: gateway boss-bar color + themed reward pool per mob family.
@@ -1198,7 +1203,8 @@ foreach ($r in $roster) {
 # entity. Each gateway sits at its mob's world tier (canOpen enforces the
 # player's unlocked tier), wears the mob family's boss-bar color, and pays
 # out of the shared tier profile scaled against a themed gem/stack pool -
-# recipes stay uniform: ender pearls, diamonds and a pinch of gem dust.
+# recipes ramp with the tier: 2 ender pearls plus tier-scaled diamonds and
+# a pinch of gem dust.
 # NOTE on the herald affix modifier: do NOT add a rarities list here. Its
 # AffixData codec resolves rarity values at DECODE time, and Gateways'
 # registry reloads before Apotheosis' rarity registry binds (all 38 files
@@ -1212,8 +1218,8 @@ $gwRecipes = @()   # @{ rel; gateway }
 function Add-Gateway([string]$rel, $json) {
     $script:gateways += @{ rel = $rel; json = $json }
 }
-function Add-GatewayRecipe([string]$rel, [string]$gateway) {
-    $script:gwRecipes += @{ rel = $rel; gateway = $gateway }
+function Add-GatewayRecipe([string]$rel, [string]$gateway, [int]$diamonds, [int]$dust) {
+    $script:gwRecipes += @{ rel = $rel; gateway = $gateway; diamonds = $diamonds; dust = $dust }
 }
 
 foreach ($r in $roster) {
@@ -1274,7 +1280,7 @@ foreach ($r in $roster) {
     $gateway = [pscustomobject][ordered]@{
         type     = 'apotheosis:tiered'
         settings = [pscustomobject][ordered]@{
-            soundtrack = 'apotheosis:soundtrack_pinnacle'
+            soundtrack = $profile.soundtrack
             tier       = $band
             size       = $profile.size
             color      = $identity.color
@@ -1316,7 +1322,7 @@ foreach ($r in $roster) {
         }
     }
     Add-Gateway "elite/$($r.mob)" $gateway
-    Add-GatewayRecipe "elite/$($r.mob)" "tensura_apotheosis:elite/$($r.mob)"
+    Add-GatewayRecipe "elite/$($r.mob)" "tensura_apotheosis:elite/$($r.mob)" $profile.recipeDiamonds $profile.recipeDust
     # Gateway name: Gateways translates a gateway id with ':' -> '.' exactly
     # like its own lang (gateways.basic/blaze) and Apotheosis'
     # (apotheosis.tiered/frontier); without this key the gate pearl tooltip
@@ -1353,6 +1359,17 @@ foreach ($gw in $gateways) {
     WriteJsonFile (Join-Path $data ("gateways\" + ($gw.rel -replace '/', '\') + '.json')) $gw.json
 }
 foreach ($rc in $gwRecipes) {
+    # One shape per cost tier (E=ender pearl, D=diamond, G=gem dust): pearls
+    # stay fixed at 2 while diamonds and dust ramp with the gateway's world
+    # tier. An unknown count pair means the profile outgrew the 3x3 grid.
+    $pattern = switch ("$($rc.diamonds)/$($rc.dust)") {
+        '1/1' { @('E E', ' G ', ' D ') }
+        '2/2' { @('E E', 'D G', 'G D') }
+        '2/3' { @('E E', 'D G', 'GGD') }
+        '3/3' { @('EDE', 'D G', 'GGD') }
+        '4/3' { @('EDE', 'DGD', 'DGG') }
+        default { throw "gateway recipe: no 3x3 shape for diamonds=$($rc.diamonds) dust=$($rc.dust)" }
+    }
     WriteJsonFile (Join-Path $data ("recipe\gateways\" + ($rc.rel -replace '/', '\') + '.json')) ([pscustomobject][ordered]@{
         'neoforge:conditions' = @([pscustomobject][ordered]@{ type = 'neoforge:mod_loaded'; modid = 'gateways' })
         type                  = 'minecraft:crafting_shaped'
@@ -1363,7 +1380,7 @@ foreach ($rc in $gwRecipes) {
             D = [pscustomobject][ordered]@{ item = 'minecraft:diamond' }
             G = [pscustomobject][ordered]@{ item = 'apotheosis:gem_dust' }
         }
-        pattern               = @('EDE', 'DGD', 'EDE')
+        pattern               = $pattern
         result                = [pscustomobject][ordered]@{
             components = [pscustomobject][ordered]@{ 'gateways:gateway' = $rc.gateway }
             count      = 1

@@ -1,7 +1,7 @@
 {
     "type":  "apotheosis:tiered",
     "settings":  {
-                     "soundtrack":  "apotheosis:soundtrack_pinnacle",
+                     "soundtrack":  "minecraft:music_disc.cat",
                      "tier":  "haven",
                      "size":  "small",
                      "color":  "#6A1B9A"

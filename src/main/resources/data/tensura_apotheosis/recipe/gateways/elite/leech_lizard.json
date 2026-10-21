@@ -20,9 +20,9 @@
                       }
             },
     "pattern":  [
-                    "EDE",
-                    "DGD",
-                    "EDE"
+                    "E E",
+                    " G ",
+                    " D "
                 ],
     "result":  {
                    "components":  {

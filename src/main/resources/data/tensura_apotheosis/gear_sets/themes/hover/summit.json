@@ -1,0 +1,25 @@
+{
+    "type":  "placebo:gear_set",
+    "mainhands":  [
+                      {
+                          "stack":  {
+                                        "count":  1,
+                                        "id":  "tensura:pure_magisteel_kodachi"
+                                    },
+                          "weight":  10
+                      }
+                  ],
+    "chestplates":  [
+                        {
+                            "stack":  {
+                                          "count":  1,
+                                          "id":  "minecraft:golden_horse_armor"
+                                      },
+                            "weight":  10
+                        }
+                    ],
+    "tags":  [
+                 "tensura_hover_summit"
+             ],
+    "weight":  100
+}

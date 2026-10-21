@@ -1,0 +1,109 @@
+{
+    "type":  "apotheosis:elite",
+    "basic_data":  {
+                       "constraints":  {
+                                           "biomes":  "#tensura:phantaspore_spawn"
+                                       },
+                       "name":  {
+                                    "translate":  "elite.tensura_apotheosis.phantaspore"
+                                },
+                       "spawn_conditions":  [
+                                                {
+                                                    "type":  "apotheosis:not",
+                                                    "spawn_condition":  {
+                                                                            "type":  "apotheosis:spawn_type",
+                                                                            "spawn_types":  [
+                                                                                                "spawn_egg",
+                                                                                                "spawner",
+                                                                                                "mob_summoned"
+                                                                                            ]
+                                                                        }
+                                                }
+                                            ],
+                       "valid_gear_sets":  {
+                                               "haven":  [
+                                                             "#tensura_spore_haven"
+                                                         ],
+                                               "frontier":  [
+                                                                "#tensura_spore_frontier"
+                                                            ],
+                                               "ascent":  [
+                                                              "#tensura_spore_ascent"
+                                                          ],
+                                               "summit":  [
+                                                              "#tensura_spore_summit"
+                                                          ],
+                                               "pinnacle":  [
+                                                                "#tensura_spore_pinnacle"
+                                                            ]
+                                           },
+                       "weights":  {
+                                       "haven":  {
+                                                     "quality":  0.1,
+                                                     "weight":  100
+                                                 },
+                                       "frontier":  {
+                                                        "quality":  0.1,
+                                                        "weight":  100
+                                                    },
+                                       "ascent":  {
+                                                      "quality":  0.1,
+                                                      "weight":  80
+                                                  },
+                                       "summit":  {
+                                                      "quality":  0.12,
+                                                      "weight":  60
+                                                  },
+                                       "pinnacle":  {
+                                                        "quality":  0.15,
+                                                        "weight":  40
+                                                    }
+                                   }
+                   },
+    "entities":  "tensura:phantaspore",
+    "stats":  {
+                  "attribute_modifiers":  [
+                                              {
+                                                  "attribute":  "minecraft:generic.max_health",
+                                                  "operation":  "add_value",
+                                                  "value":  {
+                                                                "min":  30,
+                                                                "max":  55
+                                                            }
+                                              },
+                                              {
+                                                  "attribute":  "minecraft:generic.attack_damage",
+                                                  "operation":  "add_multiplied_total",
+                                                  "value":  {
+                                                                "min":  0.3,
+                                                                "max":  0.5
+                                                            }
+                                              },
+                                              {
+                                                  "attribute":  "minecraft:generic.knockback_resistance",
+                                                  "operation":  "add_value",
+                                                  "value":  0.5
+                                              },
+                                              {
+                                                  "attribute":  "minecraft:generic.scale",
+                                                  "operation":  "add_value",
+                                                  "value":  {
+                                                                "min":  1,
+                                                                "max":  1.2
+                                                            }
+                                              }
+                                          ],
+                  "effects":  [
+                                  {
+                                      "effect":  "minecraft:regeneration",
+                                      "amplifier":  0
+                                  }
+                              ],
+                  "enchant_chance":  0.3,
+                  "enchantment_levels":  {
+                                             "primary":  20,
+                                             "secondary":  12
+                                         }
+              },
+    "success_chance":  0.014
+}

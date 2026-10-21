@@ -1,0 +1,109 @@
+{
+    "type":  "apotheosis:elite",
+    "basic_data":  {
+                       "constraints":  {
+                                           "biomes":  "#tensura:basilisk_spawn"
+                                       },
+                       "name":  {
+                                    "translate":  "elite.tensura_apotheosis.basilisk"
+                                },
+                       "spawn_conditions":  [
+                                                {
+                                                    "type":  "apotheosis:not",
+                                                    "spawn_condition":  {
+                                                                            "type":  "apotheosis:spawn_type",
+                                                                            "spawn_types":  [
+                                                                                                "spawn_egg",
+                                                                                                "spawner",
+                                                                                                "mob_summoned"
+                                                                                            ]
+                                                                        }
+                                                }
+                                            ],
+                       "valid_gear_sets":  {
+                                               "haven":  [
+                                                             "#tensura_scaled_haven"
+                                                         ],
+                                               "frontier":  [
+                                                                "#tensura_scaled_frontier"
+                                                            ],
+                                               "ascent":  [
+                                                              "#tensura_scaled_ascent"
+                                                          ],
+                                               "summit":  [
+                                                              "#tensura_scaled_summit"
+                                                          ],
+                                               "pinnacle":  [
+                                                                "#tensura_scaled_pinnacle"
+                                                            ]
+                                           },
+                       "weights":  {
+                                       "haven":  {
+                                                     "quality":  0.1,
+                                                     "weight":  100
+                                                 },
+                                       "frontier":  {
+                                                        "quality":  0.1,
+                                                        "weight":  100
+                                                    },
+                                       "ascent":  {
+                                                      "quality":  0.1,
+                                                      "weight":  80
+                                                  },
+                                       "summit":  {
+                                                      "quality":  0.12,
+                                                      "weight":  60
+                                                  },
+                                       "pinnacle":  {
+                                                        "quality":  0.15,
+                                                        "weight":  40
+                                                    }
+                                   }
+                   },
+    "entities":  "tensura:basilisk",
+    "stats":  {
+                  "attribute_modifiers":  [
+                                              {
+                                                  "attribute":  "minecraft:generic.max_health",
+                                                  "operation":  "add_value",
+                                                  "value":  {
+                                                                "min":  45,
+                                                                "max":  80
+                                                            }
+                                              },
+                                              {
+                                                  "attribute":  "minecraft:generic.attack_damage",
+                                                  "operation":  "add_multiplied_total",
+                                                  "value":  {
+                                                                "min":  0.4,
+                                                                "max":  0.75
+                                                            }
+                                              },
+                                              {
+                                                  "attribute":  "minecraft:generic.knockback_resistance",
+                                                  "operation":  "add_value",
+                                                  "value":  0.5
+                                              },
+                                              {
+                                                  "attribute":  "minecraft:generic.scale",
+                                                  "operation":  "add_value",
+                                                  "value":  {
+                                                                "min":  1.3,
+                                                                "max":  1.7
+                                                            }
+                                              }
+                                          ],
+                  "effects":  [
+                                  {
+                                      "effect":  "minecraft:fire_resistance",
+                                      "amplifier":  0
+                                  }
+                              ],
+                  "enchant_chance":  0.4,
+                  "enchantment_levels":  {
+                                             "primary":  20,
+                                             "secondary":  12
+                                         }
+              },
+    "success_chance":  0.01
+}

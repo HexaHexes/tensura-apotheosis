@@ -1,0 +1,32 @@
+{
+    "type":  "placebo:gear_set",
+    "mainhands":  [
+                      {
+                          "stack":  {
+                                        "count":  1,
+                                        "id":  "tensura:unicorn_horn_spear"
+                                    },
+                          "weight":  10
+                      },
+                      {
+                          "stack":  {
+                                        "count":  1,
+                                        "id":  "tensura:mithril_spear"
+                                    },
+                          "weight":  10
+                      }
+                  ],
+    "chestplates":  [
+                        {
+                            "stack":  {
+                                          "count":  1,
+                                          "id":  "minecraft:golden_horse_armor"
+                                      },
+                            "weight":  10
+                        }
+                    ],
+    "tags":  [
+                 "tensura_unicorn_summit"
+             ],
+    "weight":  100
+}

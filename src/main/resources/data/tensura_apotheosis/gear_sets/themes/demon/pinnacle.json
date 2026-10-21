@@ -1,0 +1,66 @@
+{
+    "type":  "placebo:gear_set",
+    "mainhands":  [
+                      {
+                          "stack":  {
+                                        "count":  1,
+                                        "id":  "tensura:grimoire_a"
+                                    },
+                          "weight":  10
+                      },
+                      {
+                          "stack":  {
+                                        "count":  1,
+                                        "id":  "tensura:grimoire_special_a"
+                                    },
+                          "weight":  10
+                      },
+                      {
+                          "stack":  {
+                                        "count":  1,
+                                        "id":  "tensura:orichalcum_katana"
+                                    },
+                          "weight":  10
+                      }
+                  ],
+    "helmets":  [
+                    {
+                        "stack":  {
+                                      "count":  1,
+                                      "id":  "tensura:hihiirokane_helmet"
+                                  },
+                        "weight":  10
+                    }
+                ],
+    "chestplates":  [
+                        {
+                            "stack":  {
+                                          "count":  1,
+                                          "id":  "tensura:hihiirokane_chestplate"
+                                      },
+                            "weight":  10
+                        }
+                    ],
+    "leggings":  [
+                     {
+                         "stack":  {
+                                       "count":  1,
+                                       "id":  "tensura:hihiirokane_leggings"
+                                   },
+                         "weight":  10
+                     }
+                 ],
+    "boots":  [
+                  {
+                      "stack":  {
+                                    "count":  1,
+                                    "id":  "tensura:hihiirokane_boots"
+                                },
+                      "weight":  10
+                  }
+              ],
+    "tags":  [
+                 "tensura_demon_pinnacle"
+             ],
+    "weight":  100
+}

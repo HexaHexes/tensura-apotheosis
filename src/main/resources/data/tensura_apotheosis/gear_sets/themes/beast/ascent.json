@@ -1,0 +1,59 @@
+{
+    "type":  "placebo:gear_set",
+    "mainhands":  [
+                      {
+                          "stack":  {
+                                        "count":  1,
+                                        "id":  "tensura:beast_horn_spear"
+                                    },
+                          "weight":  10
+                      },
+                      {
+                          "stack":  {
+                                        "count":  1,
+                                        "id":  "tensura:low_magisteel_great_sword"
+                                    },
+                          "weight":  10
+                      }
+                  ],
+    "helmets":  [
+                    {
+                        "stack":  {
+                                      "count":  1,
+                                      "id":  "tensura:monster_leather_helmet_b"
+                                  },
+                        "weight":  10
+                    }
+                ],
+    "chestplates":  [
+                        {
+                            "stack":  {
+                                          "count":  1,
+                                          "id":  "tensura:monster_leather_chestplate_b"
+                                      },
+                            "weight":  10
+                        }
+                    ],
+    "leggings":  [
+                     {
+                         "stack":  {
+                                       "count":  1,
+                                       "id":  "tensura:monster_leather_leggings_b"
+                                   },
+                         "weight":  10
+                     }
+                 ],
+    "boots":  [
+                  {
+                      "stack":  {
+                                    "count":  1,
+                                    "id":  "tensura:monster_leather_boots_b"
+                                },
+                      "weight":  10
+                  }
+              ],
+    "tags":  [
+                 "tensura_beast_ascent"
+             ],
+    "weight":  100
+}

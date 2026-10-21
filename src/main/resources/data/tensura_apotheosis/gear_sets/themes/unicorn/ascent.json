@@ -1,0 +1,25 @@
+{
+    "type":  "placebo:gear_set",
+    "mainhands":  [
+                      {
+                          "stack":  {
+                                        "count":  1,
+                                        "id":  "tensura:unicorn_horn_spear"
+                                    },
+                          "weight":  10
+                      }
+                  ],
+    "chestplates":  [
+                        {
+                            "stack":  {
+                                          "count":  1,
+                                          "id":  "minecraft:iron_horse_armor"
+                                      },
+                            "weight":  10
+                        }
+                    ],
+    "tags":  [
+                 "tensura_unicorn_ascent"
+             ],
+    "weight":  100
+}

@@ -1,0 +1,52 @@
+{
+    "type":  "placebo:gear_set",
+    "mainhands":  [
+                      {
+                          "stack":  {
+                                        "count":  1,
+                                        "id":  "tensura:wooden_scythe"
+                                    },
+                          "weight":  10
+                      }
+                  ],
+    "helmets":  [
+                    {
+                        "stack":  {
+                                      "count":  1,
+                                      "id":  "tensura:monster_leather_helmet_d"
+                                  },
+                        "weight":  10
+                    }
+                ],
+    "chestplates":  [
+                        {
+                            "stack":  {
+                                          "count":  1,
+                                          "id":  "tensura:monster_leather_chestplate_d"
+                                      },
+                            "weight":  10
+                        }
+                    ],
+    "leggings":  [
+                     {
+                         "stack":  {
+                                       "count":  1,
+                                       "id":  "tensura:monster_leather_leggings_d"
+                                   },
+                         "weight":  10
+                     }
+                 ],
+    "boots":  [
+                  {
+                      "stack":  {
+                                    "count":  1,
+                                    "id":  "tensura:monster_leather_boots_d"
+                                },
+                      "weight":  10
+                  }
+              ],
+    "tags":  [
+                 "tensura_salamander_haven"
+             ],
+    "weight":  100
+}

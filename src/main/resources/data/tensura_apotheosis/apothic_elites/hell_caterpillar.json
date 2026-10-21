@@ -1,0 +1,106 @@
+{
+    "type":  "apotheosis:elite",
+    "basic_data":  {
+                       "constraints":  {
+                                           "biomes":  "#tensura:hell_caterpillar_spawn"
+                                       },
+                       "name":  {
+                                    "translate":  "elite.tensura_apotheosis.hell_caterpillar"
+                                },
+                       "spawn_conditions":  [
+                                                {
+                                                    "type":  "apotheosis:not",
+                                                    "spawn_condition":  {
+                                                                            "type":  "apotheosis:spawn_type",
+                                                                            "spawn_types":  [
+                                                                                                "spawn_egg",
+                                                                                                "spawner",
+                                                                                                "mob_summoned"
+                                                                                            ]
+                                                                        }
+                                                }
+                                            ],
+                       "valid_gear_sets":  {
+                                               "haven":  [
+                                                             "#tensura_insect_haven"
+                                                         ],
+                                               "frontier":  [
+                                                                "#tensura_insect_frontier"
+                                                            ],
+                                               "ascent":  [
+                                                              "#tensura_insect_ascent"
+                                                          ],
+                                               "summit":  [
+                                                              "#tensura_insect_summit"
+                                                          ],
+                                               "pinnacle":  [
+                                                                "#tensura_insect_pinnacle"
+                                                            ]
+                                           },
+                       "weights":  {
+                                       "haven":  {
+                                                     "quality":  0.1,
+                                                     "weight":  100
+                                                 },
+                                       "frontier":  {
+                                                        "quality":  0.1,
+                                                        "weight":  100
+                                                    },
+                                       "ascent":  {
+                                                      "quality":  0.1,
+                                                      "weight":  80
+                                                  },
+                                       "summit":  {
+                                                      "quality":  0.12,
+                                                      "weight":  60
+                                                  },
+                                       "pinnacle":  {
+                                                        "quality":  0.15,
+                                                        "weight":  40
+                                                    }
+                                   }
+                   },
+    "entities":  "tensura:hell_caterpillar",
+    "stats":  {
+                  "attribute_modifiers":  [
+                                              {
+                                                  "attribute":  "minecraft:generic.max_health",
+                                                  "operation":  "add_value",
+                                                  "value":  {
+                                                                "min":  28,
+                                                                "max":  50
+                                                            }
+                                              },
+                                              {
+                                                  "attribute":  "minecraft:generic.attack_damage",
+                                                  "operation":  "add_multiplied_total",
+                                                  "value":  {
+                                                                "min":  0.28,
+                                                                "max":  0.5
+                                                            }
+                                              },
+                                              {
+                                                  "attribute":  "minecraft:generic.knockback_resistance",
+                                                  "operation":  "add_value",
+                                                  "value":  0.5
+                                              },
+                                              {
+                                                  "attribute":  "minecraft:generic.scale",
+                                                  "operation":  "add_value",
+                                                  "value":  {
+                                                                "min":  1,
+                                                                "max":  1.2
+                                                            }
+                                              }
+                                          ],
+                  "effects":  [
+
+                              ],
+                  "enchant_chance":  0.28,
+                  "enchantment_levels":  {
+                                             "primary":  20,
+                                             "secondary":  12
+                                         }
+              },
+    "success_chance":  0.014
+}

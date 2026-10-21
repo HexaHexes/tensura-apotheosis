@@ -402,8 +402,308 @@ Add-Gem 'ultima' 'core' 'Ultima Gem' (New-Gem $uniW @(
     (GemLine 'shield' 'apothic_attributes:cooldown_reduction' 'add_value' (Purity 0.02 0.025 0.03 0.04 0.05 0.06))) 'flawless' $true)
 
 # ======================================================================
+# ELITE BOSS GEAR SETS + ELITES
+# ======================================================================
+# Gear sets are Placebo weighted-dynamic-registry entries. Their "tags" are
+# plain strings: an elite's valid_gear_sets "#foo" matches any gear set whose
+# tags contain "foo". Two tracks:
+#   Track A - tags collide with Apotheosis' vanilla pools (haven_melee, ...
+#             pinnacle_ranged) so the 4 built-in elites can roll Tensura gear.
+#   Track B - unique "tensura_<theme>_<tier>" tags, referenced only by our 38
+#             Tensura elites, so themed gear never leaks onto vanilla bosses.
+# Elites inherit Tensura's exact spawn logic: constraints.biomes is the literal
+# "#tensura:<mob>_spawn" biome tag Tensura gates that mob's natural spawns by.
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+$gearsets = @()   # @{ rel; json }
+$elites   = @()   # @{ rel; json; mob; display }
+function Add-GearSet([string]$rel, $json) {
+    $script:gearsets += @{ rel = $rel; json = $json }
+}
+function Add-Elite([string]$rel, [string]$mob, [string]$display, $json) {
+    $script:elites += @{ rel = $rel; mob = $mob; display = $display; json = $json }
+    $script:lang["elite.tensura_apotheosis.$mob"] = "Elite $display"
+}
+
+function WS($id, [int]$w = 10) {
+    [pscustomobject][ordered]@{ stack = [pscustomobject][ordered]@{ count = 1; id = $id }; weight = $w }
+}
+# armor ids for a material; leather uses monster_leather_<slot>_<grade>,
+# every other line uses <mat>_<slot>.
+function ArmorIds($armor) {
+    if ($armor.grade) {
+        $p = 'monster_leather'
+        @{ h = "tensura:${p}_helmet_$($armor.grade)"; c = "tensura:${p}_chestplate_$($armor.grade)"
+           l = "tensura:${p}_leggings_$($armor.grade)"; b = "tensura:${p}_boots_$($armor.grade)" }
+    } else {
+        $m = $armor.mat
+        @{ h = "tensura:${m}_helmet"; c = "tensura:${m}_chestplate"
+           l = "tensura:${m}_leggings"; b = "tensura:${m}_boots" }
+    }
+}
+function New-GearSetJson($tags, $mainhands, $armor, [string]$barding, [int]$weight) {
+    $o = [ordered]@{ type = 'placebo:gear_set' }
+    if ($mainhands -and $mainhands.Count) { $o['mainhands'] = @($mainhands | ForEach-Object { WS $_ }) }
+    if ($barding) {
+        # AnimalArmorItem horse barding occupies the chest slot; only mobs whose
+        # renderer has an *ArmorLayer (pegasus/unicorn/hover_lizard) show it.
+        $o['chestplates'] = @(WS "minecraft:${barding}_horse_armor")
+    } elseif ($armor) {
+        $ids = ArmorIds $armor
+        $o['helmets']      = @(WS $ids.h)
+        $o['chestplates']  = @(WS $ids.c)
+        $o['leggings']     = @(WS $ids.l)
+        $o['boots']        = @(WS $ids.b)
+    }
+    $o['tags']   = @($tags)
+    $o['weight'] = $weight   # selection weight within the tag's pool (required)
+    [pscustomobject]$o
+}
+
+$tiers = @('haven', 'frontier', 'ascent', 'summit', 'pinnacle')
+
+# ---- Track A: Tensura gear injected into Apotheosis' vanilla tier pools -----
+# The 4 built-in elites (craig, honeyed_archer, undead_knight, withering_archer)
+# reference these tags, so Tensura equipment joins their loadout alongside the
+# existing vanilla sets. Melee weapons drop on kill; armor is applied as stats.
+$trackAArmor = @(
+    @{ mat = 'leather'; grade = 'd' }, @{ mat = 'leather'; grade = 'c' },
+    @{ mat = 'leather'; grade = 'b' }, @{ mat = 'leather'; grade = 'a' },
+    @{ mat = 'orichalcum' })
+$trackAMelee = @(
+    @('tensura:wooden_katana', 'tensura:wooden_great_sword'),
+    @('tensura:iron_katana', 'tensura:iron_great_sword'),
+    @('tensura:low_magisteel_katana', 'tensura:low_magisteel_spear'),
+    @('tensura:high_magisteel_katana', 'tensura:mithril_great_sword'),
+    @('tensura:orichalcum_katana', 'tensura:hihiirokane_great_sword'))
+$trackARanged = @(
+    @('tensura:short_bow'),
+    @('tensura:short_bow', 'tensura:long_bow'),
+    @('tensura:long_bow'),
+    @('tensura:war_bow', 'tensura:spider_bow'),
+    @('tensura:war_bow', 'tensura:war_spider_bow', 'tensura:ant_crossbow'))
+# Selection weight within each tier pool; mirrors Apotheosis' own ladder (haven
+# 100 down to pinnacle 40) so Tensura gear shows up alongside vanilla without
+# swamping it.
+$trackAWeight = @(100, 90, 70, 50, 40)
+for ($i = 0; $i -lt $tiers.Count; $i++) {
+    $t = $tiers[$i]
+    Add-GearSet "$t/melee/tensura" (New-GearSetJson @("${t}_melee") $trackAMelee[$i] $trackAArmor[$i] '' $trackAWeight[$i])
+    Add-GearSet "$t/ranged/tensura" (New-GearSetJson @("${t}_ranged") $trackARanged[$i] $trackAArmor[$i] '' $trackAWeight[$i])
+}
+
+# ---- Track B: identity-themed sets for the 38 Tensura elites ----------------
+# 14 themes. armor[i] and weapons[i] index the 5 tiers (haven..pinnacle). Barding
+# themes override the chest slot with horse armor (visible on their 3 renderable
+# mobs). Per-theme stat bands feed the elite blocks below.
+$themes = @(
+    @{ key = 'demon'
+       armor = @(@{mat='leather';grade='d'}, @{mat='leather';grade='c'}, @{mat='pure_magisteel'}, @{mat='orichalcum'}, @{mat='hihiirokane'})
+       weapons = @(@('tensura:low_magic_staff'), @('tensura:low_magic_staff','tensura:iron_katana'), @('tensura:medium_magic_staff','tensura:low_magisteel_katana'), @('tensura:high_magic_staff','tensura:high_magisteel_katana'), @('tensura:grimoire_a','tensura:grimoire_special_a','tensura:orichalcum_katana'))
+       barding=''; effects=@('minecraft:fire_resistance','minecraft:night_vision')
+       hp=@(40,70); dmg=@(0.4,0.7); scale=@(1.2,1.5); ench=0.4; success=0.01 }
+    @{ key = 'salamander'
+       armor = @(@{mat='leather';grade='d'}, @{mat='leather';grade='c'}, @{mat='high_magisteel'}, @{mat='adamantite'}, @{mat='hihiirokane'})
+       weapons = @(@('tensura:wooden_scythe'), @('tensura:iron_scythe'), @('tensura:low_magisteel_scythe'), @('tensura:adamantite_scythe'), @('tensura:hihiirokane_scythe','tensura:blade_tiger_scythe'))
+       barding=''; effects=@('minecraft:fire_resistance')
+       hp=@(35,60); dmg=@(0.35,0.6); scale=@(1.1,1.3); ench=0.35; success=0.012 }
+    @{ key = 'scaled'
+       armor = @(@{mat='leather';grade='d'}, @{mat='leather';grade='c'}, @{mat='serpent_scalemail'}, @{mat='serpent_scalemail'}, @{mat='charybdis_scalemail'})
+       weapons = @(@('tensura:wooden_spear'), @('tensura:iron_spear'), @('tensura:low_magisteel_spear'), @('tensura:mithril_spear'), @('tensura:orichalcum_spear','tensura:vortex_spear'))
+       barding=''; effects=@('minecraft:fire_resistance')
+       hp=@(45,80); dmg=@(0.4,0.75); scale=@(1.3,1.7); ench=0.4; success=0.01 }
+    @{ key = 'lizard'
+       armor = @(@{mat='leather';grade='d'}, @{mat='leather';grade='c'}, @{mat='serpent_scalemail'}, @{mat='serpent_scalemail'}, @{mat='serpent_scalemail'})
+       weapons = @(@('tensura:wooden_short_sword'), @('tensura:iron_short_sword'), @('tensura:low_magisteel_short_sword'), @('tensura:pure_magisteel_kodachi'), @('tensura:orichalcum_kodachi'))
+       barding=''; effects=@()
+       hp=@(25,45); dmg=@(0.25,0.45); scale=@(0.9,1.1); ench=0.25; success=0.015 }
+    @{ key = 'hover'
+       armor = @()
+       weapons = @(@('tensura:wooden_short_sword'), @('tensura:iron_short_sword'), @('tensura:low_magisteel_short_sword'), @('tensura:pure_magisteel_kodachi'), @('tensura:orichalcum_kodachi'))
+       barding='iron'; effects=@()
+       hp=@(25,45); dmg=@(0.25,0.45); scale=@(0.9,1.1); ench=0.25; success=0.015 }
+    @{ key = 'spider'
+       armor = @(@{mat='leather';grade='c'}, @{mat='leather';grade='c'}, @{mat='knight_spider_carapace'}, @{mat='knight_spider_carapace'}, @{mat='knight_spider_carapace'})
+       weapons = @(@('tensura:spider_dagger','tensura:short_bow'), @('tensura:spider_dagger','tensura:short_bow'), @('tensura:spider_dagger','tensura:spider_bow'), @('tensura:spider_dagger','tensura:long_spider_bow'), @('tensura:spider_dagger','tensura:war_spider_bow'))
+       barding=''; effects=@('minecraft:night_vision')
+       hp=@(30,55); dmg=@(0.3,0.55); scale=@(1.0,1.3); ench=0.3; success=0.012 }
+    @{ key = 'insect'
+       armor = @(@{mat='leather';grade='c'}, @{mat='leather';grade='c'}, @{mat='ant_carapace'}, @{mat='ant_carapace'}, @{mat='ant_carapace'})
+       weapons = @(@('tensura:short_bow'), @('tensura:short_bow','tensura:centipede_dagger'), @('tensura:ant_crossbow','tensura:centipede_dagger'), @('tensura:ant_crossbow','tensura:centipede_dagger'), @('tensura:ant_crossbow','tensura:centipede_dagger'))
+       barding=''; effects=@()
+       hp=@(28,50); dmg=@(0.28,0.5); scale=@(1.0,1.2); ench=0.28; success=0.014 }
+    @{ key = 'beast'
+       armor = @(@{mat='leather';grade='d'}, @{mat='leather';grade='c'}, @{mat='leather';grade='b'}, @{mat='leather';grade='a'}, @{mat='leather';grade='special_a'})
+       weapons = @(@('tensura:wooden_great_sword'), @('tensura:iron_great_sword'), @('tensura:beast_horn_spear','tensura:low_magisteel_great_sword'), @('tensura:blade_tiger_scythe','tensura:mithril_great_sword'), @('tensura:adamantite_great_sword','tensura:blade_tiger_scythe'))
+       barding=''; effects=@()
+       hp=@(35,65); dmg=@(0.35,0.6); scale=@(1.1,1.4); ench=0.35; success=0.012 }
+    @{ key = 'aquatic'
+       armor = @(@{mat='leather';grade='c'}, @{mat='leather';grade='c'}, @{mat='serpent_scalemail'}, @{mat='serpent_scalemail'}, @{mat='serpent_scalemail'})
+       weapons = @(@('tensura:wooden_spear'), @('tensura:iron_spear'), @('tensura:low_magisteel_spear'), @('tensura:silver_spear'), @('tensura:orichalcum_spear'))
+       barding=''; effects=@('minecraft:water_breathing')
+       hp=@(30,55); dmg=@(0.3,0.5); scale=@(1.1,1.4); ench=0.3; success=0.014 }
+    @{ key = 'armorsaurus'
+       armor = @(@{mat='leather';grade='b'}, @{mat='leather';grade='b'}, @{mat='armorsaurus_scalemail'}, @{mat='armorsaurus_scalemail'}, @{mat='armorsaurus_scalemail'})
+       weapons = @(@('tensura:iron_great_sword'), @('tensura:iron_great_sword'), @('tensura:adamantite_great_sword'), @('tensura:adamantite_great_sword'), @('tensura:adamantite_great_sword','tensura:hihiirokane_great_sword'))
+       barding=''; effects=@('minecraft:fire_resistance')
+       hp=@(50,90); dmg=@(0.45,0.8); scale=@(1.4,1.8); ench=0.45; success=0.008 }
+    @{ key = 'slime'
+       armor = @(@{mat='leather';grade='c'}, @{mat='leather';grade='c'}, @{mat='pure_magisteel'}, @{mat='pure_magisteel'}, @{mat='orichalcum'})
+       weapons = @(@('tensura:slime_staff'), @('tensura:slime_staff'), @('tensura:slime_staff'), @('tensura:slime_staff'), @('tensura:slime_staff','tensura:high_magic_staff'))
+       barding=''; effects=@()
+       hp=@(40,75); dmg=@(0.3,0.55); scale=@(1.2,1.6); ench=0.3; success=0.01 }
+    @{ key = 'spore'
+       armor = @(@{mat='leather';grade='c'}, @{mat='leather';grade='c'}, @{mat='mithril'}, @{mat='mithril'}, @{mat='orichalcum'})
+       weapons = @(@('tensura:low_magic_staff'), @('tensura:low_magic_staff'), @('tensura:medium_magic_staff'), @('tensura:high_magic_staff'), @('tensura:grimoire_b'))
+       barding=''; effects=@('minecraft:regeneration')
+       hp=@(30,55); dmg=@(0.3,0.5); scale=@(1.0,1.2); ench=0.3; success=0.014 }
+    @{ key = 'orc'
+       armor = @(@{mat='leather';grade='c'}, @{mat='leather';grade='c'}, @{mat='silver'}, @{mat='adamantite'}, @{mat='adamantite'})
+       weapons = @(@('tensura:wooden_great_sword'), @('tensura:iron_great_sword'), @('tensura:iron_great_sword','tensura:golden_great_sword'), @('tensura:adamantite_great_sword'), @('tensura:adamantite_great_sword','tensura:orichalcum_great_sword'))
+       barding=''; effects=@()
+       hp=@(45,80); dmg=@(0.45,0.75); scale=@(1.3,1.6); ench=0.4; success=0.01 }
+    @{ key = 'unicorn'
+       armor = @(@{mat='leather';grade='b'}, @{mat='leather';grade='b'}, @{mat='pure_magisteel'}, @{mat='mithril'}, @{mat='orichalcum'})
+       weapons = @(@('tensura:wooden_spear'), @('tensura:iron_spear'), @('tensura:unicorn_horn_spear'), @('tensura:unicorn_horn_spear','tensura:mithril_spear'), @('tensura:unicorn_horn_spear','tensura:orichalcum_spear'))
+       barding='iron'; effects=@('minecraft:fire_resistance')
+       hp=@(40,70); dmg=@(0.4,0.65); scale=@(1.2,1.5); ench=0.4; success=0.01 }
+)
+$themeByKey = @{}
+foreach ($th in $themes) { $themeByKey[$th.key] = $th }
+
+# Barding tiers by world tier for the two barding themes (iron..diamond).
+$bardingByTier = @('iron', 'iron', 'iron', 'golden', 'diamond')
+
+foreach ($th in $themes) {
+    for ($i = 0; $i -lt $tiers.Count; $i++) {
+        $t = $tiers[$i]
+        $barding = ''
+        if ($th.barding) { $barding = $bardingByTier[$i] }
+        $armorArg = $null
+        if (-not $barding -and $th.armor -and $th.armor.Count -gt $i) { $armorArg = $th.armor[$i] }
+        # Each themed tag resolves to exactly one set, so weight is cosmetic.
+        Add-GearSet "themes/$($th.key)/$t" (New-GearSetJson @("tensura_$($th.key)_$t") $th.weapons[$i] $armorArg $barding 100)
+    }
+}
+
+# ---- The 38 elites ----------------------------------------------------------
+# Every mob here has a #tensura:<mob>_spawn biome tag (asserted below), so its
+# elite inherits Tensura's exact natural-spawn biomes via constraints.biomes.
+# Weights ladder from common (haven) to rare (pinnacle); success_chance is the
+# per-spawn chance a natural spawn of the base mob becomes this elite.
+$spawnTags = New-Object 'System.Collections.Generic.HashSet[string]'
+$tj = [System.IO.Compression.ZipFile]::OpenRead('C:\Games\Minecraft\Mods\tensura-apotheosis\libs\tensura-neoforge-2.0.1.3.jar')
+foreach ($en in $tj.Entries) {
+    if ($en.FullName -like 'data/tensura/tags/worldgen/biome/*_spawn.json') {
+        [void]$spawnTags.Add(([System.IO.Path]::GetFileNameWithoutExtension($en.FullName) -replace '_spawn$', ''))
+    }
+}
+$tj.Dispose()
+
+# mob -> theme + display name
+$roster = @(
+    @{ mob='arch_daemon';       theme='demon';      display='Arch Daemon' }
+    @{ mob='greater_daemon';    theme='demon';      display='Greater Daemon' }
+    @{ mob='lesser_daemon';     theme='demon';      display='Lesser Daemon' }
+    @{ mob='salamander';        theme='salamander'; display='Salamander' }
+    @{ mob='basilisk';          theme='scaled';     display='Basilisk' }
+    @{ mob='dragon_peacock';    theme='scaled';     display='Dragon Peacock' }
+    @{ mob='feathered_serpent'; theme='scaled';     display='Feathered Serpent' }
+    @{ mob='tempest_serpent';   theme='scaled';     display='Tempest Serpent' }
+    @{ mob='leech_lizard';      theme='lizard';     display='Leech Lizard' }
+    @{ mob='hover_lizard';      theme='hover';      display='Hover Lizard' }
+    @{ mob='black_spider';      theme='spider';     display='Black Spider' }
+    @{ mob='knight_spider';     theme='spider';     display='Knight Spider' }
+    @{ mob='army_wasp';         theme='insect';     display='Army Wasp' }
+    @{ mob='giant_ant';         theme='insect';     display='Giant Ant' }
+    @{ mob='evil_centipede';    theme='insect';     display='Evil Centipede' }
+    @{ mob='hell_caterpillar';  theme='insect';     display='Hell Caterpillar' }
+    @{ mob='hell_moth';         theme='insect';     display='Hell Moth' }
+    @{ mob='barghest';          theme='beast';      display='Barghest' }
+    @{ mob='beast_gnome';       theme='beast';      display='Beast Gnome' }
+    @{ mob='direwolf';          theme='beast';      display='Direwolf' }
+    @{ mob='blade_tiger';       theme='beast';      display='Blade Tiger' }
+    @{ mob='giant_bat';         theme='beast';      display='Giant Bat' }
+    @{ mob='giant_bear';        theme='beast';      display='Giant Bear' }
+    @{ mob='horned_bear';       theme='beast';      display='Horned Bear' }
+    @{ mob='horned_rabbit';     theme='beast';      display='Horned Rabbit' }
+    @{ mob='hound_dog';         theme='beast';      display='Hound Dog' }
+    @{ mob='one_eyed_owl';      theme='beast';      display='One Eyed Owl' }
+    @{ mob='winged_cat';        theme='beast';      display='Winged Cat' }
+    @{ mob='giant_cod';         theme='aquatic';    display='Giant Cod' }
+    @{ mob='giant_salmon';      theme='aquatic';    display='Giant Salmon' }
+    @{ mob='landfish';          theme='aquatic';    display='Landfish' }
+    @{ mob='spear_toro';        theme='aquatic';    display='Spear Toro' }
+    @{ mob='armorsaurus';       theme='armorsaurus';display='Armorsaurus' }
+    @{ mob='slime';             theme='slime';      display='Slime' }
+    @{ mob='phantaspore';       theme='spore';      display='Phantaspore' }
+    @{ mob='orc';               theme='orc';        display='Orc' }
+    @{ mob='pegasus';           theme='unicorn';    display='Pegasus' }
+    @{ mob='unicorn';           theme='unicorn';    display='Unicorn' }
+)
+if ($roster.Count -ne 38) { throw "roster is $($roster.Count) expected 38" }
+
+$weights = [pscustomobject][ordered]@{
+    haven     = [pscustomobject]@{ quality = 0.1;  weight = 100 }
+    frontier  = [pscustomobject]@{ quality = 0.1;  weight = 100 }
+    ascent    = [pscustomobject]@{ quality = 0.1;  weight = 80 }
+    summit    = [pscustomobject]@{ quality = 0.12; weight = 60 }
+    pinnacle  = [pscustomobject]@{ quality = 0.15; weight = 40 }
+}
+$validGear = [ordered]@{}
+foreach ($t in $tiers) { $validGear[$t] = @() }  # filled per elite
+
+foreach ($r in $roster) {
+    if (-not $spawnTags.Contains($r.mob)) {
+        throw "no #tensura:$($r.mob)_spawn biome tag - cannot derive spawn biomes"
+    }
+    $th = $themeByKey[$r.theme]
+    $vg = [ordered]@{}
+    foreach ($t in $tiers) { $vg[$t] = @("#tensura_$($r.theme)_$t") }
+
+    $attr = [System.Collections.Generic.List[object]]::new()
+    $attr.Add([pscustomobject][ordered]@{ attribute='minecraft:generic.max_health'; operation='add_value'; value=(Range $th.hp[0] $th.hp[1]) })
+    $attr.Add([pscustomobject][ordered]@{ attribute='minecraft:generic.attack_damage'; operation='add_multiplied_total'; value=(Range $th.dmg[0] $th.dmg[1]) })
+    $attr.Add([pscustomobject][ordered]@{ attribute='minecraft:generic.knockback_resistance'; operation='add_value'; value=0.5 })
+    $attr.Add([pscustomobject][ordered]@{ attribute='minecraft:generic.scale'; operation='add_value'; value=(Range $th.scale[0] $th.scale[1]) })
+    $effects = @($th.effects | ForEach-Object { [pscustomobject][ordered]@{ effect = $_; amplifier = 0 } })
+
+    $stats = [ordered]@{
+        attribute_modifiers  = $attr
+        effects              = $effects
+        enchant_chance       = $th.ench
+        enchantment_levels   = [pscustomobject]@{ primary = 20; secondary = 12 }
+    }
+    $basic = [ordered]@{
+        constraints       = [pscustomobject][ordered]@{ biomes = "#tensura:$($r.mob)_spawn" }
+        name              = [pscustomobject][ordered]@{ translate = "elite.tensura_apotheosis.$($r.mob)" }
+        spawn_conditions  = @([pscustomobject][ordered]@{
+            type = 'apotheosis:not'
+            spawn_condition = [pscustomobject][ordered]@{
+                type = 'apotheosis:spawn_type'
+                spawn_types = @('spawn_egg', 'spawner', 'mob_summoned') } })
+        valid_gear_sets   = $vg
+        weights           = $weights
+    }
+    $elite = [ordered]@{
+        type           = 'apotheosis:elite'
+        basic_data     = $basic
+        entities       = "tensura:$($r.mob)"
+        stats          = $stats
+        success_chance = $th.success
+    }
+    Add-Elite $r.mob $r.mob $r.display ([pscustomobject]$elite)
+}
+
+# ======================================================================
 # EMIT
 # ======================================================================
+foreach ($gs in $gearsets) {
+    WriteJsonFile (Join-Path $data ("gear_sets\" + ($gs.rel -replace '/', '\') + '.json')) $gs.json
+}
+foreach ($el in $elites) {
+    WriteJsonFile (Join-Path $data ("apothic_elites\" + ($el.rel -replace '/', '\') + '.json')) $el.json
+}
 foreach ($a in $affixes) {
     WriteJsonFile (Join-Path $data ("affixes\" + ($a.rel -replace '/', '\') + '.json')) $a.json
     $lang["affix.tensura_apotheosis:$($a.rel)"] = $a.name
@@ -423,6 +723,8 @@ foreach ($g in $gems) {
 New-Item -ItemType Directory -Path (Join-Path $assets 'lang') -Force | Out-Null
 [System.IO.File]::WriteAllText((Join-Path $assets 'lang\en_us.json'), ($lang | ConvertTo-Json -Depth 5), $utf8)
 
-"affixes written: $($affixes.Count)"
-"gems written:    $($gems.Count)"
-"lang keys:       $($lang.Count)"
+"affixes written:   $($affixes.Count)"
+"gems written:      $($gems.Count)"
+"gear sets written: $($gearsets.Count)"
+"elites written:    $($elites.Count)"
+"lang keys:         $($lang.Count)"

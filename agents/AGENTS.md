@@ -3,19 +3,20 @@
 **Repo:** `HexaHexes/tensura-apotheosis` · **Mod ID:** `tensura_apotheosis` · **Branch:** `master`
 **Platform:** Minecraft 1.21.1 / NeoForge 21.1.259 / JDK 21 · **Jar:** `build/libs/tensura-apotheosis-<version>.jar`
 
-Tensura-themed affixes and socket gems for Apotheosis 8.8, delivered as **pure
-datapack data** (Placebo dynamic registries) — no mixins, no gameplay code. The Java
-side exists only for the in-repo gametest harness.
+Tensura-themed affixes, socket gems, elite bosses and gear sets for Apotheosis 8.8,
+delivered as **pure datapack data** (Placebo dynamic registries) — no mixins, no
+gameplay code. The Java side exists only for the in-repo gametest harness.
 
 **Dependencies (all required)**
 - Apotheosis (`apotheosis`), Apothic Attributes (`apothic_attributes`), Tensura (`tensura`).
 
-**Test:** `./gradlew runGametest` — 3 tests (`twoHandedWeaponsCategorizeAsMelee`,
-`allAffixesLoad`, `allGemsLoad`). `expectedTests = 3`.
+**Test:** `./gradlew runGametest` — 5 tests (`twoHandedWeaponsCategorizeAsMelee`,
+`allAffixesLoad`, `allGemsLoad`, `allElitesLoad`, `allGearSetsLoad`). `expectedTests = 5`.
 
 **Single source of truth:** `tools/generate-content.ps1` produces all affixes, gems,
-lang and models; `tools/generate-textures.ps1` produces the 14 gem PNGs. **Value tuning
-happens in the generator, not by hand-editing JSON** — regenerate after any change.
+gear sets, elites, lang and models; `tools/generate-textures.ps1` produces the 14 gem
+PNGs. **Value tuning happens in the generator, not by hand-editing JSON** — regenerate
+after any change.
 
 **Gotchas (all caught by the gametest; do not regress them)**
 - Affix `min`/`max` ranges decode as **step functions** with an implicit step of `0.01`;
@@ -31,6 +32,15 @@ happens in the generator, not by hand-editing JSON** — regenerate after any ch
   `assets/apotheosis/models/item/gems/`, while textures and lang stay in this mod's own
   `assets/tensura_apotheosis/`.
 - Client cosmetics (gem textures) cannot be proven headless — the user checks in-game.
+- Gear sets require a top-level `weight` (the codec rejects the file without it);
+  `quality` is optional (vanilla sets omit it).
+- Elite `stats.effects` and any `tensura:`/`minecraft:` effect id must exist in the
+  game's registry — there is **no** `minecraft:poison_resistance` (the spider and spore
+  themes use `night_vision`/`regeneration`). An invalid effect id fails the whole elite
+  parse, so verify ids before shipping.
+- Every elite mob must have a `#tensura:<mob>_spawn` biome tag; the elite's
+  `constraints.biomes` is that literal tag (so it inherits Tensura's exact natural-spawn
+  logic, no blanket dimensions).
 
 ---
 

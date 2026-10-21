@@ -1,0 +1,25 @@
+{
+    "type":  "placebo:gear_set",
+    "mainhands":  [
+                      {
+                          "stack":  {
+                                        "count":  1,
+                                        "id":  "tensura:orichalcum_kodachi"
+                                    },
+                          "weight":  10
+                      }
+                  ],
+    "chestplates":  [
+                        {
+                            "stack":  {
+                                          "count":  1,
+                                          "id":  "minecraft:diamond_horse_armor"
+                                      },
+                            "weight":  10
+                        }
+                    ],
+    "tags":  [
+                 "tensura_hover_pinnacle"
+             ],
+    "weight":  100
+}

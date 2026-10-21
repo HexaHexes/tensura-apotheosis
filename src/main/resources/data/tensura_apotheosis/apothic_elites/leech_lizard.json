@@ -1,0 +1,106 @@
+{
+    "type":  "apotheosis:elite",
+    "basic_data":  {
+                       "constraints":  {
+                                           "biomes":  "#tensura:leech_lizard_spawn"
+                                       },
+                       "name":  {
+                                    "translate":  "elite.tensura_apotheosis.leech_lizard"
+                                },
+                       "spawn_conditions":  [
+                                                {
+                                                    "type":  "apotheosis:not",
+                                                    "spawn_condition":  {
+                                                                            "type":  "apotheosis:spawn_type",
+                                                                            "spawn_types":  [
+                                                                                                "spawn_egg",
+                                                                                                "spawner",
+                                                                                                "mob_summoned"
+                                                                                            ]
+                                                                        }
+                                                }
+                                            ],
+                       "valid_gear_sets":  {
+                                               "haven":  [
+                                                             "#tensura_lizard_haven"
+                                                         ],
+                                               "frontier":  [
+                                                                "#tensura_lizard_frontier"
+                                                            ],
+                                               "ascent":  [
+                                                              "#tensura_lizard_ascent"
+                                                          ],
+                                               "summit":  [
+                                                              "#tensura_lizard_summit"
+                                                          ],
+                                               "pinnacle":  [
+                                                                "#tensura_lizard_pinnacle"
+                                                            ]
+                                           },
+                       "weights":  {
+                                       "haven":  {
+                                                     "quality":  0.1,
+                                                     "weight":  100
+                                                 },
+                                       "frontier":  {
+                                                        "quality":  0.1,
+                                                        "weight":  100
+                                                    },
+                                       "ascent":  {
+                                                      "quality":  0.1,
+                                                      "weight":  80
+                                                  },
+                                       "summit":  {
+                                                      "quality":  0.12,
+                                                      "weight":  60
+                                                  },
+                                       "pinnacle":  {
+                                                        "quality":  0.15,
+                                                        "weight":  40
+                                                    }
+                                   }
+                   },
+    "entities":  "tensura:leech_lizard",
+    "stats":  {
+                  "attribute_modifiers":  [
+                                              {
+                                                  "attribute":  "minecraft:generic.max_health",
+                                                  "operation":  "add_value",
+                                                  "value":  {
+                                                                "min":  25,
+                                                                "max":  45
+                                                            }
+                                              },
+                                              {
+                                                  "attribute":  "minecraft:generic.attack_damage",
+                                                  "operation":  "add_multiplied_total",
+                                                  "value":  {
+                                                                "min":  0.25,
+                                                                "max":  0.45
+                                                            }
+                                              },
+                                              {
+                                                  "attribute":  "minecraft:generic.knockback_resistance",
+                                                  "operation":  "add_value",
+                                                  "value":  0.5
+                                              },
+                                              {
+                                                  "attribute":  "minecraft:generic.scale",
+                                                  "operation":  "add_value",
+                                                  "value":  {
+                                                                "min":  0.9,
+                                                                "max":  1.1
+                                                            }
+                                              }
+                                          ],
+                  "effects":  [
+
+                              ],
+                  "enchant_chance":  0.25,
+                  "enchantment_levels":  {
+                                             "primary":  20,
+                                             "secondary":  12
+                                         }
+              },
+    "success_chance":  0.015
+}

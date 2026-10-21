@@ -2,10 +2,12 @@ package dev.kurok.mods.tensuraapotheosis.gametest;
 
 import dev.shadowsoffire.apotheosis.affix.AffixRegistry;
 import dev.shadowsoffire.apotheosis.loot.LootCategory;
+import dev.shadowsoffire.apotheosis.mobs.registries.EliteRegistry;
 import dev.shadowsoffire.apotheosis.socket.gem.Gem;
 import dev.shadowsoffire.apotheosis.socket.gem.GemItem;
 import dev.shadowsoffire.apotheosis.socket.gem.GemRegistry;
 import dev.shadowsoffire.apotheosis.socket.gem.Purity;
+import dev.shadowsoffire.placebo.systems.gear.GearSetRegistry;
 import io.github.manasmods.tensura.item.weapon.TwoHandedSwordItem;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,6 +41,12 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
  *       never enters the registry, and fails the test.</li>
  *   <li>Every gem JSON under {@code data/tensura_apotheosis/gems/} must resolve
  *       in {@link GemRegistry} and produce a stack of Apotheosis' shared gem item.</li>
+ *   <li>Every elite boss JSON under {@code data/tensura_apotheosis/apothic_elites/}
+ *       must resolve in {@link EliteRegistry}. These are the 38 Tensura elite
+ *       variants; a biome or stats parse failure would silently drop one.</li>
+ *   <li>Every gear set JSON under {@code data/tensura_apotheosis/gear_sets/} must
+ *       resolve in {@link GearSetRegistry}. Track A sets join Apotheosis' vanilla
+ *       tier pools; Track B sets are scoped to the Tensura elites via tags.</li>
  * </ol>
  */
 @GameTestHolder("tensura_apotheosis")
@@ -48,6 +56,8 @@ public class ApotheosisContentGameTests {
     private static final String NS = "tensura_apotheosis";
     private static final int EXPECTED_AFFIXES = 51;
     private static final int EXPECTED_GEMS = 14;
+    private static final int EXPECTED_ELITES = 38;
+    private static final int EXPECTED_GEARSETS = 80;
 
     /**
      * Enumerates this mod's data files for a Placebo registry folder and derives
@@ -139,6 +149,38 @@ public class ApotheosisContentGameTests {
             if (applied.ordinal() < gem.getMinPurity().ordinal()) {
                 throw new GameTestAssertException("gem " + id + " purity " + ap(applied)
                         + " is below its min_purity " + ap(gem.getMinPurity()));
+            }
+        }
+        helper.succeed();
+    }
+
+    /** Every shipped elite JSON must parse into Apotheosis' elite registry. */
+    @GameTest(template = "empty")
+    public static void allElitesLoad(GameTestHelper helper) {
+        Set<ResourceLocation> expected = expectedIds(helper, "apothic_elites");
+        if (expected.size() != EXPECTED_ELITES) {
+            throw new GameTestAssertException(
+                    "found " + expected.size() + " elite data files expected " + EXPECTED_ELITES);
+        }
+        for (ResourceLocation id : expected) {
+            if (EliteRegistry.INSTANCE.getValue(id) == null) {
+                throw new GameTestAssertException("elite " + id + " not in EliteRegistry (parse failure?)");
+            }
+        }
+        helper.succeed();
+    }
+
+    /** Every shipped gear set JSON must parse into Placebo's gear set registry. */
+    @GameTest(template = "empty")
+    public static void allGearSetsLoad(GameTestHelper helper) {
+        Set<ResourceLocation> expected = expectedIds(helper, "gear_sets");
+        if (expected.size() != EXPECTED_GEARSETS) {
+            throw new GameTestAssertException(
+                    "found " + expected.size() + " gear set data files expected " + EXPECTED_GEARSETS);
+        }
+        for (ResourceLocation id : expected) {
+            if (GearSetRegistry.INSTANCE.getValue(id) == null) {
+                throw new GameTestAssertException("gear set " + id + " not in GearSetRegistry (parse failure?)");
             }
         }
         helper.succeed();

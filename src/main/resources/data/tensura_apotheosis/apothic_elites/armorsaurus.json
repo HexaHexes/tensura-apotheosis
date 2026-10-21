@@ -1,0 +1,109 @@
+{
+    "type":  "apotheosis:elite",
+    "basic_data":  {
+                       "constraints":  {
+                                           "biomes":  "#tensura:armorsaurus_spawn"
+                                       },
+                       "name":  {
+                                    "translate":  "elite.tensura_apotheosis.armorsaurus"
+                                },
+                       "spawn_conditions":  [
+                                                {
+                                                    "type":  "apotheosis:not",
+                                                    "spawn_condition":  {
+                                                                            "type":  "apotheosis:spawn_type",
+                                                                            "spawn_types":  [
+                                                                                                "spawn_egg",
+                                                                                                "spawner",
+                                                                                                "mob_summoned"
+                                                                                            ]
+                                                                        }
+                                                }
+                                            ],
+                       "valid_gear_sets":  {
+                                               "haven":  [
+                                                             "#tensura_armorsaurus_haven"
+                                                         ],
+                                               "frontier":  [
+                                                                "#tensura_armorsaurus_frontier"
+                                                            ],
+                                               "ascent":  [
+                                                              "#tensura_armorsaurus_ascent"
+                                                          ],
+                                               "summit":  [
+                                                              "#tensura_armorsaurus_summit"
+                                                          ],
+                                               "pinnacle":  [
+                                                                "#tensura_armorsaurus_pinnacle"
+                                                            ]
+                                           },
+                       "weights":  {
+                                       "haven":  {
+                                                     "quality":  0.1,
+                                                     "weight":  100
+                                                 },
+                                       "frontier":  {
+                                                        "quality":  0.1,
+                                                        "weight":  100
+                                                    },
+                                       "ascent":  {
+                                                      "quality":  0.1,
+                                                      "weight":  80
+                                                  },
+                                       "summit":  {
+                                                      "quality":  0.12,
+                                                      "weight":  60
+                                                  },
+                                       "pinnacle":  {
+                                                        "quality":  0.15,
+                                                        "weight":  40
+                                                    }
+                                   }
+                   },
+    "entities":  "tensura:armorsaurus",
+    "stats":  {
+                  "attribute_modifiers":  [
+                                              {
+                                                  "attribute":  "minecraft:generic.max_health",
+                                                  "operation":  "add_value",
+                                                  "value":  {
+                                                                "min":  50,
+                                                                "max":  90
+                                                            }
+                                              },
+                                              {
+                                                  "attribute":  "minecraft:generic.attack_damage",
+                                                  "operation":  "add_multiplied_total",
+                                                  "value":  {
+                                                                "min":  0.45,
+                                                                "max":  0.8
+                                                            }
+                                              },
+                                              {
+                                                  "attribute":  "minecraft:generic.knockback_resistance",
+                                                  "operation":  "add_value",
+                                                  "value":  0.5
+                                              },
+                                              {
+                                                  "attribute":  "minecraft:generic.scale",
+                                                  "operation":  "add_value",
+                                                  "value":  {
+                                                                "min":  1.4,
+                                                                "max":  1.8
+                                                            }
+                                              }
+                                          ],
+                  "effects":  [
+                                  {
+                                      "effect":  "minecraft:fire_resistance",
+                                      "amplifier":  0
+                                  }
+                              ],
+                  "enchant_chance":  0.45,
+                  "enchantment_levels":  {
+                                             "primary":  20,
+                                             "secondary":  12
+                                         }
+              },
+    "success_chance":  0.008
+}

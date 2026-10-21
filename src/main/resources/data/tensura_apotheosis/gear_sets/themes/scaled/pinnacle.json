@@ -1,0 +1,59 @@
+{
+    "type":  "placebo:gear_set",
+    "mainhands":  [
+                      {
+                          "stack":  {
+                                        "count":  1,
+                                        "id":  "tensura:orichalcum_spear"
+                                    },
+                          "weight":  10
+                      },
+                      {
+                          "stack":  {
+                                        "count":  1,
+                                        "id":  "tensura:vortex_spear"
+                                    },
+                          "weight":  10
+                      }
+                  ],
+    "helmets":  [
+                    {
+                        "stack":  {
+                                      "count":  1,
+                                      "id":  "tensura:charybdis_scalemail_helmet"
+                                  },
+                        "weight":  10
+                    }
+                ],
+    "chestplates":  [
+                        {
+                            "stack":  {
+                                          "count":  1,
+                                          "id":  "tensura:charybdis_scalemail_chestplate"
+                                      },
+                            "weight":  10
+                        }
+                    ],
+    "leggings":  [
+                     {
+                         "stack":  {
+                                       "count":  1,
+                                       "id":  "tensura:charybdis_scalemail_leggings"
+                                   },
+                         "weight":  10
+                     }
+                 ],
+    "boots":  [
+                  {
+                      "stack":  {
+                                    "count":  1,
+                                    "id":  "tensura:charybdis_scalemail_boots"
+                                },
+                      "weight":  10
+                  }
+              ],
+    "tags":  [
+                 "tensura_scaled_pinnacle"
+             ],
+    "weight":  100
+}

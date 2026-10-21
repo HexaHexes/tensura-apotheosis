@@ -57,9 +57,11 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
  *       resolve in {@link GearSetRegistry}. Track A sets join Apotheosis' vanilla
  *       tier pools; Track B sets are scoped to the Tensura elites via tags.</li>
  *   <li>Every gateway JSON under {@code data/tensura_apotheosis/gateways/} must
- *       resolve in Gateways' registry as a tiered gateway, the 38 must span all
- *       five world tiers, and boss-bar colors must be theme-varied (the uniform
- *       single-color design is what this guards against).</li>
+ *       resolve in Gateways' registry: the 38 tiered gateways must span all
+ *       five world tiers, the endless chase gateway (granted as a pearl from
+ *       the pinnacle rewards) must load, and boss-bar colors must be
+ *       theme-varied (the uniform single-color design is what this guards
+ *       against).</li>
  * </ol>
  */
 @GameTestHolder("tensura_apotheosis")
@@ -71,7 +73,7 @@ public class ApotheosisContentGameTests {
     private static final int EXPECTED_GEMS = 37;
     private static final int EXPECTED_ELITES = 38;
     private static final int EXPECTED_GEARSETS = 80;
-    private static final int EXPECTED_GATEWAYS = 38;
+    private static final int EXPECTED_GATEWAYS = 39; // 38 tiered + 1 endless chase
 
     /**
      * Enumerates this mod's data files for a Placebo registry folder and derives
@@ -233,7 +235,7 @@ public class ApotheosisContentGameTests {
         helper.succeed();
     }
 
-    /** Every shipped gateway JSON must parse, span all tiers and vary by theme. */
+    /** Every gateway JSON must parse; tiered ones span tiers, the endless one loads. */
     @GameTest(template = "empty")
     public static void allGatewaysLoad(GameTestHelper helper) {
         Set<ResourceLocation> expected = expectedIds(helper, "gateways");
@@ -241,18 +243,36 @@ public class ApotheosisContentGameTests {
             throw new GameTestAssertException(
                     "found " + expected.size() + " gateway data files expected " + EXPECTED_GATEWAYS);
         }
+        ResourceLocation hordeId = ResourceLocation.fromNamespaceAndPath(NS, "endless/horde");
         Set<WorldTier> tiers = EnumSet.noneOf(WorldTier.class);
         Set<String> colors = new HashSet<>();
+        int tiered = 0;
+        int endless = 0;
         for (ResourceLocation id : expected) {
             Gateway gateway = GatewayRegistry.INSTANCE.getValue(id);
             if (gateway == null) {
                 throw new GameTestAssertException("gateway " + id + " not in GatewayRegistry (parse failure?)");
             }
-            if (!(gateway instanceof TieredGateway tiered)) {
-                throw new GameTestAssertException("gateway " + id + " is not apotheosis:tiered");
+            colors.add(gateway.color().serialize());
+            if (gateway instanceof TieredGateway tieredGate) {
+                tiered++;
+                tiers.add(tieredGate.settings().tier());
+            } else if (hordeId.equals(id)) {
+                // The endless chase gateway granted from the pinnacle rewards.
+                endless++;
+            } else {
+                throw new GameTestAssertException(
+                        "gateway " + id + " is neither apotheosis:tiered nor the endless horde");
             }
-            tiers.add(tiered.settings().tier());
-            colors.add(tiered.color().serialize());
+        }
+        if (tiered != EXPECTED_GATEWAYS - 1) {
+            throw new GameTestAssertException(
+                    "gateways: " + tiered + " tiered expected " + (EXPECTED_GATEWAYS - 1)
+                            + " - an elite gateway failed to load or a stray gateway appeared");
+        }
+        if (endless != 1) {
+            throw new GameTestAssertException(
+                    "endless chase gateway missing - pinnacle rewards grant a pearl for " + hordeId);
         }
         if (tiers.size() != WorldTier.values().length) {
             throw new GameTestAssertException(

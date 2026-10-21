@@ -89,6 +89,16 @@ elite system:
   climbs, the same mapping the default tiered gateways use. A gateway only opens once
   you have unlocked its tier — work up the built-in Apotheosis gateways to reach the
   higher bands. The gateway allows up to three failures before it collapses.
+- The soundtrack tracks the tier too — a calm disc at haven up to the pinnacle theme —
+  and so does the crafting cost: every gateway pearl needs two ender pearls plus
+  diamonds and gem dust that grow with the tier (the humble haven gateway costs one
+  diamond; the pinnacle one four).
+- The pinnacle gateways pay out one extra pearl each: a summons for the Endless Tensura
+  Horde — an endless survival gateway whose waves open with lizards and wasps and keep
+  escalating (direwolves, spiders and orcs join every other wave, greater daemons every
+  fourth wave, an arch daemon every sixth, and the whole horde gains health the longer
+  you hold out). It pays dust, experience and affix items as it grows, and it has no
+  recipe — only the pinnacle pearls can grant it.
 - Requires [Gateways to Eternity](https://www.curseforge.com/minecraft/mc-mods/gateways-to-eternity);
   without it, everything else still works.
 

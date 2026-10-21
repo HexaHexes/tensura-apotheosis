@@ -73,8 +73,19 @@ themed gem pool and flavor stack per mob family) all live there too.
   `gate_pearl_small/med/large` by the gateway's size. Rewards mirror Apotheosis'
   tiered scaling: `gateways:counted` wraps the affix_item and gem rewards (count =
   number of rolls) and dust/stack counts follow their 16/24/48/64 curve, all driven
-  by `$tierProfile`. The `elite` field must match a shipped
-  `tensura_apotheosis:<mob>` elite.
+  by `$tierProfile` - so are `settings.soundtrack` (frontier..pinnacle reuse
+  Apotheosis' four tier discs; haven uses `minecraft:music_disc.cat` - vanilla
+  disc sound events register with dotted paths) and the recipe cost
+  (`recipeDiamonds`/`recipeDust`, pearls fixed at 2; a 3x3 grid holds 9 items,
+  so an unknown count pair throws at generation). The pinnacle row's
+  `chaseGateway` field names a bonus gate pearl added to every pinnacle
+  gateway's rewards: currently `endless/horde`, a mixed-horde
+  `gateways:endless` survival gateway emitted as a special entry after the
+  roster loop (base_wave + after_every_n_waves modifiers escalating
+  fodder -> bruisers -> daemons with stacked health scaling; gold color
+  outside the family palette, reward-only - no recipe). The gametest counts
+  39 gateways: 38 tiered + the endless chase one. The `elite` field must
+  match a shipped `tensura_apotheosis:<mob>` elite.
 - **Never add `rarities` to the herald wave's `apotheosis:affix` modifier.** Its
   AffixData codec resolves rarity values at decode time, but Gateways' registry
   reloads before Apotheosis' rarity registry binds - all 38 gateways then fail with

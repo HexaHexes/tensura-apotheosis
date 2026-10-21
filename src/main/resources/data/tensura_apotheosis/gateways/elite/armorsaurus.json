@@ -119,6 +119,16 @@
                         "type":  "gateways:experience",
                         "experience":  1200,
                         "orb_size":  100
+                    },
+                    {
+                        "type":  "gateways:stack",
+                        "stack":  {
+                                      "count":  1,
+                                      "id":  "gateways:gate_pearl",
+                                      "components":  {
+                                                         "gateways:gateway":  "tensura_apotheosis:endless/horde"
+                                                     }
+                                  }
                     }
                 ],
     "rules":  {

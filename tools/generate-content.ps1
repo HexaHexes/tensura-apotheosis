@@ -1078,13 +1078,16 @@ foreach ($t in $tiers) {
 # discs Apotheosis' tiered gateways use; haven has no Apotheosis equivalent,
 # so it takes a calm vanilla disc). `recipeDiamonds`/`recipeDust` ramp the
 # crafting cost with the tier - pearls stay fixed at 2, and the diamonds
-# carry the ramp since a 3x3 grid only has 9 slots in total.
+# carry the ramp since a 3x3 grid only has 9 slots in total. The pinnacle
+# row's `chaseGateway` adds a bonus gate pearl to every pinnacle gateway's
+# rewards - a summons for the endless chase gateway below (the same shape
+# Apotheosis uses to hand out endless_invader from their pinnacle tier).
 $tierProfile = [ordered]@{
     haven    = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:common', 'apotheosis:uncommon'); affixChance = 0.45; rewardRarities = @('apotheosis:common', 'apotheosis:uncommon'); purities = @('cracked', 'normal');        dust = 8;  heraldXp = 100; bossXp = 300; finalXp = 500;  stackCount = 4;  itemCount = 2; gemCount = 3;  size = 'small';  soundtrack = 'minecraft:music_disc.cat';           recipeDiamonds = 1; recipeDust = 1 }
     frontier = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:uncommon', 'apotheosis:rare');  affixChance = 0.5;  rewardRarities = @('apotheosis:uncommon', 'apotheosis:rare');  purities = @('normal');                 dust = 16; heraldXp = 150; bossXp = 400; finalXp = 650;  stackCount = 8;  itemCount = 3; gemCount = 5;  size = 'small';  soundtrack = 'apotheosis:music_disc_shimmer';       recipeDiamonds = 2; recipeDust = 2 }
     ascent   = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:rare', 'apotheosis:epic');      affixChance = 0.55; rewardRarities = @('apotheosis:rare', 'apotheosis:epic');      purities = @('flawless');               dust = 24; heraldXp = 200; bossXp = 500; finalXp = 800;  stackCount = 12; itemCount = 3; gemCount = 5;  size = 'medium'; soundtrack = 'apotheosis:music_disc_flash';         recipeDiamonds = 2; recipeDust = 3 }
     summit   = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:epic', 'apotheosis:mythic');    affixChance = 0.65; rewardRarities = @('apotheosis:epic', 'apotheosis:mythic');    purities = @('flawless', 'perfect');    dust = 48; heraldXp = 250; bossXp = 650; finalXp = 950;  stackCount = 24; itemCount = 3; gemCount = 5;  size = 'medium'; soundtrack = 'apotheosis:soundtrack_summit';        recipeDiamonds = 3; recipeDust = 3 }
-    pinnacle = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:epic', 'apotheosis:mythic');    affixChance = 0.8;  rewardRarities = @('apotheosis:mythic');                     purities = @('perfect');                dust = 64; heraldXp = 300; bossXp = 800; finalXp = 1200; stackCount = 48; itemCount = 5; gemCount = 10; size = 'large';  soundtrack = 'apotheosis:soundtrack_pinnacle';     recipeDiamonds = 4; recipeDust = 3 }
+    pinnacle = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:epic', 'apotheosis:mythic');    affixChance = 0.8;  rewardRarities = @('apotheosis:mythic');                     purities = @('perfect');                dust = 64; heraldXp = 300; bossXp = 800; finalXp = 1200; stackCount = 48; itemCount = 5; gemCount = 10; size = 'large';  soundtrack = 'apotheosis:soundtrack_pinnacle';     recipeDiamonds = 4; recipeDust = 3; chaseGateway = 'endless/horde' }
 }
 
 # Theme identity: gateway boss-bar color + themed reward pool per mob family.
@@ -1313,6 +1316,20 @@ foreach ($r in $roster) {
                 stack = [pscustomobject][ordered]@{ count = $profile.stackCount; id = $identity.stack }
             }
             [pscustomobject][ordered]@{ type = 'gateways:experience'; experience = $profile.finalXp; orb_size = 100 }
+        ) + @(
+            # Pinnacle gateways carry the chase pearl: a gate pearl that
+            # summons the endless horde gateway (mirrors Apotheosis granting
+            # endless_invader from their pinnacle tiered gateway).
+            if ($profile.chaseGateway) {
+                [pscustomobject][ordered]@{
+                    type      = 'gateways:stack'
+                    stack     = [pscustomobject][ordered]@{
+                        count      = 1
+                        id         = 'gateways:gate_pearl'
+                        components = [pscustomobject][ordered]@{ 'gateways:gateway' = "tensura_apotheosis:$($profile.chaseGateway)" }
+                    }
+                }
+            }
         )
         rules    = [pscustomobject][ordered]@{
             leash_range            = 48.0
@@ -1329,7 +1346,87 @@ foreach ($r in $roster) {
     # and gateway name render the raw key.
     $lang["tensura_apotheosis.elite/$($r.mob)"] = "$($r.display) Gateway"
 }
-if ($gateways.Count -ne 38) { throw "gateways = $($gateways.Count) expected 38" }
+
+# THE ENDLESS TENSURA HORDE ------------------------------------------------
+# The one gateway above the ladder: a mixed-horde survival run granted as a
+# bonus gate pearl from every pinnacle gateway (chaseGateway in
+# $tierProfile). Structure mirrors Gateways' own endless/blaze.json - a
+# base_wave plus after_every_n_waves modifiers. Waves open with haven-tier
+# fodder and escalate: frontier bruisers join every 2nd wave, greater
+# daemons every 4th, an arch daemon every 6th, and the whole horde stacks
+# max-health modifiers the longer it survives. Pays dust, experience and
+# affix items per wave/application. No crafting recipe - reward only, like
+# Apotheosis' endless_invader. The gold color is deliberately outside the
+# mob-family palette so it reads as the chase activity.
+Add-Gateway 'endless/horde' ([pscustomobject][ordered]@{
+    type            = 'gateways:endless'
+    size            = 'large'
+    color           = '#FFD700'
+    base_wave       = [pscustomobject][ordered]@{
+        max_wave_time = 1600
+        setup_time    = 100
+        entities      = @(
+            [pscustomobject][ordered]@{ type = 'gateways:standard'; count = 4; entity = 'tensura:hover_lizard' }
+            [pscustomobject][ordered]@{ type = 'gateways:standard'; count = 3; entity = 'tensura:leech_lizard' }
+            [pscustomobject][ordered]@{ type = 'gateways:standard'; count = 3; entity = 'tensura:army_wasp' }
+        )
+        rewards       = @(
+            [pscustomobject][ordered]@{ type = 'gateways:stack'; stack = [pscustomobject][ordered]@{ count = 4; id = 'apotheosis:gem_dust' } }
+            [pscustomobject][ordered]@{ type = 'gateways:experience'; experience = 100; orb_size = 100 }
+        )
+    }
+    modifiers       = @(
+        # Every 2nd wave (up to 5 times): frontier-tier bruisers join the
+        # horde, with dust and a chanced uncommon/rare affix item.
+        [pscustomobject][ordered]@{
+            application_mode = [pscustomobject][ordered]@{ type = 'gateways:after_every_n_waves'; waves = 2; max = 5 }
+            entities         = @(
+                [pscustomobject][ordered]@{ type = 'gateways:standard'; count = 2; entity = 'tensura:direwolf' }
+                [pscustomobject][ordered]@{ type = 'gateways:standard'; count = 2; entity = 'tensura:black_spider' }
+                [pscustomobject][ordered]@{ type = 'gateways:standard'; count = 2; entity = 'tensura:orc' }
+            )
+            rewards          = @(
+                [pscustomobject][ordered]@{ type = 'gateways:stack'; stack = [pscustomobject][ordered]@{ count = 2; id = 'apotheosis:gem_dust' } }
+                [pscustomobject][ordered]@{ type = 'gateways:chanced'; chance = 0.2; reward = [pscustomobject][ordered]@{ type = 'apotheosis:affix_item'; rarities = @('apotheosis:uncommon', 'apotheosis:rare') } }
+            )
+        }
+        # Every 4th wave (up to 4 times): a greater daemon arrives and the
+        # payout turns epic - dust plus a chanced epic/mythic affix item.
+        [pscustomobject][ordered]@{
+            application_mode = [pscustomobject][ordered]@{ type = 'gateways:after_every_n_waves'; waves = 4; max = 4 }
+            entities         = @(
+                [pscustomobject][ordered]@{ type = 'gateways:standard'; count = 1; entity = 'tensura:greater_daemon' }
+            )
+            rewards          = @(
+                [pscustomobject][ordered]@{ type = 'gateways:stack'; stack = [pscustomobject][ordered]@{ count = 8; id = 'apotheosis:gem_dust' } }
+                [pscustomobject][ordered]@{ type = 'gateways:chanced'; chance = 0.5; reward = [pscustomobject][ordered]@{ type = 'apotheosis:affix_item'; rarities = @('apotheosis:epic', 'apotheosis:mythic') } }
+            )
+        }
+        # Every 6th wave (up to 3 times): the apex - an arch daemon and a
+        # guaranteed mythic affix item plus a pile of dust.
+        [pscustomobject][ordered]@{
+            application_mode = [pscustomobject][ordered]@{ type = 'gateways:after_every_n_waves'; waves = 6; max = 3 }
+            entities         = @(
+                [pscustomobject][ordered]@{ type = 'gateways:standard'; count = 1; entity = 'tensura:arch_daemon' }
+            )
+            rewards          = @(
+                [pscustomobject][ordered]@{ type = 'gateways:stack'; stack = [pscustomobject][ordered]@{ count = 16; id = 'apotheosis:gem_dust' } }
+                [pscustomobject][ordered]@{ type = 'apotheosis:affix_item'; rarities = @('apotheosis:mythic') }
+            )
+        }
+        # The horde levels up: the waves keep stacking max-health modifiers.
+        [pscustomobject][ordered]@{
+            application_mode = [pscustomobject][ordered]@{ type = 'gateways:after_every_n_waves'; waves = 3; max = 5 }
+            modifiers        = @(
+                [pscustomobject][ordered]@{ type = 'gateways:attribute'; attribute = 'minecraft:generic.max_health'; operation = 'add_multiplied_total'; value = 0.2 }
+            )
+        }
+    )
+    spawn_algorithm = 'gateways:inward_spiral'
+    boss_event      = [pscustomobject][ordered]@{ fog = $false; mode = 'name_plate' }
+})
+$lang['tensura_apotheosis.endless/horde'] = 'Endless Tensura Horde Gateway'
+if ($gateways.Count -ne 39) { throw "gateways = $($gateways.Count) expected 39 (38 elite + endless/horde)" }
 
 # ======================================================================
 # EMIT

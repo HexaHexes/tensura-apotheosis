@@ -703,13 +703,33 @@ foreach ($en in $tj.Entries) {
         [void]$spawnTags.Add(([System.IO.Path]::GetFileNameWithoutExtension($en.FullName) -replace '_spawn$', ''))
     }
 }
+# Tensura entity existence data: each mob's aura pool (AP), magicule pool
+# (MP) and spiritual health. These are per-mob values (arch_daemon MP 140000
+# vs lesser_daemon 8000), so they differentiate mobs inside a shared theme.
+# max_aura is absent on aura-less mobs and reads as 0.
+$existence = @{}
+foreach ($en in $tj.Entries) {
+    if ($en.FullName -like 'data/tensura/entity_existence/*.json') {
+        $name = [System.IO.Path]::GetFileNameWithoutExtension($en.FullName)
+        $reader = [System.IO.StreamReader]::new($en.Open())
+        $txt = $reader.ReadToEnd()
+        $reader.Dispose()
+        $j = $txt | ConvertFrom-Json
+        $existence[$name] = [pscustomobject]@{
+            aura      = [double]($j.max_aura)
+            mp        = [double]$j.max_magicule
+            spiritual = [double]$j.spiritualHealth
+        }
+    }
+}
 $tj.Dispose()
 
 # mob -> theme + display name. World tiers are NOT assigned here: they are
-# computed below from each theme's actual combat stats (hp, damage, scale,
-# enchant chance, success chance), so banding follows the numbers - and
-# identical stat profiles (lizard == hover, scaled == orc on composite)
-# always land in the same band.
+# computed below from actual stats - the theme combat stats (hp, damage,
+# scale, enchant chance, success chance) plus each mob's own Tensura
+# existence stats (aura/AP, magicule/MP, spiritual health) - so banding
+# follows the numbers, including within a theme (arch_daemon's 140000 MP
+# separates it from lesser_daemon's 8000 on identical demon stats).
 $roster = @(
     @{ mob='arch_daemon';       theme='demon';      display='Arch Daemon' }
     @{ mob='greater_daemon';    theme='demon';      display='Greater Daemon' }
@@ -758,28 +778,40 @@ for ($i = 0; $i -lt $tiers.Count; $i++) { $tierIndex[$tiers[$i]] = $i }
 # ---- Stat-derived world-tier banding ----------------------------------------
 # Tier bands gate elite spawns, elite affix rarities, gateway opening and
 # gateway rewards (see $tierProfile). Rather than hand-assigning mobs, score
-# every roster mob on its theme's actual combat stats and band by rank:
-#   1. Each stat becomes an average-rank percentile over the 38-mob roster
+# every roster mob on actual stats and band by rank:
+#   1. Every stat becomes an average-rank percentile over the 38-mob roster
 #      (a value shared by k mobs sits at the midpoint of its rank block).
-#      success_chance counts inverted - the rarer an elite is, the stronger.
-#   2. Composite = mean of the five percentiles.
-#   3. Themes sort strongest-first with a deterministic tiebreak chain
-#      (composite, hp, dmg, scale, ench, success asc, theme key).
-#   4. Greedy fill from the top: pinnacle takes the strongest themes, haven
-#      the weakest; a new band opens before a theme would push the current
-#      one past ~n/5 mobs, so tied stat profiles always share a band.
-$mobCountByTheme = @{}
-foreach ($r in $roster) { $mobCountByTheme[$r.theme] = [int]$mobCountByTheme[$r.theme] + 1 }
+#      Inputs: the theme combat stats (hp, damage, scale, enchant chance,
+#      success chance - inverted, rarer elite = stronger) plus the mob's own
+#      Tensura existence stats (aura pool / AP, magicule pool / MP, spiritual
+#      health). Percentiles are rank-based, so MP's 250..140000 spread cannot
+#      drown out the other inputs.
+#   2. Composite = mean of the eight percentiles. The theme part is shared
+#      inside a theme; AP/MP/spiritual differentiate mobs within it (e.g.
+#      arch_daemon vs lesser_daemon on the same demon stats).
+#   3. Mobs sort strongest-first with a deterministic tiebreak chain
+#      (composite, mp, aura, spiritual, hp, dmg, scale, ench, succ asc, mob).
+#   4. Greedy fill from the top: pinnacle takes the strongest mobs, haven the
+#      weakest; a new band opens before a mob would push the current one past
+#      ~n/5 mobs, so exact ties always share a band.
 
-$rawStats = foreach ($th in $themes) {
+$rawStats = foreach ($r in $roster) {
+    $th = $themeByKey[$r.theme]
+    if (-not $existence.ContainsKey($r.mob)) {
+        throw "roster $($r.mob): no data/tensura/entity_existence file for AP/MP stats"
+    }
+    $ex = $existence[$r.mob]
     [pscustomobject]@{
-        key   = $th.key
-        mobs  = $mobCountByTheme[$th.key]
-        hp    = ($th.hp[0] + $th.hp[1]) / 2
-        dmg   = ($th.dmg[0] + $th.dmg[1]) / 2
-        scale = ($th.scale[0] + $th.scale[1]) / 2
-        ench  = $th.ench
-        succ  = $th.success
+        mob       = $r.mob
+        theme     = $r.theme
+        hp        = ($th.hp[0] + $th.hp[1]) / 2
+        dmg       = ($th.dmg[0] + $th.dmg[1]) / 2
+        scale     = ($th.scale[0] + $th.scale[1]) / 2
+        ench      = [double]$th.ench
+        succ      = [double]$th.success
+        aura      = $ex.aura
+        mp        = $ex.mp
+        spiritual = $ex.spiritual
     }
 }
 function Get-StatPercentile($values, $v) {
@@ -792,11 +824,13 @@ $allDmg = [System.Collections.Generic.List[double]]::new()
 $allScale = [System.Collections.Generic.List[double]]::new()
 $allEnch = [System.Collections.Generic.List[double]]::new()
 $allSucc = [System.Collections.Generic.List[double]]::new()
+$allAura = [System.Collections.Generic.List[double]]::new()
+$allMp = [System.Collections.Generic.List[double]]::new()
+$allSpirit = [System.Collections.Generic.List[double]]::new()
 foreach ($p in $rawStats) {
-    for ($i = 0; $i -lt $p.mobs; $i++) {
-        $allHp.Add($p.hp); $allDmg.Add($p.dmg); $allScale.Add($p.scale)
-        $allEnch.Add($p.ench); $allSucc.Add($p.succ)
-    }
+    $allHp.Add($p.hp); $allDmg.Add($p.dmg); $allScale.Add($p.scale)
+    $allEnch.Add($p.ench); $allSucc.Add($p.succ)
+    $allAura.Add($p.aura); $allMp.Add($p.mp); $allSpirit.Add($p.spiritual)
 }
 $scoredStats = foreach ($p in $rawStats) {
     $pctHp = Get-StatPercentile $allHp $p.hp
@@ -804,10 +838,16 @@ $scoredStats = foreach ($p in $rawStats) {
     $pctScale = Get-StatPercentile $allScale $p.scale
     $pctEnch = Get-StatPercentile $allEnch $p.ench
     $pctSucc = 1 - (Get-StatPercentile $allSucc $p.succ)   # inverted: rarer = stronger
+    $pctAura = Get-StatPercentile $allAura $p.aura
+    $pctMp = Get-StatPercentile $allMp $p.mp
+    $pctSpirit = Get-StatPercentile $allSpirit $p.spiritual
     [pscustomobject]@{
-        key       = $p.key
-        mobs      = $p.mobs
-        composite = ($pctHp + $pctDmg + $pctScale + $pctEnch + $pctSucc) / 5
+        mob       = $p.mob
+        theme     = $p.theme
+        composite = ($pctHp + $pctDmg + $pctScale + $pctEnch + $pctSucc + $pctAura + $pctMp + $pctSpirit) / 8
+        mp        = $p.mp
+        aura      = $p.aura
+        spiritual = $p.spiritual
         hp        = $p.hp
         dmg       = $p.dmg
         scale     = $p.scale
@@ -817,12 +857,15 @@ $scoredStats = foreach ($p in $rawStats) {
 }
 $orderedThemes = $scoredStats | Sort-Object `
     @{ Expression = { $_.composite }; Descending = $true },
-    @{ Expression = { $_.hp };        Descending = $true },
-    @{ Expression = { $_.dmg };       Descending = $true },
-    @{ Expression = { $_.scale };     Descending = $true },
-    @{ Expression = { $_.ench };      Descending = $true },
-    @{ Expression = { $_.succ };      Descending = $false },
-    @{ Expression = { $_.key };       Descending = $false }
+    @{ Expression = { $_.mp };         Descending = $true },
+    @{ Expression = { $_.aura };       Descending = $true },
+    @{ Expression = { $_.spiritual };  Descending = $true },
+    @{ Expression = { $_.hp };         Descending = $true },
+    @{ Expression = { $_.dmg };        Descending = $true },
+    @{ Expression = { $_.scale };      Descending = $true },
+    @{ Expression = { $_.ench };       Descending = $true },
+    @{ Expression = { $_.succ };       Descending = $false },
+    @{ Expression = { $_.mob };        Descending = $false }
 
 $bandTarget = $roster.Count / $tiers.Count
 $themeTier = @{}
@@ -830,20 +873,20 @@ $bandIdx = $tiers.Count - 1
 $bandThemes = [System.Collections.Generic.List[string]]::new()
 $bandMobCount = 0
 foreach ($p in $orderedThemes) {
-    if ($bandThemes.Count -gt 0 -and ($bandMobCount + $p.mobs) -gt $bandTarget -and $bandIdx -gt 0) {
+    if ($bandThemes.Count -gt 0 -and ($bandMobCount + 1) -gt $bandTarget -and $bandIdx -gt 0) {
         foreach ($k in $bandThemes) { $themeTier[$k] = $tiers[$bandIdx] }
         $bandIdx--
         $bandThemes.Clear()
         $bandMobCount = 0
     }
-    $bandThemes.Add($p.key)
-    $bandMobCount += $p.mobs
+    $bandThemes.Add($p.mob)
+    $bandMobCount++
 }
 if ($bandIdx -ne 0) {
     throw "stat banding left world tier(s) above '$($tiers[$bandIdx])' empty - stats too clumped?"
 }
 foreach ($k in $bandThemes) { $themeTier[$k] = $tiers[0] }
-foreach ($r in $roster) { $r.tier = $themeTier[$r.theme] }
+foreach ($r in $roster) { $r.tier = $themeTier[$r.mob] }
 Write-Output 'tier bands (stat-derived):'
 foreach ($t in $tiers) {
     $mobs = @($roster | Where-Object { $_.tier -eq $t } | ForEach-Object { $_.mob })

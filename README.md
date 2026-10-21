@@ -42,11 +42,13 @@ elite system:
 - Each elite appears where its base mob naturally spawns, and only in that biome (no
   dimension-wide spawns). Spawned from eggs, spawners or summons never become elites —
   only natural spawns have a chance.
-- The 38 are banded across Apotheosis' five world tiers by their actual combat stats
-  (health, damage, size, enchantment and spawn rarity): the weakest profiles — the
-  lizards and insects — sit at haven, mid-strength beasts at ascent, and the
-  stat-heaviest profiles (armorsaurus, orcs, the scaled serpent family) at pinnacle.
-  A band's elite only spawns in worlds at or above its tier.
+- The 38 are banded across Apotheosis' five world tiers by their actual stats — combat
+  numbers (health, damage, size, enchantment, spawn rarity) combined with each mob's
+  Tensura aura pool (AP), magicule pool (MP) and spiritual health. The tiers cut both
+  across and inside mob families: a haven band holds the low-MP lizards and insects,
+  while a family's strongest member can sit far above its siblings (Arch Daemon's
+  140,000 MP against Lesser Daemon's 8,000). A band's elite only spawns in worlds at
+  or above its tier.
 - Their gear rolls an increasing affix rarity ladder that tracks the tier: common and
   uncommon affixes at haven, up through rare and epic to mythic at summit and pinnacle.
 - They carry bonus health, damage, knockback resistance and size, and wear themed gear

@@ -2,7 +2,7 @@
     "type":  "apotheosis:tiered",
     "settings":  {
                      "soundtrack":  "apotheosis:soundtrack_pinnacle",
-                     "tier":  "frontier",
+                     "tier":  "ascent",
                      "size":  "large",
                      "color":  "#616161"
                  },
@@ -32,7 +32,7 @@
                       "rewards":  [
                                       {
                                           "type":  "gateways:experience",
-                                          "experience":  150,
+                                          "experience":  200,
                                           "orb_size":  60
                                       }
                                   ]
@@ -69,7 +69,7 @@
                       "rewards":  [
                                       {
                                           "type":  "gateways:experience",
-                                          "experience":  400,
+                                          "experience":  500,
                                           "orb_size":  100
                                       }
                                   ]
@@ -79,14 +79,14 @@
                     {
                         "type":  "apotheosis:affix_item",
                         "rarities":  [
-                                         "apotheosis:uncommon",
-                                         "apotheosis:rare"
+                                         "apotheosis:rare",
+                                         "apotheosis:epic"
                                      ]
                     },
                     {
                         "type":  "apotheosis:gem",
                         "purities":  [
-                                         "normal"
+                                         "flawless"
                                      ],
                         "gems":  [
                                      "tensura_apotheosis:core/shadow",
@@ -97,20 +97,20 @@
                     {
                         "type":  "gateways:stack",
                         "stack":  {
-                                      "count":  12,
+                                      "count":  16,
                                       "id":  "apotheosis:gem_dust"
                                   }
                     },
                     {
                         "type":  "gateways:stack",
                         "stack":  {
-                                      "count":  10,
+                                      "count":  12,
                                       "id":  "minecraft:spider_eye"
                                   }
                     },
                     {
                         "type":  "gateways:experience",
-                        "experience":  650,
+                        "experience":  800,
                         "orb_size":  100
                     }
                 ],

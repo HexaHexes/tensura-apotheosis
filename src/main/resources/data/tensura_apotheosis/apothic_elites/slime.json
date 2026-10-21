@@ -21,6 +21,9 @@
                                                 }
                                             ],
                        "valid_gear_sets":  {
+                                               "ascent":  [
+                                                              "#tensura_slime_ascent"
+                                                          ],
                                                "summit":  [
                                                               "#tensura_slime_summit"
                                                           ],
@@ -29,6 +32,10 @@
                                                             ]
                                            },
                        "weights":  {
+                                       "ascent":  {
+                                                      "quality":  0.1,
+                                                      "weight":  80
+                                                  },
                                        "summit":  {
                                                       "quality":  0.12,
                                                       "weight":  60
@@ -83,10 +90,10 @@
               },
     "success_chance":  0.01,
     "affix_data":  {
-                       "affix_chance":  0.65,
+                       "affix_chance":  0.55,
                        "rarities":  [
-                                        "apotheosis:epic",
-                                        "apotheosis:mythic"
+                                        "apotheosis:rare",
+                                        "apotheosis:epic"
                                     ]
                    }
 }

@@ -9,7 +9,7 @@
                         "type":  "apotheosis:attribute",
                         "attribute":  "tensura:magic_resistance",
                         "gem_class":  {
-                                          "key":  "tensura_helmet",
+                                          "key":  "helmet",
                                           "types":  [
                                                         "apotheosis:helmet"
                                                     ]
@@ -28,7 +28,7 @@
                         "type":  "apotheosis:attribute",
                         "attribute":  "tensura:magic_barrier",
                         "gem_class":  {
-                                          "key":  "tensura_body",
+                                          "key":  "core_armor",
                                           "types":  [
                                                         "apotheosis:chestplate",
                                                         "apotheosis:leggings"

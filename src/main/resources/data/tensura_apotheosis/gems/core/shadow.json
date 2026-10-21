@@ -9,7 +9,7 @@
                         "type":  "apotheosis:attribute",
                         "attribute":  "tensura:presence_concealment",
                         "gem_class":  {
-                                          "key":  "tensura_helmet",
+                                          "key":  "helmet",
                                           "types":  [
                                                         "apotheosis:helmet"
                                                     ]
@@ -28,7 +28,7 @@
                         "type":  "apotheosis:attribute",
                         "attribute":  "tensura:dodge_strength",
                         "gem_class":  {
-                                          "key":  "tensura_boots",
+                                          "key":  "boots",
                                           "types":  [
                                                         "apotheosis:boots"
                                                     ]

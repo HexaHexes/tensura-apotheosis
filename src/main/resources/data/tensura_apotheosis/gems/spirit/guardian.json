@@ -25,7 +25,7 @@
                         "type":  "apotheosis:attribute",
                         "attribute":  "minecraft:generic.armor",
                         "gem_class":  {
-                                          "key":  "tensura_shield",
+                                          "key":  "shield",
                                           "types":  [
                                                         "apotheosis:shield"
                                                     ]
@@ -44,7 +44,7 @@
                         "type":  "apotheosis:attribute",
                         "attribute":  "minecraft:generic.max_health",
                         "gem_class":  {
-                                          "key":  "tensura_body",
+                                          "key":  "core_armor",
                                           "types":  [
                                                         "apotheosis:chestplate",
                                                         "apotheosis:leggings"

@@ -9,7 +9,7 @@
                         "type":  "apotheosis:attribute",
                         "attribute":  "minecraft:generic.movement_speed",
                         "gem_class":  {
-                                          "key":  "tensura_boots",
+                                          "key":  "boots",
                                           "types":  [
                                                         "apotheosis:boots"
                                                     ]
@@ -28,7 +28,7 @@
                         "type":  "apotheosis:attribute",
                         "attribute":  "minecraft:generic.safe_fall_distance",
                         "gem_class":  {
-                                          "key":  "tensura_body",
+                                          "key":  "core_armor",
                                           "types":  [
                                                         "apotheosis:chestplate",
                                                         "apotheosis:leggings"

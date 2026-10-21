@@ -324,13 +324,27 @@ Add-Affix 'generic/mob_effect/entangling' 'Entangling' 'of the Spider' (
 # GEMS
 # ======================================================================
 $GC = @{
-    body   = @{ key = 'tensura_body';   types = $BODY }
-    helmet = @{ key = 'tensura_helmet'; types = @('apotheosis:helmet') }
-    boots  = @{ key = 'tensura_boots';  types = @('apotheosis:boots') }
-    weapon = @{ key = 'tensura_weapon'; types = $MEA }
-    bow    = @{ key = 'tensura_bow';    types = $BOW }
-    tool   = @{ key = 'tensura_tool';   types = @('apotheosis:breaker', 'apotheosis:shears') }
-    shield = @{ key = 'tensura_shield'; types = $SHLD }
+    body   = @{ key = 'core_armor';   types = @('apotheosis:chestplate', 'apotheosis:leggings') }
+    helmet = @{ key = 'helmet';       types = @('apotheosis:helmet') }
+    boots  = @{ key = 'boots';        types = @('apotheosis:boots') }
+    weapon = @{ key = 'light_weapon'; types = $MEA }
+    bow    = @{ key = 'bow';          types = $BOW }
+    tool   = @{ key = 'tools';        types = @('apotheosis:breaker', 'apotheosis:shears') }
+    shield = @{ key = 'shield';       types = $SHLD }
+}
+# The keys above mirror Apotheosis' canonical gem_class entries (same key AND
+# same types as apotheosis' own gems - e.g. core_armor is chestplate+leggings,
+# light_weapon is melee_weapon+trident), so tooltips reuse Apotheosis' lang
+# entries and we ship no gem_class.* keys of our own. Apotheosis translates a
+# gem_class key as gem_class.<key>; only pick keys it already ships a label for
+# (assets/apotheosis/lang/en_us.json) - the guard below enforces that.
+$apoGcLang = @('anything', 'armor', 'bow', 'boots', 'breaker', 'chestplate', 'core_armor',
+    'helmet', 'leggings', 'light_ranged', 'light_weapon', 'lower_armor', 'melee_weapon',
+    'pickaxe', 'ranged_weapon', 'shield', 'tools', 'trident', 'weapon_or_tool', 'weapons')
+foreach ($kv in $GC.GetEnumerator()) {
+    if ($apoGcLang -notcontains $kv.Value.key) {
+        throw "gem class key '$($kv.Value.key)' has no Apotheosis lang entry - reuse a shipped key or add emission"
+    }
 }
 
 $flatW = [pscustomobject][ordered]@{ quality = 0.1; weight = 100 }

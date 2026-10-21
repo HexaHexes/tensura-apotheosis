@@ -9,7 +9,7 @@
                         "type":  "apotheosis:attribute",
                         "attribute":  "minecraft:generic.attack_speed",
                         "gem_class":  {
-                                          "key":  "tensura_weapon",
+                                          "key":  "light_weapon",
                                           "types":  [
                                                         "apotheosis:melee_weapon",
                                                         "apotheosis:trident"
@@ -29,7 +29,7 @@
                         "type":  "apotheosis:attribute",
                         "attribute":  "minecraft:generic.armor_toughness",
                         "gem_class":  {
-                                          "key":  "tensura_helmet",
+                                          "key":  "helmet",
                                           "types":  [
                                                         "apotheosis:helmet"
                                                     ]

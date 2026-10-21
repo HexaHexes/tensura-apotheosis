@@ -25,7 +25,7 @@
                         "type":  "apotheosis:attribute",
                         "attribute":  "tensura:wind_boost",
                         "gem_class":  {
-                                          "key":  "tensura_weapon",
+                                          "key":  "light_weapon",
                                           "types":  [
                                                         "apotheosis:melee_weapon",
                                                         "apotheosis:trident"
@@ -45,7 +45,7 @@
                         "type":  "apotheosis:attribute",
                         "attribute":  "tensura:wind_resistance",
                         "gem_class":  {
-                                          "key":  "tensura_body",
+                                          "key":  "core_armor",
                                           "types":  [
                                                         "apotheosis:chestplate",
                                                         "apotheosis:leggings"
@@ -65,7 +65,7 @@
                         "type":  "apotheosis:attribute",
                         "attribute":  "minecraft:generic.movement_speed",
                         "gem_class":  {
-                                          "key":  "tensura_boots",
+                                          "key":  "boots",
                                           "types":  [
                                                         "apotheosis:boots"
                                                     ]

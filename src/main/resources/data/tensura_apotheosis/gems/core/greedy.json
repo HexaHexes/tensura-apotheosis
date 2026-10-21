@@ -9,7 +9,7 @@
                         "type":  "apotheosis:attribute",
                         "attribute":  "apothic_attributes:mining_speed",
                         "gem_class":  {
-                                          "key":  "tensura_tool",
+                                          "key":  "tools",
                                           "types":  [
                                                         "apotheosis:breaker",
                                                         "apotheosis:shears"
@@ -29,7 +29,7 @@
                         "type":  "apotheosis:attribute",
                         "attribute":  "apothic_attributes:experience_gained",
                         "gem_class":  {
-                                          "key":  "tensura_helmet",
+                                          "key":  "helmet",
                                           "types":  [
                                                         "apotheosis:helmet"
                                                     ]
@@ -48,7 +48,7 @@
                         "type":  "apotheosis:attribute",
                         "attribute":  "apothic_attributes:cooldown_reduction",
                         "gem_class":  {
-                                          "key":  "tensura_body",
+                                          "key":  "core_armor",
                                           "types":  [
                                                         "apotheosis:chestplate",
                                                         "apotheosis:leggings"

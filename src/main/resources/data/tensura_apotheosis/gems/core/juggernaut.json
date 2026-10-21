@@ -9,7 +9,7 @@
                         "type":  "apotheosis:attribute",
                         "attribute":  "minecraft:generic.knockback_resistance",
                         "gem_class":  {
-                                          "key":  "tensura_body",
+                                          "key":  "core_armor",
                                           "types":  [
                                                         "apotheosis:chestplate",
                                                         "apotheosis:leggings"
@@ -29,7 +29,7 @@
                         "type":  "apotheosis:attribute",
                         "attribute":  "minecraft:generic.armor",
                         "gem_class":  {
-                                          "key":  "tensura_boots",
+                                          "key":  "boots",
                                           "types":  [
                                                         "apotheosis:boots"
                                                     ]

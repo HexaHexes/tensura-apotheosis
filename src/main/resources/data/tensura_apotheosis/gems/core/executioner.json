@@ -9,7 +9,7 @@
                         "type":  "apotheosis:attribute",
                         "attribute":  "apothic_attributes:current_hp_damage",
                         "gem_class":  {
-                                          "key":  "tensura_weapon",
+                                          "key":  "light_weapon",
                                           "types":  [
                                                         "apotheosis:melee_weapon",
                                                         "apotheosis:trident"
@@ -29,7 +29,7 @@
                         "type":  "apotheosis:attribute",
                         "attribute":  "apothic_attributes:crit_damage",
                         "gem_class":  {
-                                          "key":  "tensura_bow",
+                                          "key":  "bow",
                                           "types":  [
                                                         "apotheosis:bow"
                                                     ]

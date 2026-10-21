@@ -9,7 +9,7 @@
                         "type":  "apotheosis:attribute",
                         "attribute":  "minecraft:generic.max_health",
                         "gem_class":  {
-                                          "key":  "tensura_body",
+                                          "key":  "core_armor",
                                           "types":  [
                                                         "apotheosis:chestplate",
                                                         "apotheosis:leggings"
@@ -29,7 +29,7 @@
                         "type":  "apotheosis:attribute",
                         "attribute":  "tensura:spiritual_health_regeneration",
                         "gem_class":  {
-                                          "key":  "tensura_helmet",
+                                          "key":  "helmet",
                                           "types":  [
                                                         "apotheosis:helmet"
                                                     ]

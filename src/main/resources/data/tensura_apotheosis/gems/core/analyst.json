@@ -9,7 +9,7 @@
                         "type":  "apotheosis:attribute",
                         "attribute":  "tensura:analysis_level",
                         "gem_class":  {
-                                          "key":  "tensura_helmet",
+                                          "key":  "helmet",
                                           "types":  [
                                                         "apotheosis:helmet"
                                                     ]
@@ -28,7 +28,7 @@
                         "type":  "apotheosis:attribute",
                         "attribute":  "tensura:analysis_distance",
                         "gem_class":  {
-                                          "key":  "tensura_boots",
+                                          "key":  "boots",
                                           "types":  [
                                                         "apotheosis:boots"
                                                     ]
@@ -47,7 +47,7 @@
                         "type":  "apotheosis:attribute",
                         "attribute":  "tensura:presence_sense_radius",
                         "gem_class":  {
-                                          "key":  "tensura_body",
+                                          "key":  "core_armor",
                                           "types":  [
                                                         "apotheosis:chestplate",
                                                         "apotheosis:leggings"

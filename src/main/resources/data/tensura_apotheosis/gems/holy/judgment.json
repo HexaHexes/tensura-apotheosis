@@ -25,7 +25,7 @@
                         "type":  "apotheosis:attribute",
                         "attribute":  "tensura:light_boost",
                         "gem_class":  {
-                                          "key":  "tensura_bow",
+                                          "key":  "bow",
                                           "types":  [
                                                         "apotheosis:bow"
                                                     ]
@@ -44,7 +44,7 @@
                         "type":  "apotheosis:attribute",
                         "attribute":  "tensura:light_resistance",
                         "gem_class":  {
-                                          "key":  "tensura_body",
+                                          "key":  "core_armor",
                                           "types":  [
                                                         "apotheosis:chestplate",
                                                         "apotheosis:leggings"

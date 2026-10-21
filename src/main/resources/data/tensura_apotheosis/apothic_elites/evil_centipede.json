@@ -13,9 +13,7 @@
                                                     "spawn_condition":  {
                                                                             "type":  "apotheosis:spawn_type",
                                                                             "spawn_types":  [
-                                                                                                "spawn_egg",
-                                                                                                "spawner",
-                                                                                                "mob_summoned"
+                                                                                                "spawn_egg"
                                                                                             ]
                                                                         }
                                                 }
@@ -60,16 +58,16 @@
                                                   "attribute":  "minecraft:generic.max_health",
                                                   "operation":  "add_value",
                                                   "value":  {
-                                                                "min":  28,
-                                                                "max":  50
+                                                                "min":  50,
+                                                                "max":  80
                                                             }
                                               },
                                               {
                                                   "attribute":  "minecraft:generic.attack_damage",
                                                   "operation":  "add_multiplied_total",
                                                   "value":  {
-                                                                "min":  0.28,
-                                                                "max":  0.5
+                                                                "min":  0.7,
+                                                                "max":  1
                                                             }
                                               },
                                               {
@@ -81,18 +79,28 @@
                                                   "attribute":  "minecraft:generic.scale",
                                                   "operation":  "add_value",
                                                   "value":  {
-                                                                "min":  1,
-                                                                "max":  1.2
+                                                                "min":  0.6,
+                                                                "max":  0.9
                                                             }
+                                              },
+                                              {
+                                                  "attribute":  "tensura:max_aura",
+                                                  "operation":  "add_multiplied_total",
+                                                  "value":  1
+                                              },
+                                              {
+                                                  "attribute":  "tensura:max_magicule",
+                                                  "operation":  "add_multiplied_total",
+                                                  "value":  1
                                               }
                                           ],
                   "effects":  [
 
                               ],
-                  "enchant_chance":  0.28,
+                  "enchant_chance":  0.35,
                   "enchantment_levels":  {
-                                             "primary":  20,
-                                             "secondary":  12
+                                             "primary":  18,
+                                             "secondary":  11
                                          }
               },
     "success_chance":  0.014,

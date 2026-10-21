@@ -1,5 +1,6 @@
 package dev.kurok.mods.tensuraapotheosis.gametest;
 
+import dev.kurok.mods.tensuraapotheosis.EliteNamePools;
 import dev.shadowsoffire.apotheosis.affix.AffixRegistry;
 import dev.shadowsoffire.apotheosis.compat.gateways.tiered_gate.TieredGateway;
 import dev.shadowsoffire.apotheosis.loot.LootCategory;
@@ -13,11 +14,14 @@ import dev.shadowsoffire.apotheosis.socket.gem.Purity;
 import dev.shadowsoffire.apotheosis.tiers.WorldTier;
 import dev.shadowsoffire.gateways.gate.Gateway;
 import dev.shadowsoffire.gateways.gate.GatewayRegistry;
+import dev.shadowsoffire.placebo.json.RandomAttributeModifier;
 import dev.shadowsoffire.placebo.systems.gear.GearSetRegistry;
 import io.github.manasmods.tensura.item.weapon.TwoHandedSwordItem;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -27,15 +31,17 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
 /**
- * Content verification for Tensura Apotheosis. The mod is pure data, so the
- * tests assert against Apotheosis' own registries (Placebo dynamic registries,
- * reloaded during server data-pack load) rather than any code of ours:
+ * Content verification for Tensura Apotheosis. The mod is almost entirely
+ * data, so most tests assert against Apotheosis' own registries (Placebo
+ * dynamic registries, reloaded during server data-pack load); the one piece
+ * of our own runtime, the elite name pools, is checked directly:
  *
  * <ol>
  *   <li>Two-handed Tensura weapons must fall into Apotheosis' {@code melee_weapon}
@@ -50,9 +56,11 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
  *       in {@link GemRegistry} and produce a stack of Apotheosis' shared gem item.</li>
  *   <li>Every elite boss JSON under {@code data/tensura_apotheosis/apothic_elites/}
  *       must resolve in {@link EliteRegistry}, carry the tier band's affix
- *       rarities (the rising elite rarity ladder), and keep its spawn weights
+ *       rarities (the rising elite rarity ladder), keep its spawn weights
  *       a contiguous suffix of the haven..pinnacle ladder - full gating means
- *       a band's elite never weighs in below its tier.</li>
+ *       a band's elite never weighs in below its tier - and follow the
+ *       tier-scaled stat ladder (HP, damage and AP/MP pool bonuses strictly
+ *       rise between adjacent tiers, never overlapping).</li>
  *   <li>Every gear set JSON under {@code data/tensura_apotheosis/gear_sets/} must
  *       resolve in {@link GearSetRegistry}. Track A sets join Apotheosis' vanilla
  *       tier pools; Track B sets are scoped to the Tensura elites via tags.</li>
@@ -62,6 +70,11 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
  *       the pinnacle rewards) must load, and boss-bar colors must be
  *       theme-varied (the uniform single-color design is what this guards
  *       against).</li>
+ *   <li>Every elite must have a name pool file under
+ *       {@code data/tensura_apotheosis/elite_names/} loaded into
+ *       {@link EliteNamePools} with at least 40 names - the runtime draws
+ *       one per spawn, so a missing or shrunk pool silently regresses every
+ *       elite's identity.</li>
  * </ol>
  */
 @GameTestHolder("tensura_apotheosis")
@@ -74,6 +87,7 @@ public class ApotheosisContentGameTests {
     private static final int EXPECTED_ELITES = 38;
     private static final int EXPECTED_GEARSETS = 80;
     private static final int EXPECTED_GATEWAYS = 39; // 38 tiered + 1 endless chase
+    private static final int MIN_NAME_POOL = 40;
 
     /**
      * Enumerates this mod's data files for a Placebo registry folder and derives
@@ -180,6 +194,19 @@ public class ApotheosisContentGameTests {
         }
         WorldTier[] ladder = WorldTier.values();
         Set<Set<LootRarity>> distinctBands = new HashSet<>();
+        // Stat ladder bounds per tier index: adjacent tiers must never overlap
+        // (the generator's elite ladder emits haven HP 30-45, frontier 50-80,
+        // ... so tier N's minimum always beats tier N-1's maximum).
+        int tiers = ladder.length;
+        float[] hpMin = new float[tiers], hpMax = new float[tiers];
+        float[] dmgMin = new float[tiers], dmgMax = new float[tiers];
+        float[] poolMin = new float[tiers], poolMax = new float[tiers];
+        Arrays.fill(hpMin, Float.MAX_VALUE);
+        Arrays.fill(dmgMin, Float.MAX_VALUE);
+        Arrays.fill(poolMin, Float.MAX_VALUE);
+        Arrays.fill(hpMax, -Float.MAX_VALUE);
+        Arrays.fill(dmgMax, -Float.MAX_VALUE);
+        Arrays.fill(poolMax, -Float.MAX_VALUE);
         for (ResourceLocation id : expected) {
             Elite elite = EliteRegistry.INSTANCE.getValue(id);
             if (elite == null) {
@@ -210,11 +237,86 @@ public class ApotheosisContentGameTests {
                             "elite " + id + " spawn weights are not a contiguous tier suffix: " + present);
                 }
             }
+            // Fold this elite's stat bounds into its tier's ladder entries.
+            for (RandomAttributeModifier mod : elite.stats().modifiers()) {
+                ResourceLocation attr = mod.attribute().unwrapKey().map(k -> k.location()).orElse(null);
+                if (attr == null) {
+                    continue;
+                }
+                float min = mod.value().min(), max = mod.value().max();
+                if (ResourceLocation.withDefaultNamespace("generic.max_health").equals(attr)
+                        && mod.operation() == AttributeModifier.Operation.ADD_VALUE) {
+                    hpMin[first] = Math.min(hpMin[first], min);
+                    hpMax[first] = Math.max(hpMax[first], max);
+                } else if (ResourceLocation.withDefaultNamespace("generic.attack_damage").equals(attr)
+                        && mod.operation() == AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL) {
+                    dmgMin[first] = Math.min(dmgMin[first], min);
+                    dmgMax[first] = Math.max(dmgMax[first], max);
+                } else if ((ResourceLocation.fromNamespaceAndPath(NS, "max_aura").equals(attr)
+                        || ResourceLocation.fromNamespaceAndPath(NS, "max_magicule").equals(attr))
+                        && mod.operation() == AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL) {
+                    poolMin[first] = Math.min(poolMin[first], min);
+                    poolMax[first] = Math.max(poolMax[first], max);
+                }
+            }
         }
         if (distinctBands.size() < 3) {
             throw new GameTestAssertException(
                     "elite rarity ladder collapsed: only " + distinctBands.size()
                             + " distinct rarity bands across the roster");
+        }
+        // Monotone stat ladder: every tier must be strictly stronger than the
+        // one below it, and every tier must be populated by some elite.
+        for (int t = 0; t < tiers; t++) {
+            if (hpMin[t] == Float.MAX_VALUE) {
+                throw new GameTestAssertException("no elite carries stat bounds for tier " + ladder[t]);
+            }
+            if (t == 0) {
+                continue;
+            }
+            if (hpMin[t] <= hpMax[t - 1]) {
+                throw new GameTestAssertException("elite HP ladder overlaps between " + ladder[t - 1]
+                        + " (" + hpMax[t - 1] + ") and " + ladder[t] + " (" + hpMin[t] + ")");
+            }
+            if (dmgMin[t] <= dmgMax[t - 1]) {
+                throw new GameTestAssertException("elite damage ladder overlaps between " + ladder[t - 1]
+                        + " (" + dmgMax[t - 1] + ") and " + ladder[t] + " (" + dmgMin[t] + ")");
+            }
+            if (poolMin[t] <= poolMax[t - 1]) {
+                throw new GameTestAssertException("elite AP/MP pool ladder overlaps between " + ladder[t - 1]
+                        + " (" + poolMax[t - 1] + ") and " + ladder[t] + " (" + poolMin[t] + ")");
+            }
+        }
+        helper.succeed();
+    }
+
+    /**
+     * Every elite must have its name pool loaded: the runtime draws one of
+     * 40+ themed names per spawn, so a missing or shrunk pool file silently
+     * regresses elite identities in-game.
+     */
+    @GameTest(template = "empty")
+    public static void eliteNamePoolsLoad(GameTestHelper helper) {
+        Set<ResourceLocation> expected = expectedIds(helper, EliteNamePools.FOLDER);
+        if (expected.size() != EXPECTED_ELITES) {
+            throw new GameTestAssertException("found " + expected.size()
+                    + " elite name pool files expected " + EXPECTED_ELITES);
+        }
+        for (ResourceLocation id : expected) {
+            List<String> pool = EliteNamePools.poolFor(id);
+            if (pool.size() < MIN_NAME_POOL) {
+                throw new GameTestAssertException("elite " + id + " has " + pool.size()
+                        + " pool names expected at least " + MIN_NAME_POOL);
+            }
+            for (String name : pool) {
+                if (name.isBlank()) {
+                    throw new GameTestAssertException("elite " + id + " contains a blank pool name");
+                }
+            }
+        }
+        if (EliteNamePools.poolCount() != EXPECTED_ELITES) {
+            throw new GameTestAssertException("loaded " + EliteNamePools.poolCount()
+                    + " name pools expected " + EXPECTED_ELITES + " (reload listener not registered?)");
         }
         helper.succeed();
     }

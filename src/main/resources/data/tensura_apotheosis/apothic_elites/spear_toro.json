@@ -13,9 +13,7 @@
                                                     "spawn_condition":  {
                                                                             "type":  "apotheosis:spawn_type",
                                                                             "spawn_types":  [
-                                                                                                "spawn_egg",
-                                                                                                "spawner",
-                                                                                                "mob_summoned"
+                                                                                                "spawn_egg"
                                                                                             ]
                                                                         }
                                                 }
@@ -53,30 +51,40 @@
                                                   "attribute":  "minecraft:generic.max_health",
                                                   "operation":  "add_value",
                                                   "value":  {
-                                                                "min":  30,
-                                                                "max":  55
+                                                                "min":  85,
+                                                                "max":  120
                                                             }
                                               },
                                               {
                                                   "attribute":  "minecraft:generic.attack_damage",
                                                   "operation":  "add_multiplied_total",
                                                   "value":  {
-                                                                "min":  0.3,
-                                                                "max":  0.5
+                                                                "min":  1.1,
+                                                                "max":  1.5
                                                             }
                                               },
                                               {
                                                   "attribute":  "minecraft:generic.knockback_resistance",
                                                   "operation":  "add_value",
-                                                  "value":  0.5
+                                                  "value":  0.7
                                               },
                                               {
                                                   "attribute":  "minecraft:generic.scale",
                                                   "operation":  "add_value",
                                                   "value":  {
-                                                                "min":  1.1,
-                                                                "max":  1.4
+                                                                "min":  0.8,
+                                                                "max":  1.1
                                                             }
+                                              },
+                                              {
+                                                  "attribute":  "tensura:max_aura",
+                                                  "operation":  "add_multiplied_total",
+                                                  "value":  2
+                                              },
+                                              {
+                                                  "attribute":  "tensura:max_magicule",
+                                                  "operation":  "add_multiplied_total",
+                                                  "value":  2
                                               }
                                           ],
                   "effects":  [
@@ -85,10 +93,10 @@
                                       "amplifier":  0
                                   }
                               ],
-                  "enchant_chance":  0.3,
+                  "enchant_chance":  0.5,
                   "enchantment_levels":  {
-                                             "primary":  20,
-                                             "secondary":  12
+                                             "primary":  28,
+                                             "secondary":  17
                                          }
               },
     "success_chance":  0.014,

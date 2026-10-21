@@ -4,17 +4,20 @@
 **Platform:** Minecraft 1.21.1 / NeoForge 21.1.259 / JDK 21 · **Jar:** `build/libs/tensura-apotheosis-<version>.jar`
 
 Tensura-themed affixes, socket gems, elite bosses and gear sets for Apotheosis 8.8,
-delivered as **pure datapack data** (Placebo dynamic registries) — no mixins, no
-gameplay code. The Java side exists only for the in-repo gametest harness.
+delivered as **datapack data** (Placebo dynamic registries) - no mixins. The Java side
+holds one small runtime (`EliteNamePools`: draws a themed name per elite spawn from
+per-mob pool data - Apotheosis' own name generation is global-config only and cannot
+be themed per mob) plus the in-repo gametest harness. Public APIs only.
 
 **Dependencies**
 - Required: Apotheosis (`apotheosis`), Apothic Attributes (`apothic_attributes`), Tensura (`tensura`).
 - Optional: Gateways to Eternity (`gateways`) - the elite gateways and their recipes only
   load when it is present (recipes carry a `mod_loaded` condition).
 
-**Test:** `./gradlew runGametest` - 6 tests (`twoHandedWeaponsCategorizeAsMelee`,
-`allAffixesLoad`, `allGemsLoad`, `allElitesLoad`, `allGearSetsLoad`, `allGatewaysLoad`).
-`expectedTests = 6`.
+**Test:** `./gradlew runGametest` - 7 tests (`twoHandedWeaponsCategorizeAsMelee`,
+`allAffixesLoad`, `allGemsLoad`, `allElitesLoad`, `eliteNamePoolsLoad`,
+`allGearSetsLoad`, `allGatewaysLoad`).
+`expectedTests = 7`.
 
 **Single source of truth:** `tools/generate-content.ps1` produces all affixes, gems,
 gear sets, elites, gateways, gateway recipes, lang and models. **Textures are never
@@ -48,6 +51,20 @@ themed gem pool and flavor stack per mob family) all live there too.
 - Every elite mob must have a `#tensura:<mob>_spawn` biome tag; the elite's
   `constraints.biomes` is that literal tag (so it inherits Tensura's exact natural-spawn
   logic, no blanket dimensions).
+- Elite combat stats come from the tier-scaled elite ladder (`$tierProfile.elite*`
+  fields), not the theme table - the theme table only scores banding and keeps
+  `effects`/`success_chance`. HP, damage, knockback, scale, enchant chance/levels and
+  the AP/MP `add_multiplied_total` bonuses on `tensura:max_aura`/`tensura:max_magicule`
+  (+50% at haven up to +500% at pinnacle) rise strictly by tier, and **adjacent tiers
+  must never overlap** - `allElitesLoad`'s monotone guard fails otherwise.
+- Elite `spawn_conditions` exclude `spawn_egg` **only** - the same pattern Apotheosis'
+  own elites use; biome constraints, tier weights and `success_chance` all run through
+  Apotheosis' native spawn pipeline (`ApothMobEvents`).
+- Elite name pools ship from `tools/name-pools.json` (40-50 fantasy names per mob,
+  globally unique - the generator asserts both) into
+  `data/tensura_apotheosis/elite_names/<mob>.json`. The `EliteNamePools` runtime
+  reloads them and draws one name per elite spawn (disk loads keep their saved name).
+  `eliteNamePoolsLoad` asserts every elite has at least 40 loaded names.
 - Elite gateways use `apotheosis:tiered`; each mob's gateway sits at a world tier
   computed from actual stats: the generator scores hp / damage / scale /
   enchant-chance / success-chance (inverted) from the theme table plus the mob's own

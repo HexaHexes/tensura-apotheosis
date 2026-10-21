@@ -1,4 +1,4 @@
-# Generates all tensura_apotheosis datapack content: affixes, gems, lang, gem models.
+﻿# Generates all tensura_apotheosis datapack content: affixes, gems, lang, gem models.
 # Single source of truth: the affix/gem tables below also emit the lang file.
 $ErrorActionPreference = 'Stop'
 
@@ -614,7 +614,9 @@ for ($i = 0; $i -lt $tiers.Count; $i++) {
 # ---- Track B: identity-themed sets for the 38 Tensura elites ----------------
 # 14 themes. armor[i] and weapons[i] index the 5 tiers (haven..pinnacle). Barding
 # themes override the chest slot with horse armor (visible on their 3 renderable
-# mobs). Per-theme stat bands feed the elite blocks below.
+# mobs). The per-theme stat bands score the tier banding above; the stats
+# EMITTED on elites come from the tier profile's elite ladder, while effects
+# and success_chance stay per-theme.
 $themes = @(
     @{ key = 'demon'
        armor = @(@{mat='leather';grade='d'}, @{mat='leather';grade='c'}, @{mat='pure_magisteel'}, @{mat='orichalcum'}, @{mat='hihiirokane'})
@@ -1082,12 +1084,21 @@ foreach ($t in $tiers) {
 # row's `chaseGateway` adds a bonus gate pearl to every pinnacle gateway's
 # rewards - a summons for the endless chase gateway below (the same shape
 # Apotheosis uses to hand out endless_invader from their pinnacle tier).
+# The elite* fields are the tier-scaled ELITE STAT LADDER: combat bonuses
+# rise strictly with the world tier (HP add_value, damage
+# add_multiplied_total so strong base mobs scale with it, knockback
+# resistance, scale, enchant chance and enchantment levels). elitePoolMult
+# is the Tensura spiritual ladder - an add_multiplied_total bonus on
+# tensura:max_aura and tensura:max_magicule, so AP/MP pools grow from +50%
+# at haven to +500% at pinnacle. Adjacent tiers never overlap (haven HP
+# caps at 45, frontier starts at 50) - that is the contract the gametest's
+# monotone-ladder guard enforces.
 $tierProfile = [ordered]@{
-    haven    = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:common', 'apotheosis:uncommon'); affixChance = 0.45; rewardRarities = @('apotheosis:common', 'apotheosis:uncommon'); purities = @('cracked', 'normal');        dust = 8;  heraldXp = 100; bossXp = 300; finalXp = 500;  stackCount = 4;  itemCount = 2; gemCount = 3;  size = 'small';  soundtrack = 'minecraft:music_disc.cat';           recipeDiamonds = 1; recipeDust = 1 }
-    frontier = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:uncommon', 'apotheosis:rare');  affixChance = 0.5;  rewardRarities = @('apotheosis:uncommon', 'apotheosis:rare');  purities = @('normal');                 dust = 16; heraldXp = 150; bossXp = 400; finalXp = 650;  stackCount = 8;  itemCount = 3; gemCount = 5;  size = 'small';  soundtrack = 'apotheosis:music_disc_shimmer';       recipeDiamonds = 2; recipeDust = 2 }
-    ascent   = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:rare', 'apotheosis:epic');      affixChance = 0.55; rewardRarities = @('apotheosis:rare', 'apotheosis:epic');      purities = @('flawless');               dust = 24; heraldXp = 200; bossXp = 500; finalXp = 800;  stackCount = 12; itemCount = 3; gemCount = 5;  size = 'medium'; soundtrack = 'apotheosis:music_disc_flash';         recipeDiamonds = 2; recipeDust = 3 }
-    summit   = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:epic', 'apotheosis:mythic');    affixChance = 0.65; rewardRarities = @('apotheosis:epic', 'apotheosis:mythic');    purities = @('flawless', 'perfect');    dust = 48; heraldXp = 250; bossXp = 650; finalXp = 950;  stackCount = 24; itemCount = 3; gemCount = 5;  size = 'medium'; soundtrack = 'apotheosis:soundtrack_summit';        recipeDiamonds = 3; recipeDust = 3 }
-    pinnacle = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:epic', 'apotheosis:mythic');    affixChance = 0.8;  rewardRarities = @('apotheosis:mythic');                     purities = @('perfect');                dust = 64; heraldXp = 300; bossXp = 800; finalXp = 1200; stackCount = 48; itemCount = 5; gemCount = 10; size = 'large';  soundtrack = 'apotheosis:soundtrack_pinnacle';     recipeDiamonds = 4; recipeDust = 3; chaseGateway = 'endless/horde' }
+    haven    = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:common', 'apotheosis:uncommon'); affixChance = 0.45; rewardRarities = @('apotheosis:common', 'apotheosis:uncommon'); purities = @('cracked', 'normal');        dust = 8;  heraldXp = 100; bossXp = 300; finalXp = 500;  stackCount = 4;  itemCount = 2; gemCount = 3;  size = 'small';  soundtrack = 'minecraft:music_disc.cat';           recipeDiamonds = 1; recipeDust = 1; eliteHp = @(30, 45);   eliteDmg = @(0.4, 0.6);  eliteKb = 0.3; eliteScale = @(0.4, 0.7); eliteEnch = 0.25; eliteEnchLvl = @(10, 6);  elitePoolMult = 0.5 }
+    frontier = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:uncommon', 'apotheosis:rare');  affixChance = 0.5;  rewardRarities = @('apotheosis:uncommon', 'apotheosis:rare');  purities = @('normal');                 dust = 16; heraldXp = 150; bossXp = 400; finalXp = 650;  stackCount = 8;  itemCount = 3; gemCount = 5;  size = 'small';  soundtrack = 'apotheosis:music_disc_shimmer';       recipeDiamonds = 2; recipeDust = 2; eliteHp = @(50, 80);   eliteDmg = @(0.7, 1.0);  eliteKb = 0.5; eliteScale = @(0.6, 0.9); eliteEnch = 0.35; eliteEnchLvl = @(18, 11); elitePoolMult = 1.0 }
+    ascent   = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:rare', 'apotheosis:epic');      affixChance = 0.55; rewardRarities = @('apotheosis:rare', 'apotheosis:epic');      purities = @('flawless');               dust = 24; heraldXp = 200; bossXp = 500; finalXp = 800;  stackCount = 12; itemCount = 3; gemCount = 5;  size = 'medium'; soundtrack = 'apotheosis:music_disc_flash';         recipeDiamonds = 2; recipeDust = 3; eliteHp = @(85, 120);  eliteDmg = @(1.1, 1.5);  eliteKb = 0.7; eliteScale = @(0.8, 1.1); eliteEnch = 0.5;  eliteEnchLvl = @(28, 17); elitePoolMult = 2.0 }
+    summit   = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:epic', 'apotheosis:mythic');    affixChance = 0.65; rewardRarities = @('apotheosis:epic', 'apotheosis:mythic');    purities = @('flawless', 'perfect');    dust = 48; heraldXp = 250; bossXp = 650; finalXp = 950;  stackCount = 24; itemCount = 3; gemCount = 5;  size = 'medium'; soundtrack = 'apotheosis:soundtrack_summit';        recipeDiamonds = 3; recipeDust = 3; eliteHp = @(130, 170); eliteDmg = @(1.6, 2.2);  eliteKb = 0.9; eliteScale = @(1.0, 1.4); eliteEnch = 0.65; eliteEnchLvl = @(40, 24); elitePoolMult = 3.0 }
+    pinnacle = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:epic', 'apotheosis:mythic');    affixChance = 0.8;  rewardRarities = @('apotheosis:mythic');                     purities = @('perfect');                dust = 64; heraldXp = 300; bossXp = 800; finalXp = 1200; stackCount = 48; itemCount = 5; gemCount = 10; size = 'large';  soundtrack = 'apotheosis:soundtrack_pinnacle';     recipeDiamonds = 4; recipeDust = 3; eliteHp = @(180, 260); eliteDmg = @(2.5, 3.5);  eliteKb = 1.0; eliteScale = @(1.2, 1.6); eliteEnch = 0.85; eliteEnchLvl = @(60, 36); elitePoolMult = 5.0; chaseGateway = 'endless/horde' }
 }
 
 # Theme identity: gateway boss-bar color + themed reward pool per mob family.
@@ -1157,27 +1168,36 @@ foreach ($r in $roster) {
         }
     }
 
+    # Combat bonuses come from the tier profile's elite stat ladder (the
+    # theme table above still drives banding and spawn rarity), plus the
+    # Tensura spiritual ladder: an add_multiplied_total bonus on both pool
+    # attributes so an elite's AP/MP grows with its base mob.
     $attr = [System.Collections.Generic.List[object]]::new()
-    $attr.Add([pscustomobject][ordered]@{ attribute='minecraft:generic.max_health'; operation='add_value'; value=(Range $th.hp[0] $th.hp[1]) })
-    $attr.Add([pscustomobject][ordered]@{ attribute='minecraft:generic.attack_damage'; operation='add_multiplied_total'; value=(Range $th.dmg[0] $th.dmg[1]) })
-    $attr.Add([pscustomobject][ordered]@{ attribute='minecraft:generic.knockback_resistance'; operation='add_value'; value=0.5 })
-    $attr.Add([pscustomobject][ordered]@{ attribute='minecraft:generic.scale'; operation='add_value'; value=(Range $th.scale[0] $th.scale[1]) })
+    $attr.Add([pscustomobject][ordered]@{ attribute='minecraft:generic.max_health'; operation='add_value'; value=(Range $profile.eliteHp[0] $profile.eliteHp[1]) })
+    $attr.Add([pscustomobject][ordered]@{ attribute='minecraft:generic.attack_damage'; operation='add_multiplied_total'; value=(Range $profile.eliteDmg[0] $profile.eliteDmg[1]) })
+    $attr.Add([pscustomobject][ordered]@{ attribute='minecraft:generic.knockback_resistance'; operation='add_value'; value=$profile.eliteKb })
+    $attr.Add([pscustomobject][ordered]@{ attribute='minecraft:generic.scale'; operation='add_value'; value=(Range $profile.eliteScale[0] $profile.eliteScale[1]) })
+    $attr.Add([pscustomobject][ordered]@{ attribute='tensura:max_aura'; operation='add_multiplied_total'; value=$profile.elitePoolMult })
+    $attr.Add([pscustomobject][ordered]@{ attribute='tensura:max_magicule'; operation='add_multiplied_total'; value=$profile.elitePoolMult })
     $effects = @($th.effects | ForEach-Object { [pscustomobject][ordered]@{ effect = $_; amplifier = 0 } })
 
     $stats = [ordered]@{
         attribute_modifiers  = $attr
         effects              = $effects
-        enchant_chance       = $th.ench
-        enchantment_levels   = [pscustomobject]@{ primary = 20; secondary = 12 }
+        enchant_chance       = $profile.eliteEnch
+        enchantment_levels   = [pscustomobject]@{ primary = $profile.eliteEnchLvl[0]; secondary = $profile.eliteEnchLvl[1] }
     }
     $basic = [ordered]@{
         constraints       = [pscustomobject][ordered]@{ biomes = "#tensura:$($r.mob)_spawn" }
         name              = [pscustomobject][ordered]@{ translate = "elite.tensura_apotheosis.$($r.mob)" }
+        # Apotheosis' own elites block exactly one spawn type - spawn_egg -
+        # and let its native spawn pipeline (biome constraints, tier
+        # weights, the success_chance roll in ApothMobEvents) do the rest.
         spawn_conditions  = @([pscustomobject][ordered]@{
             type = 'apotheosis:not'
             spawn_condition = [pscustomobject][ordered]@{
                 type = 'apotheosis:spawn_type'
-                spawn_types = @('spawn_egg', 'spawner', 'mob_summoned') } })
+                spawn_types = @('spawn_egg') } })
         valid_gear_sets   = $vg
         weights           = $wb
     }
@@ -1429,6 +1449,34 @@ $lang['tensura_apotheosis.endless/horde'] = 'Endless Tensura Horde Gateway'
 if ($gateways.Count -ne 39) { throw "gateways = $($gateways.Count) expected 39 (38 elite + endless/horde)" }
 
 # ======================================================================
+# ELITE NAME POOLS (data for the runtime name generator)
+# ======================================================================
+# Every elite draws a random full name per spawn from its own pool, shipped
+# as data/tensura_apotheosis/elite_names/<mob>.json and consumed by the
+# EliteNamePools runtime (the mirror of Apotheosis' use_name_generation,
+# which is global-config only and cannot be themed per mob). The pools are
+# authored in tools/name-pools.json (40-50 fantasy names composed from
+# per-family vocabularies); this guard enforces the contract: one pool per
+# roster mob, 40-50 non-blank names each, and every name globally unique so
+# each elite reads as its own character.
+$namePools = Get-Content (Join-Path $PSScriptRoot 'name-pools.json') -Raw | ConvertFrom-Json
+$poolProps = @($namePools.PSObject.Properties)
+if ($poolProps.Count -ne $roster.Count) { throw "name pools: $($poolProps.Count) mobs expected $($roster.Count)" }
+$seenNames = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
+$namePoolFiles = @()
+foreach ($r in $roster) {
+    $prop = $namePools.PSObject.Properties[$r.mob]
+    if ($null -eq $prop) { throw "name pools: missing entry for $($r.mob)" }
+    $names = @($prop.Value)
+    if ($names.Count -lt 40 -or $names.Count -gt 50) { throw "name pools: $($r.mob) has $($names.Count) names expected 40-50" }
+    foreach ($n in $names) {
+        if ([string]::IsNullOrWhiteSpace($n)) { throw "name pools: $($r.mob) contains a blank name" }
+        if (-not $seenNames.Add($n)) { throw "name pools: duplicate name '$n'" }
+    }
+    $namePoolFiles += @{ rel = $r.mob; json = [pscustomobject][ordered]@{ names = @($names) } }
+}
+
+# ======================================================================
 # EMIT
 # ======================================================================
 foreach ($gs in $gearsets) {
@@ -1454,6 +1502,9 @@ foreach ($g in $gems) {
 }
 foreach ($gw in $gateways) {
     WriteJsonFile (Join-Path $data ("gateways\" + ($gw.rel -replace '/', '\') + '.json')) $gw.json
+}
+foreach ($np in $namePoolFiles) {
+    WriteJsonFile (Join-Path $data ("elite_names\" + ($np.rel -replace '/', '\') + '.json')) $np.json
 }
 foreach ($rc in $gwRecipes) {
     # One shape per cost tier (E=ender pearl, D=diamond, G=gem dust): pearls
@@ -1495,4 +1546,5 @@ New-Item -ItemType Directory -Path (Join-Path $assets 'lang') -Force | Out-Null
 "elites written:    $($elites.Count)"
 "gateways written:  $($gateways.Count)"
 "gateway recipes:   $($gwRecipes.Count)"
+"name pools:        $($namePoolFiles.Count) mobs, $($seenNames.Count) names"
 "lang keys:         $($lang.Count)"

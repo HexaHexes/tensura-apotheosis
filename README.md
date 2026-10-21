@@ -40,8 +40,8 @@ on affixes.
 elite system:
 
 - Each elite appears where its base mob naturally spawns, and only in that biome (no
-  dimension-wide spawns). Spawned from eggs, spawners or summons never become elites —
-  only natural spawns have a chance.
+  dimension-wide spawns). Like Apotheosis' own elites, only spawn-egg copies are
+  excluded - natural spawns, spawners and summons all have a chance to turn elite.
 - The 38 are banded across Apotheosis' five world tiers by their actual stats — combat
   numbers (health, damage, size, enchantment, spawn rarity) combined with each mob's
   Tensura aura pool (AP), magicule pool (MP) and spiritual health — and stratified by
@@ -53,9 +53,18 @@ elite system:
   8,000). A band's elite only spawns in worlds at or above its tier.
 - Their gear rolls an increasing affix rarity ladder that tracks the tier: common and
   uncommon affixes at haven, up through rare and epic to mythic at summit and pinnacle.
-- They carry bonus health, damage, knockback resistance and size, and wear themed gear
-  drawn from their identity (daemons wield staves and grimoires, spiders wear knight-spider
-  carapace, beasts carry beast-horn and blade-tiger weapons, and so on).
+- Every spawn rolls a fresh identity: each elite draws a random full name from its own
+  themed pool of 40-50 names ("Zarnakzul the Shadowarch", "Planeshifter Nabrkael") -
+  fantasy name pools per mob family, wired as our own mirror of Apotheosis' name
+  generation, which is global-config only and can't be themed per mob.
+- Their combat bonuses scale strictly with their tier: bonus health (+30 at haven up
+  to +260 at pinnacle), damage (+40% up to +350%), knockback resistance, size,
+  enchantment level - and a big Tensura spin, an AP/MP pool bonus that multiplies the
+  mob's own aura and magicule pools (+50% at haven up to +500% at pinnacle), so an
+  elite boss's spiritual energy grows with its base mob.
+- They wear themed gear drawn from their identity (daemons wield staves and grimoires,
+  spiders wear knight-spider carapace, beasts carry beast-horn and blade-tiger
+  weapons, and so on).
 - On a player kill the elite's held weapon always drops, so the loot is real.
 
 **80 gear sets** — Tensura equipment wired into Apotheosis' boss gear:

@@ -13,9 +13,7 @@
                                                     "spawn_condition":  {
                                                                             "type":  "apotheosis:spawn_type",
                                                                             "spawn_types":  [
-                                                                                                "spawn_egg",
-                                                                                                "spawner",
-                                                                                                "mob_summoned"
+                                                                                                "spawn_egg"
                                                                                             ]
                                                                         }
                                                 }
@@ -67,7 +65,7 @@
                                                   "attribute":  "minecraft:generic.max_health",
                                                   "operation":  "add_value",
                                                   "value":  {
-                                                                "min":  25,
+                                                                "min":  30,
                                                                 "max":  45
                                                             }
                                               },
@@ -75,22 +73,32 @@
                                                   "attribute":  "minecraft:generic.attack_damage",
                                                   "operation":  "add_multiplied_total",
                                                   "value":  {
-                                                                "min":  0.25,
-                                                                "max":  0.45
+                                                                "min":  0.4,
+                                                                "max":  0.6
                                                             }
                                               },
                                               {
                                                   "attribute":  "minecraft:generic.knockback_resistance",
                                                   "operation":  "add_value",
-                                                  "value":  0.5
+                                                  "value":  0.3
                                               },
                                               {
                                                   "attribute":  "minecraft:generic.scale",
                                                   "operation":  "add_value",
                                                   "value":  {
-                                                                "min":  0.9,
-                                                                "max":  1.1
+                                                                "min":  0.4,
+                                                                "max":  0.7
                                                             }
+                                              },
+                                              {
+                                                  "attribute":  "tensura:max_aura",
+                                                  "operation":  "add_multiplied_total",
+                                                  "value":  0.5
+                                              },
+                                              {
+                                                  "attribute":  "tensura:max_magicule",
+                                                  "operation":  "add_multiplied_total",
+                                                  "value":  0.5
                                               }
                                           ],
                   "effects":  [
@@ -98,8 +106,8 @@
                               ],
                   "enchant_chance":  0.25,
                   "enchantment_levels":  {
-                                             "primary":  20,
-                                             "secondary":  12
+                                             "primary":  10,
+                                             "secondary":  6
                                          }
               },
     "success_chance":  0.015,

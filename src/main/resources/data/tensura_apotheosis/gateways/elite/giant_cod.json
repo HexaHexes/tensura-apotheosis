@@ -2,7 +2,7 @@
     "type":  "apotheosis:tiered",
     "settings":  {
                      "soundtrack":  "apotheosis:soundtrack_pinnacle",
-                     "tier":  "haven",
+                     "tier":  "frontier",
                      "size":  "large",
                      "color":  "#039BE5"
                  },
@@ -32,7 +32,7 @@
                       "rewards":  [
                                       {
                                           "type":  "gateways:experience",
-                                          "experience":  100,
+                                          "experience":  150,
                                           "orb_size":  60
                                       }
                                   ]
@@ -69,7 +69,7 @@
                       "rewards":  [
                                       {
                                           "type":  "gateways:experience",
-                                          "experience":  300,
+                                          "experience":  400,
                                           "orb_size":  100
                                       }
                                   ]
@@ -79,14 +79,13 @@
                     {
                         "type":  "apotheosis:affix_item",
                         "rarities":  [
-                                         "apotheosis:common",
-                                         "apotheosis:uncommon"
+                                         "apotheosis:uncommon",
+                                         "apotheosis:rare"
                                      ]
                     },
                     {
                         "type":  "apotheosis:gem",
                         "purities":  [
-                                         "cracked",
                                          "normal"
                                      ],
                         "gems":  [
@@ -98,20 +97,20 @@
                     {
                         "type":  "gateways:stack",
                         "stack":  {
-                                      "count":  8,
+                                      "count":  12,
                                       "id":  "apotheosis:gem_dust"
                                   }
                     },
                     {
                         "type":  "gateways:stack",
                         "stack":  {
-                                      "count":  8,
+                                      "count":  10,
                                       "id":  "minecraft:prismarine_crystals"
                                   }
                     },
                     {
                         "type":  "gateways:experience",
-                        "experience":  500,
+                        "experience":  650,
                         "orb_size":  100
                     }
                 ],

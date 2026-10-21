@@ -21,6 +21,9 @@
                                                 }
                                             ],
                        "valid_gear_sets":  {
+                                               "haven":  [
+                                                             "#tensura_hover_haven"
+                                                         ],
                                                "frontier":  [
                                                                 "#tensura_hover_frontier"
                                                             ],
@@ -35,6 +38,10 @@
                                                             ]
                                            },
                        "weights":  {
+                                       "haven":  {
+                                                     "quality":  0.1,
+                                                     "weight":  100
+                                                 },
                                        "frontier":  {
                                                         "quality":  0.1,
                                                         "weight":  100
@@ -97,10 +104,10 @@
               },
     "success_chance":  0.015,
     "affix_data":  {
-                       "affix_chance":  0.5,
+                       "affix_chance":  0.45,
                        "rarities":  [
-                                        "apotheosis:uncommon",
-                                        "apotheosis:rare"
+                                        "apotheosis:common",
+                                        "apotheosis:uncommon"
                                     ]
                    }
 }

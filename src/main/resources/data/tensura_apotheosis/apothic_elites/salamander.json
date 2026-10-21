@@ -21,6 +21,12 @@
                                                 }
                                             ],
                        "valid_gear_sets":  {
+                                               "frontier":  [
+                                                                "#tensura_salamander_frontier"
+                                                            ],
+                                               "ascent":  [
+                                                              "#tensura_salamander_ascent"
+                                                          ],
                                                "summit":  [
                                                               "#tensura_salamander_summit"
                                                           ],
@@ -29,6 +35,14 @@
                                                             ]
                                            },
                        "weights":  {
+                                       "frontier":  {
+                                                        "quality":  0.1,
+                                                        "weight":  100
+                                                    },
+                                       "ascent":  {
+                                                      "quality":  0.1,
+                                                      "weight":  80
+                                                  },
                                        "summit":  {
                                                       "quality":  0.12,
                                                       "weight":  60
@@ -86,10 +100,10 @@
               },
     "success_chance":  0.012,
     "affix_data":  {
-                       "affix_chance":  0.65,
+                       "affix_chance":  0.5,
                        "rarities":  [
-                                        "apotheosis:epic",
-                                        "apotheosis:mythic"
+                                        "apotheosis:uncommon",
+                                        "apotheosis:rare"
                                     ]
                    }
 }

@@ -21,6 +21,15 @@
                                                 }
                                             ],
                        "valid_gear_sets":  {
+                                               "haven":  [
+                                                             "#tensura_insect_haven"
+                                                         ],
+                                               "frontier":  [
+                                                                "#tensura_insect_frontier"
+                                                            ],
+                                               "ascent":  [
+                                                              "#tensura_insect_ascent"
+                                                          ],
                                                "summit":  [
                                                               "#tensura_insect_summit"
                                                           ],
@@ -29,6 +38,18 @@
                                                             ]
                                            },
                        "weights":  {
+                                       "haven":  {
+                                                     "quality":  0.1,
+                                                     "weight":  100
+                                                 },
+                                       "frontier":  {
+                                                        "quality":  0.1,
+                                                        "weight":  100
+                                                    },
+                                       "ascent":  {
+                                                      "quality":  0.1,
+                                                      "weight":  80
+                                                  },
                                        "summit":  {
                                                       "quality":  0.12,
                                                       "weight":  60
@@ -83,10 +104,10 @@
               },
     "success_chance":  0.014,
     "affix_data":  {
-                       "affix_chance":  0.65,
+                       "affix_chance":  0.45,
                        "rarities":  [
-                                        "apotheosis:epic",
-                                        "apotheosis:mythic"
+                                        "apotheosis:common",
+                                        "apotheosis:uncommon"
                                     ]
                    }
 }

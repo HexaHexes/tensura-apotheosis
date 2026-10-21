@@ -42,10 +42,11 @@ elite system:
 - Each elite appears where its base mob naturally spawns, and only in that biome (no
   dimension-wide spawns). Spawned from eggs, spawners or summons never become elites —
   only natural spawns have a chance.
-- The 38 are banded across Apotheosis' five world tiers — eight each at haven, frontier
-  and ascent, seven at summit and seven at pinnacle — from haven-band spawns like Giant
-  Ant and Slime to pinnacle threats like Arch Daemon, Tempest Serpent, Unicorn and
-  Pegasus. A band's elite only spawns in worlds at or above its tier.
+- The 38 are banded across Apotheosis' five world tiers by their actual combat stats
+  (health, damage, size, enchantment and spawn rarity): the weakest profiles — the
+  lizards and insects — sit at haven, mid-strength beasts at ascent, and the
+  stat-heaviest profiles (armorsaurus, orcs, the scaled serpent family) at pinnacle.
+  A band's elite only spawns in worlds at or above its tier.
 - Their gear rolls an increasing affix rarity ladder that tracks the tier: common and
   uncommon affixes at haven, up through rare and epic to mythic at summit and pinnacle.
 - They carry bonus health, damage, knockback resistance and size, and wear themed gear

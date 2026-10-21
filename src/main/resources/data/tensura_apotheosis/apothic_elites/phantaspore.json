@@ -21,6 +21,12 @@
                                                 }
                                             ],
                        "valid_gear_sets":  {
+                                               "haven":  [
+                                                             "#tensura_spore_haven"
+                                                         ],
+                                               "frontier":  [
+                                                                "#tensura_spore_frontier"
+                                                            ],
                                                "ascent":  [
                                                               "#tensura_spore_ascent"
                                                           ],
@@ -32,6 +38,14 @@
                                                             ]
                                            },
                        "weights":  {
+                                       "haven":  {
+                                                     "quality":  0.1,
+                                                     "weight":  100
+                                                 },
+                                       "frontier":  {
+                                                        "quality":  0.1,
+                                                        "weight":  100
+                                                    },
                                        "ascent":  {
                                                       "quality":  0.1,
                                                       "weight":  80
@@ -93,10 +107,10 @@
               },
     "success_chance":  0.014,
     "affix_data":  {
-                       "affix_chance":  0.55,
+                       "affix_chance":  0.45,
                        "rarities":  [
-                                        "apotheosis:rare",
-                                        "apotheosis:epic"
+                                        "apotheosis:common",
+                                        "apotheosis:uncommon"
                                     ]
                    }
 }

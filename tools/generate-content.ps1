@@ -705,62 +705,158 @@ foreach ($en in $tj.Entries) {
 }
 $tj.Dispose()
 
-# mob -> theme + display name + hand-tuned world tier (haven..pinnacle).
-# Tier bands gate elite spawns, elite affix rarities, gateway opening and
-# gateway rewards - see $tierProfile below. Bands are lore-tuned within
-# themes too (lesser_daemon is ascent, arch_daemon is pinnacle). Distribution:
-# 8 haven / 8 frontier / 8 ascent / 7 summit / 7 pinnacle.
+# mob -> theme + display name. World tiers are NOT assigned here: they are
+# computed below from each theme's actual combat stats (hp, damage, scale,
+# enchant chance, success chance), so banding follows the numbers - and
+# identical stat profiles (lizard == hover, scaled == orc on composite)
+# always land in the same band.
 $roster = @(
-    @{ mob='arch_daemon';       theme='demon';      display='Arch Daemon';       tier='pinnacle' }
-    @{ mob='greater_daemon';    theme='demon';      display='Greater Daemon';    tier='pinnacle' }
-    @{ mob='lesser_daemon';     theme='demon';      display='Lesser Daemon';     tier='ascent'   }
-    @{ mob='salamander';        theme='salamander'; display='Salamander';        tier='summit'   }
-    @{ mob='basilisk';          theme='scaled';     display='Basilisk';          tier='summit'   }
-    @{ mob='dragon_peacock';    theme='scaled';     display='Dragon Peacock';    tier='pinnacle' }
-    @{ mob='feathered_serpent'; theme='scaled';     display='Feathered Serpent'; tier='summit'   }
-    @{ mob='tempest_serpent';   theme='scaled';     display='Tempest Serpent';   tier='pinnacle' }
-    @{ mob='leech_lizard';      theme='lizard';     display='Leech Lizard';      tier='haven'    }
-    @{ mob='hover_lizard';      theme='hover';      display='Hover Lizard';      tier='frontier' }
-    @{ mob='black_spider';      theme='spider';     display='Black Spider';      tier='haven'    }
-    @{ mob='knight_spider';     theme='spider';     display='Knight Spider';     tier='ascent'   }
-    @{ mob='army_wasp';         theme='insect';     display='Army Wasp';         tier='frontier' }
-    @{ mob='giant_ant';         theme='insect';     display='Giant Ant';         tier='haven'    }
-    @{ mob='evil_centipede';    theme='insect';     display='Evil Centipede';    tier='frontier' }
-    @{ mob='hell_caterpillar';  theme='insect';     display='Hell Caterpillar';  tier='ascent'   }
-    @{ mob='hell_moth';         theme='insect';     display='Hell Moth';         tier='summit'   }
-    @{ mob='barghest';          theme='beast';      display='Barghest';          tier='summit'   }
-    @{ mob='beast_gnome';       theme='beast';      display='Beast Gnome';       tier='frontier' }
-    @{ mob='direwolf';          theme='beast';      display='Direwolf';          tier='ascent'   }
-    @{ mob='blade_tiger';       theme='beast';      display='Blade Tiger';       tier='summit'   }
-    @{ mob='giant_bat';         theme='beast';      display='Giant Bat';         tier='haven'    }
-    @{ mob='giant_bear';        theme='beast';      display='Giant Bear';        tier='ascent'   }
-    @{ mob='horned_bear';       theme='beast';      display='Horned Bear';       tier='ascent'   }
-    @{ mob='horned_rabbit';     theme='beast';      display='Horned Rabbit';     tier='haven'    }
-    @{ mob='hound_dog';         theme='beast';      display='Hound Dog';         tier='frontier' }
-    @{ mob='one_eyed_owl';      theme='beast';      display='One Eyed Owl';      tier='frontier' }
-    @{ mob='winged_cat';        theme='beast';      display='Winged Cat';        tier='frontier' }
-    @{ mob='giant_cod';         theme='aquatic';    display='Giant Cod';         tier='haven'    }
-    @{ mob='giant_salmon';      theme='aquatic';    display='Giant Salmon';      tier='haven'    }
-    @{ mob='landfish';          theme='aquatic';    display='Landfish';          tier='frontier' }
-    @{ mob='spear_toro';        theme='aquatic';    display='Spear Toro';        tier='ascent'   }
-    @{ mob='armorsaurus';       theme='armorsaurus';display='Armorsaurus';       tier='pinnacle' }
-    @{ mob='slime';             theme='slime';      display='Slime';             tier='haven'    }
-    @{ mob='phantaspore';       theme='spore';      display='Phantaspore';       tier='ascent'   }
-    @{ mob='orc';               theme='orc';        display='Orc';               tier='summit'   }
-    @{ mob='pegasus';           theme='unicorn';    display='Pegasus';           tier='pinnacle' }
-    @{ mob='unicorn';           theme='unicorn';    display='Unicorn';           tier='pinnacle' }
+    @{ mob='arch_daemon';       theme='demon';      display='Arch Daemon' }
+    @{ mob='greater_daemon';    theme='demon';      display='Greater Daemon' }
+    @{ mob='lesser_daemon';     theme='demon';      display='Lesser Daemon' }
+    @{ mob='salamander';        theme='salamander'; display='Salamander' }
+    @{ mob='basilisk';          theme='scaled';     display='Basilisk' }
+    @{ mob='dragon_peacock';    theme='scaled';     display='Dragon Peacock' }
+    @{ mob='feathered_serpent'; theme='scaled';     display='Feathered Serpent' }
+    @{ mob='tempest_serpent';   theme='scaled';     display='Tempest Serpent' }
+    @{ mob='leech_lizard';      theme='lizard';     display='Leech Lizard' }
+    @{ mob='hover_lizard';      theme='hover';      display='Hover Lizard' }
+    @{ mob='black_spider';      theme='spider';     display='Black Spider' }
+    @{ mob='knight_spider';     theme='spider';     display='Knight Spider' }
+    @{ mob='army_wasp';         theme='insect';     display='Army Wasp' }
+    @{ mob='giant_ant';         theme='insect';     display='Giant Ant' }
+    @{ mob='evil_centipede';    theme='insect';     display='Evil Centipede' }
+    @{ mob='hell_caterpillar';  theme='insect';     display='Hell Caterpillar' }
+    @{ mob='hell_moth';         theme='insect';     display='Hell Moth' }
+    @{ mob='barghest';          theme='beast';      display='Barghest' }
+    @{ mob='beast_gnome';       theme='beast';      display='Beast Gnome' }
+    @{ mob='direwolf';          theme='beast';      display='Direwolf' }
+    @{ mob='blade_tiger';       theme='beast';      display='Blade Tiger' }
+    @{ mob='giant_bat';         theme='beast';      display='Giant Bat' }
+    @{ mob='giant_bear';        theme='beast';      display='Giant Bear' }
+    @{ mob='horned_bear';       theme='beast';      display='Horned Bear' }
+    @{ mob='horned_rabbit';     theme='beast';      display='Horned Rabbit' }
+    @{ mob='hound_dog';         theme='beast';      display='Hound Dog' }
+    @{ mob='one_eyed_owl';      theme='beast';      display='One Eyed Owl' }
+    @{ mob='winged_cat';        theme='beast';      display='Winged Cat' }
+    @{ mob='giant_cod';         theme='aquatic';    display='Giant Cod' }
+    @{ mob='giant_salmon';      theme='aquatic';    display='Giant Salmon' }
+    @{ mob='landfish';          theme='aquatic';    display='Landfish' }
+    @{ mob='spear_toro';        theme='aquatic';    display='Spear Toro' }
+    @{ mob='armorsaurus';       theme='armorsaurus';display='Armorsaurus' }
+    @{ mob='slime';             theme='slime';      display='Slime' }
+    @{ mob='phantaspore';       theme='spore';      display='Phantaspore' }
+    @{ mob='orc';               theme='orc';        display='Orc' }
+    @{ mob='pegasus';           theme='unicorn';    display='Pegasus' }
+    @{ mob='unicorn';           theme='unicorn';    display='Unicorn' }
 )
 if ($roster.Count -ne 38) { throw "roster is $($roster.Count) expected 38" }
 
 $tierIndex = @{}
 for ($i = 0; $i -lt $tiers.Count; $i++) { $tierIndex[$tiers[$i]] = $i }
 
+# ---- Stat-derived world-tier banding ----------------------------------------
+# Tier bands gate elite spawns, elite affix rarities, gateway opening and
+# gateway rewards (see $tierProfile). Rather than hand-assigning mobs, score
+# every roster mob on its theme's actual combat stats and band by rank:
+#   1. Each stat becomes an average-rank percentile over the 38-mob roster
+#      (a value shared by k mobs sits at the midpoint of its rank block).
+#      success_chance counts inverted - the rarer an elite is, the stronger.
+#   2. Composite = mean of the five percentiles.
+#   3. Themes sort strongest-first with a deterministic tiebreak chain
+#      (composite, hp, dmg, scale, ench, success asc, theme key).
+#   4. Greedy fill from the top: pinnacle takes the strongest themes, haven
+#      the weakest; a new band opens before a theme would push the current
+#      one past ~n/5 mobs, so tied stat profiles always share a band.
+$mobCountByTheme = @{}
+foreach ($r in $roster) { $mobCountByTheme[$r.theme] = [int]$mobCountByTheme[$r.theme] + 1 }
+
+$rawStats = foreach ($th in $themes) {
+    [pscustomobject]@{
+        key   = $th.key
+        mobs  = $mobCountByTheme[$th.key]
+        hp    = ($th.hp[0] + $th.hp[1]) / 2
+        dmg   = ($th.dmg[0] + $th.dmg[1]) / 2
+        scale = ($th.scale[0] + $th.scale[1]) / 2
+        ench  = $th.ench
+        succ  = $th.success
+    }
+}
+function Get-StatPercentile($values, $v) {
+    $below = @($values | Where-Object { $_ -lt $v }).Count
+    $equal = @($values | Where-Object { $_ -eq $v }).Count
+    return ($below + 0.5 * $equal) / $values.Count
+}
+$allHp = [System.Collections.Generic.List[double]]::new()
+$allDmg = [System.Collections.Generic.List[double]]::new()
+$allScale = [System.Collections.Generic.List[double]]::new()
+$allEnch = [System.Collections.Generic.List[double]]::new()
+$allSucc = [System.Collections.Generic.List[double]]::new()
+foreach ($p in $rawStats) {
+    for ($i = 0; $i -lt $p.mobs; $i++) {
+        $allHp.Add($p.hp); $allDmg.Add($p.dmg); $allScale.Add($p.scale)
+        $allEnch.Add($p.ench); $allSucc.Add($p.succ)
+    }
+}
+$scoredStats = foreach ($p in $rawStats) {
+    $pctHp = Get-StatPercentile $allHp $p.hp
+    $pctDmg = Get-StatPercentile $allDmg $p.dmg
+    $pctScale = Get-StatPercentile $allScale $p.scale
+    $pctEnch = Get-StatPercentile $allEnch $p.ench
+    $pctSucc = 1 - (Get-StatPercentile $allSucc $p.succ)   # inverted: rarer = stronger
+    [pscustomobject]@{
+        key       = $p.key
+        mobs      = $p.mobs
+        composite = ($pctHp + $pctDmg + $pctScale + $pctEnch + $pctSucc) / 5
+        hp        = $p.hp
+        dmg       = $p.dmg
+        scale     = $p.scale
+        ench      = $p.ench
+        succ      = $p.succ
+    }
+}
+$orderedThemes = $scoredStats | Sort-Object `
+    @{ Expression = { $_.composite }; Descending = $true },
+    @{ Expression = { $_.hp };        Descending = $true },
+    @{ Expression = { $_.dmg };       Descending = $true },
+    @{ Expression = { $_.scale };     Descending = $true },
+    @{ Expression = { $_.ench };      Descending = $true },
+    @{ Expression = { $_.succ };      Descending = $false },
+    @{ Expression = { $_.key };       Descending = $false }
+
+$bandTarget = $roster.Count / $tiers.Count
+$themeTier = @{}
+$bandIdx = $tiers.Count - 1
+$bandThemes = [System.Collections.Generic.List[string]]::new()
+$bandMobCount = 0
+foreach ($p in $orderedThemes) {
+    if ($bandThemes.Count -gt 0 -and ($bandMobCount + $p.mobs) -gt $bandTarget -and $bandIdx -gt 0) {
+        foreach ($k in $bandThemes) { $themeTier[$k] = $tiers[$bandIdx] }
+        $bandIdx--
+        $bandThemes.Clear()
+        $bandMobCount = 0
+    }
+    $bandThemes.Add($p.key)
+    $bandMobCount += $p.mobs
+}
+if ($bandIdx -ne 0) {
+    throw "stat banding left world tier(s) above '$($tiers[$bandIdx])' empty - stats too clumped?"
+}
+foreach ($k in $bandThemes) { $themeTier[$k] = $tiers[0] }
+foreach ($r in $roster) { $r.tier = $themeTier[$r.theme] }
+Write-Output 'tier bands (stat-derived):'
+foreach ($t in $tiers) {
+    $mobs = @($roster | Where-Object { $_.tier -eq $t } | ForEach-Object { $_.mob })
+    Write-Output ("  {0,-9} ({1,2})  {2}" -f $t, $mobs.Count, ($mobs -join ' '))
+}
+
 # World-tier profiles: one table drives BOTH the elite affix ladder and the
 # gateway reward ladder, so gear rarity and gem quality rise together (the
 # "rewards scale with tier" contract). Elite bands follow Apotheosis' own
 # rarity weights per world tier (common is haven-heavy, mythic only exists
 # from summit on); summit/pinnacle elites share the {epic, mythic} pool and
-# separate on affix_chance instead, since mythic is the cap.
+# separate on affix_chance instead, since mythic is the cap. Band MEMBERSHIP
+# is stat-derived by the block above, never hand-picked.
 $tierProfile = [ordered]@{
     haven    = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:common', 'apotheosis:uncommon'); affixChance = 0.45; rewardRarities = @('apotheosis:common', 'apotheosis:uncommon'); purities = @('cracked', 'normal');        dust = 8;  heraldXp = 100; bossXp = 300; finalXp = 500;  stackCount = 8  }
     frontier = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:uncommon', 'apotheosis:rare');  affixChance = 0.5;  rewardRarities = @('apotheosis:uncommon', 'apotheosis:rare');  purities = @('normal');                 dust = 12; heraldXp = 150; bossXp = 400; finalXp = 650;  stackCount = 10 }

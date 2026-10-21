@@ -2,7 +2,7 @@
     "type":  "apotheosis:tiered",
     "settings":  {
                      "soundtrack":  "apotheosis:soundtrack_pinnacle",
-                     "tier":  "haven",
+                     "tier":  "summit",
                      "size":  "large",
                      "color":  "#7CB342"
                  },
@@ -32,7 +32,7 @@
                       "rewards":  [
                                       {
                                           "type":  "gateways:experience",
-                                          "experience":  100,
+                                          "experience":  250,
                                           "orb_size":  60
                                       }
                                   ]
@@ -69,7 +69,7 @@
                       "rewards":  [
                                       {
                                           "type":  "gateways:experience",
-                                          "experience":  300,
+                                          "experience":  650,
                                           "orb_size":  100
                                       }
                                   ]
@@ -79,15 +79,15 @@
                     {
                         "type":  "apotheosis:affix_item",
                         "rarities":  [
-                                         "apotheosis:common",
-                                         "apotheosis:uncommon"
+                                         "apotheosis:epic",
+                                         "apotheosis:mythic"
                                      ]
                     },
                     {
                         "type":  "apotheosis:gem",
                         "purities":  [
-                                         "cracked",
-                                         "normal"
+                                         "flawless",
+                                         "perfect"
                                      ],
                         "gems":  [
                                      "tensura_apotheosis:core/vigor",
@@ -98,20 +98,20 @@
                     {
                         "type":  "gateways:stack",
                         "stack":  {
-                                      "count":  8,
+                                      "count":  20,
                                       "id":  "apotheosis:gem_dust"
                                   }
                     },
                     {
                         "type":  "gateways:stack",
                         "stack":  {
-                                      "count":  8,
+                                      "count":  16,
                                       "id":  "minecraft:slime_ball"
                                   }
                     },
                     {
                         "type":  "gateways:experience",
-                        "experience":  500,
+                        "experience":  950,
                         "orb_size":  100
                     }
                 ],

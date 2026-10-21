@@ -48,9 +48,13 @@ themed gem pool and flavor stack per mob family) all live there too.
 - Every elite mob must have a `#tensura:<mob>_spawn` biome tag; the elite's
   `constraints.biomes` is that literal tag (so it inherits Tensura's exact natural-spawn
   logic, no blanket dimensions).
-- Elite gateways use `apotheosis:tiered`; each mob's gateway sits at its hand-tuned
-  world tier (roster `tier`, distributed 8/8/8/7/7 across haven..pinnacle) and
-  `canOpen` blocks players who have not unlocked that tier. `settings.color`, the
+- Elite gateways use `apotheosis:tiered`; each mob's gateway sits at a world tier
+  computed from its theme's actual combat stats - the generator scores hp / damage /
+  scale / enchant-chance / success-chance (inverted) as average-rank percentiles over
+  the 38-mob roster, then greedy-bands the themes strongest-to-weakest into the five
+  tiers (ties always share a band; current distribution haven 8 / frontier 7 /
+  ascent 11 / summit 6 / pinnacle 6). Band membership is data - never hand-assign a
+  tier. `canOpen` blocks players who have not unlocked that tier. `settings.color`, the
   gem pool, the flavor stack and all reward magnitudes come from
   `$themeIdentity` + `$tierProfile` in the generator - never hand-tune one gateway.
   The `elite` field must match a shipped `tensura_apotheosis:<mob>` elite.

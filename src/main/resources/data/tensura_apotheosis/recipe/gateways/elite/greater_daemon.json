@@ -1,0 +1,34 @@
+{
+    "neoforge:conditions":  [
+                                {
+                                    "type":  "neoforge:mod_loaded",
+                                    "modid":  "gateways"
+                                }
+                            ],
+    "type":  "minecraft:crafting_shaped",
+    "category":  "misc",
+    "group":  "tensura_apotheosis",
+    "key":  {
+                "E":  {
+                          "tag":  "c:ender_pearls"
+                      },
+                "D":  {
+                          "item":  "minecraft:diamond"
+                      },
+                "G":  {
+                          "item":  "apotheosis:gem_dust"
+                      }
+            },
+    "pattern":  [
+                    "EDE",
+                    "DGD",
+                    "EDE"
+                ],
+    "result":  {
+                   "components":  {
+                                      "gateways:gateway":  "tensura_apotheosis:elite/greater_daemon"
+                                  },
+                   "count":  1,
+                   "id":  "gateways:gate_pearl"
+               }
+}

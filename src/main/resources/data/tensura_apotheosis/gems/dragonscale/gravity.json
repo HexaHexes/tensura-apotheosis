@@ -1,0 +1,84 @@
+{
+    "type":  "apotheosis:gem",
+    "weights":  {
+                    "frontier":  {
+                                     "quality":  0.05,
+                                     "weight":  2
+                                 },
+                    "ascent":  {
+                                   "quality":  0.08,
+                                   "weight":  6
+                               },
+                    "summit":  {
+                                   "quality":  0.1,
+                                   "weight":  15
+                               },
+                    "pinnacle":  {
+                                     "quality":  0.15,
+                                     "weight":  30
+                                 }
+                },
+    "min_purity":  "flawed",
+    "unique":  true,
+    "bonuses":  [
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "tensura:gravity_boost",
+                        "gem_class":  {
+                                          "key":  "tensura_weapon",
+                                          "types":  [
+                                                        "apotheosis:melee_weapon",
+                                                        "apotheosis:trident"
+                                                    ]
+                                      },
+                        "operation":  "add_value",
+                        "values":  {
+                                       "cracked":  3,
+                                       "chipped":  5,
+                                       "flawed":  8,
+                                       "normal":  12,
+                                       "flawless":  16,
+                                       "perfect":  22
+                                   }
+                    },
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "minecraft:generic.max_health",
+                        "gem_class":  {
+                                          "key":  "tensura_body",
+                                          "types":  [
+                                                        "apotheosis:chestplate",
+                                                        "apotheosis:leggings"
+                                                    ]
+                                      },
+                        "operation":  "add_value",
+                        "values":  {
+                                       "cracked":  5,
+                                       "chipped":  8,
+                                       "flawed":  12,
+                                       "normal":  16,
+                                       "flawless":  22,
+                                       "perfect":  30
+                                   }
+                    },
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "minecraft:generic.knockback_resistance",
+                        "gem_class":  {
+                                          "key":  "tensura_boots",
+                                          "types":  [
+                                                        "apotheosis:boots"
+                                                    ]
+                                      },
+                        "operation":  "add_value",
+                        "values":  {
+                                       "cracked":  0.05,
+                                       "chipped":  0.1,
+                                       "flawed":  0.15,
+                                       "normal":  0.2,
+                                       "flawless":  0.3,
+                                       "perfect":  0.4
+                                   }
+                    }
+                ]
+}

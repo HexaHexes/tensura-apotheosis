@@ -1,0 +1,48 @@
+{
+    "type":  "apotheosis:gem",
+    "weights":  {
+                    "quality":  0.1,
+                    "weight":  100
+                },
+    "bonuses":  [
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "tensura:multilayer_barrier",
+                        "gem_class":  {
+                                          "key":  "tensura_body",
+                                          "types":  [
+                                                        "apotheosis:chestplate",
+                                                        "apotheosis:leggings"
+                                                    ]
+                                      },
+                        "operation":  "add_value",
+                        "values":  {
+                                       "cracked":  1,
+                                       "chipped":  1,
+                                       "flawed":  2,
+                                       "normal":  2,
+                                       "flawless":  3,
+                                       "perfect":  4
+                                   }
+                    },
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "tensura:magic_barrier",
+                        "gem_class":  {
+                                          "key":  "tensura_shield",
+                                          "types":  [
+                                                        "apotheosis:shield"
+                                                    ]
+                                      },
+                        "operation":  "add_value",
+                        "values":  {
+                                       "cracked":  2,
+                                       "chipped":  4,
+                                       "flawed":  6,
+                                       "normal":  9,
+                                       "flawless":  12,
+                                       "perfect":  16
+                                   }
+                    }
+                ]
+}

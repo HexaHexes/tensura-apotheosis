@@ -59,7 +59,7 @@ tasks.matching { it.name == 'runGametest' }.configureEach {
     // GameTestServer prints "All N required tests passed :)" or "N required
     // tests failed :(" when the run finishes; grade that so the Gradle build
     // is green/red on its own (crashes fail via the java exit code anyway).
-    def expectedTests = 5 // keep in sync with @GameTest methods in src/.../gametest/
+    def expectedTests = 6 // keep in sync with @GameTest methods in src/.../gametest/
     doLast {
         def log = file('run/logs/latest.log')
         if (!log.exists()) {

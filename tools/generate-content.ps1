@@ -179,6 +179,8 @@ Add-Affix 'ranged/mob_effect/frostbite' 'Frostbite' 'of the Frost Queen' (
     New-ProcAffix 'tensura:frost' 'arrow_target' $BOW $rangedDot)
 Add-Affix 'ranged/mob_effect/infective' 'Infective' 'of the Contagion' (
     New-ProcAffix 'tensura:infection' 'arrow_target' $BOW $rangedDot)
+Add-Affix 'ranged/mob_effect/venomous' 'Venomous' 'of the Poison Breath' (
+    New-ProcAffix 'tensura:magicule_poison' 'arrow_target' $BOW $rangedDot)
 
 # ======================================================================
 # ARMOR - attribute affixes
@@ -237,6 +239,13 @@ $surgeVals = [ordered]@{
 }
 Add-Affix 'armor/mob_effect/magicule_surge' 'Magicule Surge' 'of Recovery' (
     New-ProcAffix 'tensura:magicule_regeneration' 'hurt_self' $BODY $surgeVals 25 @() $false)
+$restoVals = [ordered]@{
+    $R = [pscustomobject]@{ duration = 80; amplifier = 0; cooldown = 220 }
+    $E = [pscustomobject]@{ duration = 110; amplifier = 0; cooldown = 200 }
+    $M = [pscustomobject]@{ duration = 140; amplifier = (Range 0 1 0.5); cooldown = 180 }
+}
+Add-Affix 'armor/mob_effect/restorative' 'Restorative' 'of Renewal' (
+    New-ProcAffix 'tensura:instant_regeneration' 'hurt_self' $BODY $restoVals 25 @() $false)
 
 # ======================================================================
 # SHIELD
@@ -250,6 +259,13 @@ Add-Affix 'shield/attribute/aegis' 'Aegis' 'of Protection' (
 Add-Affix 'shield/attribute/wardstone' 'Wardstone' 'of Nullification' (
     New-AttrAffix 'tensura:magic_resistance' $SHLD 'add_value' ([ordered]@{
         $R = Range 3 6; $E = Range 4 9; $M = Range 6 12 }))
+$reinforceVals = [ordered]@{
+    $R = [pscustomobject]@{ duration = 100; amplifier = 0; cooldown = 200 }
+    $E = [pscustomobject]@{ duration = 140; amplifier = 0; cooldown = 180 }
+    $M = [pscustomobject]@{ duration = 180; amplifier = (Range 0 1 0.5); cooldown = 160 }
+}
+Add-Affix 'shield/mob_effect/reinforced' 'Reinforced' 'of Endurance' (
+    New-ProcAffix 'tensura:reinforcement' 'hurt_self' $SHLD $reinforceVals 25 @() $false)
 
 # ======================================================================
 # BREAKER (tools)
@@ -296,6 +312,13 @@ Add-Affix 'generic/attribute/far_sight' 'Far Sight' 'of Foresight' (
 Add-Affix 'generic/attribute/heatseeker' 'Heatseeker' 'of Detection' (
     New-AttrAffix 'tensura:heat_sense_radius' $ALL 'add_value' ([ordered]@{
         $R = Range 5 10; $E = Range 8 16; $M = Range 12 25 }))
+$webVals = [ordered]@{
+    $R = [pscustomobject]@{ duration = (Range 60 80 20); amplifier = 0; cooldown = 160 }
+    $E = [pscustomobject]@{ duration = (Range 80 100 20); amplifier = 0; cooldown = 150 }
+    $M = [pscustomobject]@{ duration = (Range 100 140 20); amplifier = (Range 0 1 0.5); cooldown = 140 }
+}
+Add-Affix 'generic/mob_effect/entangling' 'Entangling' 'of the Spider' (
+    New-ProcAffix 'tensura:webbed' 'attack_target' $ALL $webVals 20)
 
 # ======================================================================
 # GEMS
@@ -332,9 +355,13 @@ function GemLine($class, [string]$attr, [string]$op, $vals) {
     }
 }
 
-$gems = @()   # @{ rel; name; json }
-function Add-Gem([string]$family, [string]$name, [string]$display, $json) {
-    $script:gems += @{ rel = "$family/$name"; name = $name; display = $display; json = $json }
+$gems = @()   # @{ rel; name; tex; display; json }
+function Add-Gem([string]$family, [string]$name, [string]$display, $json, [string]$tex = '') {
+    # Project convention: never generate textures. The original 14 gems keep their
+    # own PNGs; additional gems pass $tex = an existing Apotheosis gem texture id
+    # as a placeholder until hand-drawn art arrives.
+    if (-not $tex) { $tex = "tensura_apotheosis:items/gems/$name" }
+    $script:gems += @{ rel = "$family/$name"; name = $name; tex = $tex; display = $display; json = $json }
 }
 
 function New-Gem($weights, $bonuses, [string]$minPurity = 'cracked', [bool]$unique = $false) {
@@ -390,16 +417,94 @@ Add-Gem 'dragonscale' 'storm' 'Storm Dragonscale' (New-Gem $uniW @(
 Add-Gem 'holy' 'core' 'Holy Core' (New-Gem $uniW @(
     (GemLine 'weapon' 'tensura:light_boost' 'add_value' (Purity 3 5 8 12 16 22)),
     (GemLine 'body' 'apothic_attributes:healing_received' 'add_multiplied_total' (Purity 0.05 0.08 0.12 0.16 0.2 0.26)),
-    (GemLine 'helmet' 'tensura:light_resistance' 'add_value' (Purity 3 5 8 12 16 22))) 'flawed' $true)
+    (GemLine 'helmet' 'tensura:light_resistance' 'add_value' (Purity 3 5 8 12 16 22))) 'flawed' $true) 'tensura_apotheosis:items/gems/holy'
 Add-Gem 'spirit' 'core' 'Spirit Core' (New-Gem $uniW @(
     (GemLine 'body' 'tensura:magic_barrier' 'add_value' (Purity 3 5 7 10 13 17)),
     (GemLine 'shield' 'tensura:physical_barrier' 'add_value' (Purity 3 5 7 10 13 17)),
-    (GemLine 'helmet' 'tensura:magic_resistance' 'add_value' (Purity 2 4 6 9 12 16))) 'flawed' $true)
+    (GemLine 'helmet' 'tensura:magic_resistance' 'add_value' (Purity 2 4 6 9 12 16))) 'flawed' $true) 'tensura_apotheosis:items/gems/spirit'
 Add-Gem 'ultima' 'core' 'Ultima Gem' (New-Gem $uniW @(
     (GemLine 'weapon' 'apothic_attributes:crit_chance' 'add_value' (Purity 0.1 0.14 0.18 0.24 0.3 0.38)),
     (GemLine 'body' 'tensura:magic_barrier' 'add_value' (Purity 5 7 9 12 15 19)),
     (GemLine 'helmet' 'tensura:ability_mastery_gain' 'add_value' (Purity 0.1 0.15 0.2 0.3 0.4 0.55)),
-    (GemLine 'shield' 'apothic_attributes:cooldown_reduction' 'add_value' (Purity 0.02 0.025 0.03 0.04 0.05 0.06))) 'flawless' $true)
+    (GemLine 'shield' 'apothic_attributes:cooldown_reduction' 'add_value' (Purity 0.02 0.025 0.03 0.04 0.05 0.06))) 'flawless' $true) 'tensura_apotheosis:items/gems/ultima'
+
+# Additional gems. Textures reuse Apotheosis' stock gem art as placeholders -
+# textures are never generated (hand-drawn art is planned later).
+Add-Gem 'core' 'barrier' 'Barrier Gem' (New-Gem $flatW @(
+    (GemLine 'body' 'tensura:multilayer_barrier' 'add_value' (Purity 1 1 2 2 3 4)),
+    (GemLine 'shield' 'tensura:magic_barrier' 'add_value' (Purity 2 4 6 9 12 16)))) 'apotheosis:items/gems/guardian'
+Add-Gem 'core' 'shadow' 'Shadow Gem' (New-Gem $flatW @(
+    (GemLine 'helmet' 'tensura:presence_concealment' 'add_value' (Purity 3 5 8 11 15 20)),
+    (GemLine 'boots' 'tensura:dodge_strength' 'add_value' (Purity 1 2 3 5 7 10)))) 'apotheosis:items/gems/endersurge'
+Add-Gem 'core' 'vigil' 'Vigil Gem' (New-Gem $flatW @(
+    (GemLine 'helmet' 'tensura:heat_sense_radius' 'add_value' (Purity 3 5 8 12 16 22)),
+    (GemLine 'body' 'tensura:presence_sense_radius' 'add_value' (Purity 2 4 6 9 12 16)))) 'apotheosis:items/gems/inferno'
+Add-Gem 'core' 'stalwart' 'Stalwart Gem' (New-Gem $flatW @(
+    (GemLine 'body' 'minecraft:generic.armor' 'add_value' (Purity 2 3 4 5 6 8)),
+    (GemLine 'boots' 'minecraft:generic.armor_toughness' 'add_value' (Purity 1 2 3 4 5 7)))) 'apotheosis:items/gems/ballast'
+Add-Gem 'core' 'gale' 'Gale Gem' (New-Gem $flatW @(
+    (GemLine 'boots' 'minecraft:generic.movement_speed' 'add_multiplied_total' (Purity 0.02 0.03 0.04 0.06 0.08 0.1)),
+    (GemLine 'body' 'tensura:wind_resistance' 'add_value' (Purity 1 2 3 4 6 8)))) 'apotheosis:items/gems/slipstream'
+Add-Gem 'core' 'earthen' 'Earthen Gem' (New-Gem $flatW @(
+    (GemLine 'body' 'minecraft:generic.knockback_resistance' 'add_value' (Purity 0.05 0.1 0.15 0.2 0.3 0.4)),
+    (GemLine 'boots' 'tensura:earth_resistance' 'add_value' (Purity 2 4 6 9 12 16)))) 'apotheosis:items/gems/verdant_ruin'
+Add-Gem 'core' 'fury' 'Fury Gem' (New-Gem $flatW @(
+    (GemLine 'weapon' 'minecraft:generic.attack_damage' 'add_multiplied_total' (Purity 0.03 0.05 0.07 0.1 0.13 0.17)),
+    (GemLine 'bow' 'apothic_attributes:arrow_damage' 'add_multiplied_total' (Purity 0.04 0.06 0.09 0.12 0.16 0.2)))) 'apotheosis:items/gems/tyrannical'
+Add-Gem 'core' 'vigor' 'Vigor Gem' (New-Gem $flatW @(
+    (GemLine 'body' 'minecraft:generic.max_health' 'add_value' (Purity 3 5 8 12 16 22)),
+    (GemLine 'helmet' 'tensura:spiritual_health_regeneration' 'add_value' (Purity 0.1 0.2 0.3 0.5 0.7 1)))) 'apotheosis:items/gems/solar'
+Add-Gem 'core' 'juggernaut' 'Juggernaut Gem' (New-Gem $flatW @(
+    (GemLine 'body' 'minecraft:generic.knockback_resistance' 'add_value' (Purity 0.1 0.15 0.2 0.3 0.4 0.5)),
+    (GemLine 'boots' 'minecraft:generic.armor' 'add_value' (Purity 1 2 3 4 5 7)))) 'apotheosis:items/gems/warlord'
+Add-Gem 'core' 'striker' 'Striker Gem' (New-Gem $flatW @(
+    (GemLine 'weapon' 'minecraft:generic.attack_damage' 'add_multiplied_total' (Purity 0.04 0.06 0.08 0.11 0.14 0.18)),
+    (GemLine 'bow' 'apothic_attributes:arrow_damage' 'add_multiplied_total' (Purity 0.05 0.07 0.1 0.13 0.17 0.21)))) 'apotheosis:items/gems/combatant'
+Add-Gem 'core' 'precision' 'Precision Gem' (New-Gem $flatW @(
+    (GemLine 'bow' 'apothic_attributes:crit_chance' 'add_value' (Purity 0.05 0.07 0.1 0.13 0.16 0.2)),
+    (GemLine 'weapon' 'apothic_attributes:armor_pierce' 'add_value' (Purity 2 3 4 6 8 10)))) 'apotheosis:items/gems/breach'
+Add-Gem 'core' 'sprinter' 'Sprinter Gem' (New-Gem $flatW @(
+    (GemLine 'boots' 'minecraft:generic.movement_speed' 'add_multiplied_total' (Purity 0.01 0.02 0.03 0.04 0.06 0.08)),
+    (GemLine 'body' 'minecraft:generic.safe_fall_distance' 'add_value' (Purity 2 3 4 6 8 11)))) 'apotheosis:items/gems/samurai'
+Add-Gem 'core' 'brawler' 'Brawler Gem' (New-Gem $flatW @(
+    (GemLine 'weapon' 'minecraft:generic.attack_speed' 'add_value' (Purity 0.05 0.08 0.1 0.14 0.18 0.22)),
+    (GemLine 'helmet' 'minecraft:generic.armor_toughness' 'add_value' (Purity 1 2 3 4 5 7)))) 'apotheosis:items/gems/brawlers'
+Add-Gem 'core' 'mystic' 'Mystic Gem' (New-Gem $flatW @(
+    (GemLine 'helmet' 'tensura:magic_resistance' 'add_value' (Purity 2 3 5 7 9 12)),
+    (GemLine 'body' 'tensura:magic_barrier' 'add_value' (Purity 2 3 5 7 9 12)))) 'apotheosis:items/gems/mageslayer'
+Add-Gem 'core' 'executioner' 'Executioner Gem' (New-Gem $flatW @(
+    (GemLine 'weapon' 'apothic_attributes:current_hp_damage' 'add_value' (Purity 0.04 0.06 0.09 0.12 0.15 0.19)),
+    (GemLine 'bow' 'apothic_attributes:crit_damage' 'add_value' (Purity 0.08 0.11 0.14 0.18 0.22 0.27)))) 'apotheosis:items/gems/blood_lord'
+
+Add-Gem 'dragonscale' 'earth' 'Earth Dragonscale' (New-Gem $uniW @(
+    (GemLine 'weapon' 'tensura:earth_boost' 'add_value' (Purity 3 5 8 12 16 22)),
+    (GemLine 'body' 'tensura:earth_resistance' 'add_value' (Purity 2 4 6 9 12 16)),
+    (GemLine 'helmet' 'minecraft:generic.armor' 'add_value' (Purity 2 3 4 5 6 8))) 'flawed' $true) 'apotheosis:items/gems/earth'
+Add-Gem 'dragonscale' 'darkness' 'Darkness Dragonscale' (New-Gem $uniW @(
+    (GemLine 'weapon' 'tensura:darkness_boost' 'add_value' (Purity 3 5 8 12 16 22)),
+    (GemLine 'body' 'tensura:darkness_resistance' 'add_value' (Purity 2 4 6 9 12 16)),
+    (GemLine 'helmet' 'tensura:dark_vision' 'add_value' (Purity 1 1 2 2 3 4))) 'flawed' $true) 'apotheosis:items/gems/queen'
+Add-Gem 'dragonscale' 'wind' 'Wind Dragonscale' (New-Gem $uniW @(
+    (GemLine 'weapon' 'tensura:wind_boost' 'add_value' (Purity 3 5 8 12 16 22)),
+    (GemLine 'body' 'tensura:wind_resistance' 'add_value' (Purity 2 4 6 9 12 16)),
+    (GemLine 'boots' 'minecraft:generic.movement_speed' 'add_multiplied_total' (Purity 0.02 0.03 0.05 0.07 0.09 0.12))) 'flawed' $true) 'apotheosis:items/gems/lightning'
+Add-Gem 'dragonscale' 'gravity' 'Gravity Dragonscale' (New-Gem $uniW @(
+    (GemLine 'weapon' 'tensura:gravity_boost' 'add_value' (Purity 3 5 8 12 16 22)),
+    (GemLine 'body' 'minecraft:generic.max_health' 'add_value' (Purity 5 8 12 16 22 30)),
+    (GemLine 'boots' 'minecraft:generic.knockback_resistance' 'add_value' (Purity 0.05 0.1 0.15 0.2 0.3 0.4))) 'flawed' $true) 'apotheosis:items/gems/lunar'
+Add-Gem 'holy' 'judgment' 'Judgment Core' (New-Gem $uniW @(
+    (GemLine 'bow' 'tensura:light_boost' 'add_value' (Purity 3 5 8 12 16 22)),
+    (GemLine 'body' 'tensura:light_resistance' 'add_value' (Purity 2 4 6 9 12 16))) 'flawed' $true) 'apotheosis:items/gems/splendor'
+Add-Gem 'spirit' 'guardian' 'Guardian Core' (New-Gem $uniW @(
+    (GemLine 'shield' 'minecraft:generic.armor' 'add_value' (Purity 2 3 4 6 8 10)),
+    (GemLine 'body' 'minecraft:generic.max_health' 'add_value' (Purity 5 8 12 16 22 30))) 'flawed' $true) 'apotheosis:items/gems/molten_breach'
+Add-Gem 'spirit' 'mender' 'Mender Core' (New-Gem $uniW @(
+    (GemLine 'body' 'apothic_attributes:healing_received' 'add_multiplied_total' (Purity 0.04 0.06 0.09 0.12 0.16 0.2)),
+    (GemLine 'helmet' 'tensura:spiritual_health_regeneration' 'add_value' (Purity 0.15 0.3 0.45 0.75 1 1.5))) 'flawed' $true) 'apotheosis:items/gems/forest'
+Add-Gem 'ultima' 'sovereign' 'Sovereign Gem' (New-Gem $uniW @(
+    (GemLine 'weapon' 'apothic_attributes:crit_damage' 'add_value' (Purity 0.12 0.16 0.2 0.26 0.32 0.4)),
+    (GemLine 'body' 'tensura:max_magicule' 'add_value' (Purity 15 25 40 60 90 130)),
+    (GemLine 'shield' 'apothic_attributes:cooldown_reduction' 'add_value' (Purity 0.02 0.025 0.03 0.04 0.05 0.06))) 'flawless' $true) 'apotheosis:items/gems/royalty'
 
 # ======================================================================
 # ELITE BOSS GEAR SETS + ELITES
@@ -696,6 +801,105 @@ foreach ($r in $roster) {
 }
 
 # ======================================================================
+# ELITE GATEWAYS (Gateways to Eternity, apotheosis:tiered)
+# ======================================================================
+# One summonable boss gateway per Tensura elite: a herald wave of the mob's
+# lesser kin, then the elite itself via Apotheosis' apotheosis:elite wave
+# entity. Tier is haven - the default active World Tier - so every gateway
+# opens from the start of the pack. Recipes are uniform: summoning a boss
+# costs ender pearls, diamonds and a pinch of gem dust.
+$gateways  = @()   # @{ rel; json }
+$gwRecipes = @()   # @{ rel; gateway }
+function Add-Gateway([string]$rel, $json) {
+    $script:gateways += @{ rel = $rel; json = $json }
+}
+function Add-GatewayRecipe([string]$rel, [string]$gateway) {
+    $script:gwRecipes += @{ rel = $rel; gateway = $gateway }
+}
+
+foreach ($r in $roster) {
+    $heraldWave = [pscustomobject][ordered]@{
+        max_wave_time = 2400
+        setup_time    = 150
+        entities      = @([pscustomobject][ordered]@{
+            type      = 'gateways:standard'
+            count     = 3
+            entity    = "tensura:$($r.mob)"
+            modifiers = @(
+                [pscustomobject][ordered]@{
+                    type      = 'gateways:attribute'
+                    attribute = 'minecraft:generic.max_health'
+                    operation = 'add_multiplied_total'
+                    value     = 0.5
+                }
+                [pscustomobject][ordered]@{
+                    type         = 'apotheosis:affix'
+                    affix_chance = 0.5
+                })
+        })
+        rewards       = @([pscustomobject][ordered]@{
+            type = 'gateways:experience'; experience = 150; orb_size = 60 })
+    }
+    $bossWave = [pscustomobject][ordered]@{
+        max_wave_time = 4800
+        setup_time    = 200
+        entities      = @([pscustomobject][ordered]@{
+            type        = 'apotheosis:elite'
+            base_entity = [pscustomobject][ordered]@{
+                type           = 'gateways:standard'
+                entity         = "tensura:$($r.mob)"
+                finalize_spawn = $false
+                modifiers      = @(
+                    [pscustomobject][ordered]@{
+                        type      = 'gateways:attribute'
+                        attribute = 'minecraft:generic.max_health'
+                        operation = 'add_multiplied_total'
+                        value     = 1.0
+                    }
+                    [pscustomobject][ordered]@{
+                        type      = 'gateways:attribute'
+                        attribute = 'minecraft:generic.attack_damage'
+                        operation = 'add_multiplied_total'
+                        value     = 0.25
+                    })
+            }
+            desc           = "elite.tensura_apotheosis.$($r.mob)"
+            elite          = "tensura_apotheosis:$($r.mob)"
+        })
+        rewards       = @([pscustomobject][ordered]@{
+            type = 'gateways:experience'; experience = 500; orb_size = 100 })
+    }
+    $gateway = [pscustomobject][ordered]@{
+        type     = 'apotheosis:tiered'
+        settings = [pscustomobject][ordered]@{
+            soundtrack = 'apotheosis:soundtrack_pinnacle'
+            tier       = 'haven'
+            size       = 'large'
+            color      = '#B02E26'
+        }
+        waves    = @($heraldWave, $bossWave)
+        rewards  = @(
+            [pscustomobject][ordered]@{ type = 'apotheosis:affix_item'; rarities = @('apotheosis:mythic') }
+            [pscustomobject][ordered]@{ type = 'apotheosis:gem'; purities = @('flawless') }
+            [pscustomobject][ordered]@{
+                type  = 'gateways:stack'
+                stack = [pscustomobject][ordered]@{ count = 24; id = 'apotheosis:gem_dust' }
+            }
+            [pscustomobject][ordered]@{ type = 'gateways:experience'; experience = 1000; orb_size = 100 }
+        )
+        rules    = [pscustomobject][ordered]@{
+            leash_range            = 48.0
+            lives                  = 3
+            requires_nearby_player = $true
+            spawn_range            = 24.0
+        }
+    }
+    Add-Gateway "elite/$($r.mob)" $gateway
+    Add-GatewayRecipe "elite/$($r.mob)" "tensura_apotheosis:elite/$($r.mob)"
+}
+if ($gateways.Count -ne 38) { throw "gateways = $($gateways.Count) expected 38" }
+
+# ======================================================================
 # EMIT
 # ======================================================================
 foreach ($gs in $gearsets) {
@@ -715,9 +919,31 @@ foreach ($g in $gems) {
     WriteJsonFile (Join-Path $apoAssets ("models\item\gems\" + ($g.rel -replace '/', '\') + '.json')) `
         ([pscustomobject][ordered]@{
             parent   = 'item/generated'
-            textures = [pscustomobject]@{ layer0 = "tensura_apotheosis:items/gems/$($g.name)" }
+            textures = [pscustomobject]@{ layer0 = "$($g.tex)" }
         })
     $lang["item.apotheosis.gem.tensura_apotheosis:$($g.rel)"] = $g.display
+}
+foreach ($gw in $gateways) {
+    WriteJsonFile (Join-Path $data ("gateways\" + ($gw.rel -replace '/', '\') + '.json')) $gw.json
+}
+foreach ($rc in $gwRecipes) {
+    WriteJsonFile (Join-Path $data ("recipe\gateways\" + ($rc.rel -replace '/', '\') + '.json')) ([pscustomobject][ordered]@{
+        'neoforge:conditions' = @([pscustomobject][ordered]@{ type = 'neoforge:mod_loaded'; modid = 'gateways' })
+        type                  = 'minecraft:crafting_shaped'
+        category              = 'misc'
+        group                 = 'tensura_apotheosis'
+        key                   = [pscustomobject][ordered]@{
+            E = [pscustomobject][ordered]@{ tag = 'c:ender_pearls' }
+            D = [pscustomobject][ordered]@{ item = 'minecraft:diamond' }
+            G = [pscustomobject][ordered]@{ item = 'apotheosis:gem_dust' }
+        }
+        pattern               = @('EDE', 'DGD', 'EDE')
+        result                = [pscustomobject][ordered]@{
+            components = [pscustomobject][ordered]@{ 'gateways:gateway' = $rc.gateway }
+            count      = 1
+            id         = 'gateways:gate_pearl'
+        }
+    })
 }
 
 New-Item -ItemType Directory -Path (Join-Path $assets 'lang') -Force | Out-Null
@@ -727,4 +953,6 @@ New-Item -ItemType Directory -Path (Join-Path $assets 'lang') -Force | Out-Null
 "gems written:      $($gems.Count)"
 "gear sets written: $($gearsets.Count)"
 "elites written:    $($elites.Count)"
+"gateways written:  $($gateways.Count)"
+"gateway recipes:   $($gwRecipes.Count)"
 "lang keys:         $($lang.Count)"

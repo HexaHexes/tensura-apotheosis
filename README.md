@@ -3,12 +3,12 @@
 Adds a Tensura-themed set of **affixes, socket gems, elite bosses and gear** to
 [Apotheosis](https://www.curseforge.com/minecraft/mc-mods/apotheosis) 8.8. Boss loot can
 now roll Tensura-flavored magic items, Apotheosis' gem socketing gains a family of
-Tensura gems, Tensura mobs get Apotheosis elite-boss variants, and Tensura equipment
-enters the boss loot pool.
+Tensura gems, Tensura mobs get Apotheosis elite-boss variants (with summonable gateway
+challenges to fight them directly), and Tensura equipment enters the boss loot pool.
 
 ## What it adds
 
-**51 affixes** — magical weapon, armor, shield and utility effects that roll onto loot,
+**55 affixes** — magical weapon, armor, shield and utility effects that roll onto loot,
 drawn straight from Tensura's systems (magicule/aura economy, the dodge suite, presence
 concealment, chant and cost multipliers, and Tensura mob effects like frost, infection,
 silence and petrification). A few examples:
@@ -16,20 +16,25 @@ silence and petrification). A few examples:
 - **Melee** — Flame Blade, Frost Blade, Armor Piercing, Keen, Soul Thief, plus damage-over-time
   (frostbite, infective, venomous) and crowd-control (paralyzing, silencing, terrifying,
   stone gaze) procs.
-- **Ranged** — Hawk Eye, Quick Draw, Warped, plus arrow procs.
+- **Ranged** — Hawk Eye, Quick Draw, Warped, plus arrow procs (frostbite, infective, venomous).
 - **Armor** — Arcane Barrier, Iron Will, Warded, Sanctified, Ghost Step, Concealed,
-  Regenerative, Untouchable, and more.
-- **Shield / Breaking / Any item** — Bulwark, Aegis, Deep Delver, Learned, Prodigy,
-  Mastered, Danger Sense, Analyst, and more.
+  Regenerative, Untouchable, Restorative, and more.
+- **Shield / Breaking / Any item** — Bulwark, Aegis, Reinforced, Deep Delver, Learned,
+  Prodigy, Mastered, Danger Sense, Analyst, Entangling, and more.
 
 Ultimate and transformation effects are deliberately left out — they'd be far too strong
 on affixes.
 
-**14 socket gems**, scaling from cracked to perfect purity:
+**37 socket gems**, scaling from cracked to perfect purity:
 
-- **Core (8):** magicule, aura, soul, predator, doppelganger, analyst, greedy, swift
-- **Unique (5):** flame, frost and storm dragonscale, Holy Core, Spirit Core
-- **Ultima:** a top-tier gem combining crit, barrier, mastery and cooldown bonuses
+- **Core (23):** magicule, aura, soul, predator, doppelganger, analyst, greedy, swift,
+  barrier, shadow, vigil, stalwart, gale, earthen, fury, vigor, juggernaut, striker,
+  precision, sprinter, brawler, mystic, executioner
+- **Dragonscales (7):** flame, frost and storm, plus earth, darkness, wind and gravity
+- **Holy (2):** Holy Core, Judgment Core
+- **Spirit (3):** Spirit Core, Guardian Core, Mender Core
+- **Ultima (2):** Ultima Gem and Sovereign Gem, top-tier gems combining crit, barrier,
+  mastery and cooldown bonuses
 
 **38 elite bosses** — rare, tiered variants of Tensura mobs, spawned by Apotheosis'
 elite system:
@@ -56,6 +61,17 @@ elite system:
   visibly rendered); everyone else's elite gear is mechanical — real armor points and a
   real weapon, even where the model doesn't draw it.
 
+**38 elite gateways** — summon the elites directly:
+
+- Craft a gate pearl from ender pearls, diamonds and Apotheosis gem dust (one recipe per
+  elite), place it on the ground, and a gateway opens.
+- Each gateway runs two waves: a herald pack of the mob's lesser kin, then the elite
+  itself as a full boss with boosted health and damage.
+- Clear it for a mythic affix item, a flawless gem, gem dust and experience. The gateway
+  allows up to three failures before it collapses.
+- Requires [Gateways to Eternity](https://www.curseforge.com/minecraft/mc-mods/gateways-to-eternity);
+  without it, everything else still works.
+
 ## Two-handed weapons count as melee
 
 Tensura's two-handed weapons (greatsword, katana, longsword, odachi, scythe, spear,
@@ -75,6 +91,10 @@ Gems also appear in Apotheosis' creative tab. To find affix items, reroll or ref
 dropped affix item (or use Apotheosis' own `/apotheosis` commands) until a Tensura name
 shows up — *Flame Blade*, *Silencing "of Severance"*, *Concealed*, and so on.
 
+To fight an elite directly, craft its gate pearl (ender pearls, diamonds and Apotheosis
+gem dust — one recipe per elite, all 38 in the recipe book) and place it on the ground
+to open the gateway. Needs [Gateways to Eternity](https://www.curseforge.com/minecraft/mc-mods/gateways-to-eternity).
+
 ## Dependencies
 
 | | Mod | Why |
@@ -82,6 +102,7 @@ shows up — *Flame Blade*, *Silencing "of Severance"*, *Concealed*, and so on.
 | **Required** | [Apotheosis](https://www.curseforge.com/minecraft/mc-mods/apotheosis) 8.8+ | The affix and gem system |
 | **Required** | Apothic Attributes | Apotheosis' attribute library |
 | **Required** | Tensura: Reincarnated | The themed effects and attributes |
+| **Optional** | [Gateways to Eternity](https://www.curseforge.com/minecraft/mc-mods/gateways-to-eternity) | The 38 summonable elite gateways |
 
 Made for the **Tensura RPG** pack (Minecraft 1.21.1, NeoForge).
 

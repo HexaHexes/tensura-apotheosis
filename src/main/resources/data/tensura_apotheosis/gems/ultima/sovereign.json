@@ -1,0 +1,84 @@
+{
+    "type":  "apotheosis:gem",
+    "weights":  {
+                    "frontier":  {
+                                     "quality":  0.05,
+                                     "weight":  2
+                                 },
+                    "ascent":  {
+                                   "quality":  0.08,
+                                   "weight":  6
+                               },
+                    "summit":  {
+                                   "quality":  0.1,
+                                   "weight":  15
+                               },
+                    "pinnacle":  {
+                                     "quality":  0.15,
+                                     "weight":  30
+                                 }
+                },
+    "min_purity":  "flawless",
+    "unique":  true,
+    "bonuses":  [
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "apothic_attributes:crit_damage",
+                        "gem_class":  {
+                                          "key":  "tensura_weapon",
+                                          "types":  [
+                                                        "apotheosis:melee_weapon",
+                                                        "apotheosis:trident"
+                                                    ]
+                                      },
+                        "operation":  "add_value",
+                        "values":  {
+                                       "cracked":  0.12,
+                                       "chipped":  0.16,
+                                       "flawed":  0.2,
+                                       "normal":  0.26,
+                                       "flawless":  0.32,
+                                       "perfect":  0.4
+                                   }
+                    },
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "tensura:max_magicule",
+                        "gem_class":  {
+                                          "key":  "tensura_body",
+                                          "types":  [
+                                                        "apotheosis:chestplate",
+                                                        "apotheosis:leggings"
+                                                    ]
+                                      },
+                        "operation":  "add_value",
+                        "values":  {
+                                       "cracked":  15,
+                                       "chipped":  25,
+                                       "flawed":  40,
+                                       "normal":  60,
+                                       "flawless":  90,
+                                       "perfect":  130
+                                   }
+                    },
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "apothic_attributes:cooldown_reduction",
+                        "gem_class":  {
+                                          "key":  "tensura_shield",
+                                          "types":  [
+                                                        "apotheosis:shield"
+                                                    ]
+                                      },
+                        "operation":  "add_value",
+                        "values":  {
+                                       "cracked":  0.02,
+                                       "chipped":  0.025,
+                                       "flawed":  0.03,
+                                       "normal":  0.04,
+                                       "flawless":  0.05,
+                                       "perfect":  0.06
+                                   }
+                    }
+                ]
+}

@@ -1,6 +1,6 @@
 {
     "parent":  "item/generated",
     "textures":  {
-                     "layer0":  "tensura_apotheosis:items/gems/core"
+                     "layer0":  "tensura_apotheosis:items/gems/holy"
                  }
 }

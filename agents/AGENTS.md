@@ -7,16 +7,21 @@ Tensura-themed affixes, socket gems, elite bosses and gear sets for Apotheosis 8
 delivered as **pure datapack data** (Placebo dynamic registries) — no mixins, no
 gameplay code. The Java side exists only for the in-repo gametest harness.
 
-**Dependencies (all required)**
-- Apotheosis (`apotheosis`), Apothic Attributes (`apothic_attributes`), Tensura (`tensura`).
+**Dependencies**
+- Required: Apotheosis (`apotheosis`), Apothic Attributes (`apothic_attributes`), Tensura (`tensura`).
+- Optional: Gateways to Eternity (`gateways`) - the elite gateways and their recipes only
+  load when it is present (recipes carry a `mod_loaded` condition).
 
-**Test:** `./gradlew runGametest` — 5 tests (`twoHandedWeaponsCategorizeAsMelee`,
-`allAffixesLoad`, `allGemsLoad`, `allElitesLoad`, `allGearSetsLoad`). `expectedTests = 5`.
+**Test:** `./gradlew runGametest` - 6 tests (`twoHandedWeaponsCategorizeAsMelee`,
+`allAffixesLoad`, `allGemsLoad`, `allElitesLoad`, `allGearSetsLoad`, `allGatewaysLoad`).
+`expectedTests = 6`.
 
 **Single source of truth:** `tools/generate-content.ps1` produces all affixes, gems,
-gear sets, elites, lang and models; `tools/generate-textures.ps1` produces the 14 gem
-PNGs. **Value tuning happens in the generator, not by hand-editing JSON** — regenerate
-after any change.
+gear sets, elites, gateways, gateway recipes, lang and models. **Textures are never
+generated**: the original 14 gem PNGs are fixed art, and every newer gem reuses an
+existing Apotheosis gem texture as a placeholder until hand-drawn art lands (the 5th
+`Add-Gem` argument). **Value tuning happens in the generator, not by hand-editing
+JSON** - regenerate after any change.
 
 **Gotchas (all caught by the gametest; do not regress them)**
 - Affix `min`/`max` ranges decode as **step functions** with an implicit step of `0.01`;
@@ -41,6 +46,9 @@ after any change.
 - Every elite mob must have a `#tensura:<mob>_spawn` biome tag; the elite's
   `constraints.biomes` is that literal tag (so it inherits Tensura's exact natural-spawn
   logic, no blanket dimensions).
+- Elite gateways use `apotheosis:tiered` with `settings.tier = "haven"` - the default
+  active World Tier, so every gateway opens from the start (`tier` is a `WorldTier`
+  enum id). Their `elite` field must match a shipped `tensura_apotheosis:<mob>` elite.
 
 ---
 

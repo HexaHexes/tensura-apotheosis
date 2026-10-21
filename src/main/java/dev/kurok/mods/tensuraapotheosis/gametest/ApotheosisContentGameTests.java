@@ -7,6 +7,7 @@ import dev.shadowsoffire.apotheosis.socket.gem.Gem;
 import dev.shadowsoffire.apotheosis.socket.gem.GemItem;
 import dev.shadowsoffire.apotheosis.socket.gem.GemRegistry;
 import dev.shadowsoffire.apotheosis.socket.gem.Purity;
+import dev.shadowsoffire.gateways.gate.GatewayRegistry;
 import dev.shadowsoffire.placebo.systems.gear.GearSetRegistry;
 import io.github.manasmods.tensura.item.weapon.TwoHandedSwordItem;
 import java.util.HashMap;
@@ -54,10 +55,11 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 public class ApotheosisContentGameTests {
 
     private static final String NS = "tensura_apotheosis";
-    private static final int EXPECTED_AFFIXES = 51;
-    private static final int EXPECTED_GEMS = 14;
+    private static final int EXPECTED_AFFIXES = 55;
+    private static final int EXPECTED_GEMS = 37;
     private static final int EXPECTED_ELITES = 38;
     private static final int EXPECTED_GEARSETS = 80;
+    private static final int EXPECTED_GATEWAYS = 38;
 
     /**
      * Enumerates this mod's data files for a Placebo registry folder and derives
@@ -181,6 +183,22 @@ public class ApotheosisContentGameTests {
         for (ResourceLocation id : expected) {
             if (GearSetRegistry.INSTANCE.getValue(id) == null) {
                 throw new GameTestAssertException("gear set " + id + " not in GearSetRegistry (parse failure?)");
+            }
+        }
+        helper.succeed();
+    }
+
+    /** Every shipped gateway JSON must parse into Gateways' gateway registry. */
+    @GameTest(template = "empty")
+    public static void allGatewaysLoad(GameTestHelper helper) {
+        Set<ResourceLocation> expected = expectedIds(helper, "gateways");
+        if (expected.size() != EXPECTED_GATEWAYS) {
+            throw new GameTestAssertException(
+                    "found " + expected.size() + " gateway data files expected " + EXPECTED_GATEWAYS);
+        }
+        for (ResourceLocation id : expected) {
+            if (GatewayRegistry.INSTANCE.getValue(id) == null) {
+                throw new GameTestAssertException("gateway " + id + " not in GatewayRegistry (parse failure?)");
             }
         }
         helper.succeed();

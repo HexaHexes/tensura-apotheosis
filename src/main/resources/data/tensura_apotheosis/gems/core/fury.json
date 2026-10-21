@@ -1,0 +1,48 @@
+{
+    "type":  "apotheosis:gem",
+    "weights":  {
+                    "quality":  0.1,
+                    "weight":  100
+                },
+    "bonuses":  [
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "minecraft:generic.attack_damage",
+                        "gem_class":  {
+                                          "key":  "tensura_weapon",
+                                          "types":  [
+                                                        "apotheosis:melee_weapon",
+                                                        "apotheosis:trident"
+                                                    ]
+                                      },
+                        "operation":  "add_multiplied_total",
+                        "values":  {
+                                       "cracked":  0.03,
+                                       "chipped":  0.05,
+                                       "flawed":  0.07,
+                                       "normal":  0.1,
+                                       "flawless":  0.13,
+                                       "perfect":  0.17
+                                   }
+                    },
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "apothic_attributes:arrow_damage",
+                        "gem_class":  {
+                                          "key":  "tensura_bow",
+                                          "types":  [
+                                                        "apotheosis:bow"
+                                                    ]
+                                      },
+                        "operation":  "add_multiplied_total",
+                        "values":  {
+                                       "cracked":  0.04,
+                                       "chipped":  0.06,
+                                       "flawed":  0.09,
+                                       "normal":  0.12,
+                                       "flawless":  0.16,
+                                       "perfect":  0.2
+                                   }
+                    }
+                ]
+}

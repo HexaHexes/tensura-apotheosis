@@ -1,0 +1,47 @@
+{
+    "type":  "apotheosis:gem",
+    "weights":  {
+                    "quality":  0.1,
+                    "weight":  100
+                },
+    "bonuses":  [
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "tensura:presence_concealment",
+                        "gem_class":  {
+                                          "key":  "tensura_helmet",
+                                          "types":  [
+                                                        "apotheosis:helmet"
+                                                    ]
+                                      },
+                        "operation":  "add_value",
+                        "values":  {
+                                       "cracked":  3,
+                                       "chipped":  5,
+                                       "flawed":  8,
+                                       "normal":  11,
+                                       "flawless":  15,
+                                       "perfect":  20
+                                   }
+                    },
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "tensura:dodge_strength",
+                        "gem_class":  {
+                                          "key":  "tensura_boots",
+                                          "types":  [
+                                                        "apotheosis:boots"
+                                                    ]
+                                      },
+                        "operation":  "add_value",
+                        "values":  {
+                                       "cracked":  1,
+                                       "chipped":  2,
+                                       "flawed":  3,
+                                       "normal":  5,
+                                       "flawless":  7,
+                                       "perfect":  10
+                                   }
+                    }
+                ]
+}

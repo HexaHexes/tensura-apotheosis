@@ -1,0 +1,48 @@
+{
+    "type":  "apotheosis:gem",
+    "weights":  {
+                    "quality":  0.1,
+                    "weight":  100
+                },
+    "bonuses":  [
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "minecraft:generic.max_health",
+                        "gem_class":  {
+                                          "key":  "tensura_body",
+                                          "types":  [
+                                                        "apotheosis:chestplate",
+                                                        "apotheosis:leggings"
+                                                    ]
+                                      },
+                        "operation":  "add_value",
+                        "values":  {
+                                       "cracked":  3,
+                                       "chipped":  5,
+                                       "flawed":  8,
+                                       "normal":  12,
+                                       "flawless":  16,
+                                       "perfect":  22
+                                   }
+                    },
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "tensura:spiritual_health_regeneration",
+                        "gem_class":  {
+                                          "key":  "tensura_helmet",
+                                          "types":  [
+                                                        "apotheosis:helmet"
+                                                    ]
+                                      },
+                        "operation":  "add_value",
+                        "values":  {
+                                       "cracked":  0.1,
+                                       "chipped":  0.2,
+                                       "flawed":  0.3,
+                                       "normal":  0.5,
+                                       "flawless":  0.7,
+                                       "perfect":  1
+                                   }
+                    }
+                ]
+}

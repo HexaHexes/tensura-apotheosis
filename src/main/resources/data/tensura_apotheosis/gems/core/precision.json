@@ -1,0 +1,48 @@
+{
+    "type":  "apotheosis:gem",
+    "weights":  {
+                    "quality":  0.1,
+                    "weight":  100
+                },
+    "bonuses":  [
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "apothic_attributes:crit_chance",
+                        "gem_class":  {
+                                          "key":  "tensura_bow",
+                                          "types":  [
+                                                        "apotheosis:bow"
+                                                    ]
+                                      },
+                        "operation":  "add_value",
+                        "values":  {
+                                       "cracked":  0.05,
+                                       "chipped":  0.07,
+                                       "flawed":  0.1,
+                                       "normal":  0.13,
+                                       "flawless":  0.16,
+                                       "perfect":  0.2
+                                   }
+                    },
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "apothic_attributes:armor_pierce",
+                        "gem_class":  {
+                                          "key":  "tensura_weapon",
+                                          "types":  [
+                                                        "apotheosis:melee_weapon",
+                                                        "apotheosis:trident"
+                                                    ]
+                                      },
+                        "operation":  "add_value",
+                        "values":  {
+                                       "cracked":  2,
+                                       "chipped":  3,
+                                       "flawed":  4,
+                                       "normal":  6,
+                                       "flawless":  8,
+                                       "perfect":  10
+                                   }
+                    }
+                ]
+}

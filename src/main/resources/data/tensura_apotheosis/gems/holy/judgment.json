@@ -1,0 +1,64 @@
+{
+    "type":  "apotheosis:gem",
+    "weights":  {
+                    "frontier":  {
+                                     "quality":  0.05,
+                                     "weight":  2
+                                 },
+                    "ascent":  {
+                                   "quality":  0.08,
+                                   "weight":  6
+                               },
+                    "summit":  {
+                                   "quality":  0.1,
+                                   "weight":  15
+                               },
+                    "pinnacle":  {
+                                     "quality":  0.15,
+                                     "weight":  30
+                                 }
+                },
+    "min_purity":  "flawed",
+    "unique":  true,
+    "bonuses":  [
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "tensura:light_boost",
+                        "gem_class":  {
+                                          "key":  "tensura_bow",
+                                          "types":  [
+                                                        "apotheosis:bow"
+                                                    ]
+                                      },
+                        "operation":  "add_value",
+                        "values":  {
+                                       "cracked":  3,
+                                       "chipped":  5,
+                                       "flawed":  8,
+                                       "normal":  12,
+                                       "flawless":  16,
+                                       "perfect":  22
+                                   }
+                    },
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "tensura:light_resistance",
+                        "gem_class":  {
+                                          "key":  "tensura_body",
+                                          "types":  [
+                                                        "apotheosis:chestplate",
+                                                        "apotheosis:leggings"
+                                                    ]
+                                      },
+                        "operation":  "add_value",
+                        "values":  {
+                                       "cracked":  2,
+                                       "chipped":  4,
+                                       "flawed":  6,
+                                       "normal":  9,
+                                       "flawless":  12,
+                                       "perfect":  16
+                                   }
+                    }
+                ]
+}

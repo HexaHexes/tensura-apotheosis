@@ -1,0 +1,64 @@
+{
+    "type":  "apotheosis:gem",
+    "weights":  {
+                    "frontier":  {
+                                     "quality":  0.05,
+                                     "weight":  2
+                                 },
+                    "ascent":  {
+                                   "quality":  0.08,
+                                   "weight":  6
+                               },
+                    "summit":  {
+                                   "quality":  0.1,
+                                   "weight":  15
+                               },
+                    "pinnacle":  {
+                                     "quality":  0.15,
+                                     "weight":  30
+                                 }
+                },
+    "min_purity":  "flawed",
+    "unique":  true,
+    "bonuses":  [
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "apothic_attributes:healing_received",
+                        "gem_class":  {
+                                          "key":  "tensura_body",
+                                          "types":  [
+                                                        "apotheosis:chestplate",
+                                                        "apotheosis:leggings"
+                                                    ]
+                                      },
+                        "operation":  "add_multiplied_total",
+                        "values":  {
+                                       "cracked":  0.04,
+                                       "chipped":  0.06,
+                                       "flawed":  0.09,
+                                       "normal":  0.12,
+                                       "flawless":  0.16,
+                                       "perfect":  0.2
+                                   }
+                    },
+                    {
+                        "type":  "apotheosis:attribute",
+                        "attribute":  "tensura:spiritual_health_regeneration",
+                        "gem_class":  {
+                                          "key":  "tensura_helmet",
+                                          "types":  [
+                                                        "apotheosis:helmet"
+                                                    ]
+                                      },
+                        "operation":  "add_value",
+                        "values":  {
+                                       "cracked":  0.15,
+                                       "chipped":  0.3,
+                                       "flawed":  0.45,
+                                       "normal":  0.75,
+                                       "flawless":  1,
+                                       "perfect":  1.5
+                                   }
+                    }
+                ]
+}

@@ -2,7 +2,7 @@
     "type":  "apotheosis:tiered",
     "settings":  {
                      "soundtrack":  "apotheosis:soundtrack_pinnacle",
-                     "tier":  "ascent",
+                     "tier":  "pinnacle",
                      "size":  "large",
                      "color":  "#E64A19"
                  },
@@ -32,7 +32,7 @@
                       "rewards":  [
                                       {
                                           "type":  "gateways:experience",
-                                          "experience":  200,
+                                          "experience":  300,
                                           "orb_size":  60
                                       }
                                   ]
@@ -69,7 +69,7 @@
                       "rewards":  [
                                       {
                                           "type":  "gateways:experience",
-                                          "experience":  500,
+                                          "experience":  800,
                                           "orb_size":  100
                                       }
                                   ]
@@ -77,40 +77,47 @@
               ],
     "rewards":  [
                     {
-                        "type":  "apotheosis:affix_item",
-                        "rarities":  [
-                                         "apotheosis:rare",
-                                         "apotheosis:epic"
-                                     ]
+                        "type":  "gateways:counted",
+                        "count":  5,
+                        "reward":  {
+                                       "type":  "apotheosis:affix_item",
+                                       "rarities":  [
+                                                        "apotheosis:mythic"
+                                                    ]
+                                   }
                     },
                     {
-                        "type":  "apotheosis:gem",
-                        "purities":  [
-                                         "flawless"
-                                     ],
-                        "gems":  [
-                                     "tensura_apotheosis:dragonscale/flame",
-                                     "tensura_apotheosis:core/vigor",
-                                     "tensura_apotheosis:core/fury"
-                                 ]
+                        "type":  "gateways:counted",
+                        "count":  10,
+                        "reward":  {
+                                       "type":  "apotheosis:gem",
+                                       "purities":  [
+                                                        "perfect"
+                                                    ],
+                                       "gems":  [
+                                                    "tensura_apotheosis:dragonscale/flame",
+                                                    "tensura_apotheosis:core/vigor",
+                                                    "tensura_apotheosis:core/fury"
+                                                ]
+                                   }
                     },
                     {
                         "type":  "gateways:stack",
                         "stack":  {
-                                      "count":  16,
+                                      "count":  64,
                                       "id":  "apotheosis:gem_dust"
                                   }
                     },
                     {
                         "type":  "gateways:stack",
                         "stack":  {
-                                      "count":  12,
+                                      "count":  48,
                                       "id":  "minecraft:blaze_powder"
                                   }
                     },
                     {
                         "type":  "gateways:experience",
-                        "experience":  800,
+                        "experience":  1200,
                         "orb_size":  100
                     }
                 ],

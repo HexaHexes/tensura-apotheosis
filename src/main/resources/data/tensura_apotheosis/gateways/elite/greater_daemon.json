@@ -2,8 +2,8 @@
     "type":  "apotheosis:tiered",
     "settings":  {
                      "soundtrack":  "apotheosis:soundtrack_pinnacle",
-                     "tier":  "pinnacle",
-                     "size":  "large",
+                     "tier":  "ascent",
+                     "size":  "medium",
                      "color":  "#6A1B9A"
                  },
     "waves":  [
@@ -32,7 +32,7 @@
                       "rewards":  [
                                       {
                                           "type":  "gateways:experience",
-                                          "experience":  300,
+                                          "experience":  200,
                                           "orb_size":  60
                                       }
                                   ]
@@ -69,7 +69,7 @@
                       "rewards":  [
                                       {
                                           "type":  "gateways:experience",
-                                          "experience":  800,
+                                          "experience":  500,
                                           "orb_size":  100
                                       }
                                   ]
@@ -77,21 +77,30 @@
               ],
     "rewards":  [
                     {
-                        "type":  "apotheosis:affix_item",
-                        "rarities":  [
-                                         "apotheosis:mythic"
-                                     ]
+                        "type":  "gateways:counted",
+                        "count":  3,
+                        "reward":  {
+                                       "type":  "apotheosis:affix_item",
+                                       "rarities":  [
+                                                        "apotheosis:rare",
+                                                        "apotheosis:epic"
+                                                    ]
+                                   }
                     },
                     {
-                        "type":  "apotheosis:gem",
-                        "purities":  [
-                                         "perfect"
-                                     ],
-                        "gems":  [
-                                     "tensura_apotheosis:core/shadow",
-                                     "tensura_apotheosis:core/fury",
-                                     "tensura_apotheosis:dragonscale/darkness"
-                                 ]
+                        "type":  "gateways:counted",
+                        "count":  5,
+                        "reward":  {
+                                       "type":  "apotheosis:gem",
+                                       "purities":  [
+                                                        "flawless"
+                                                    ],
+                                       "gems":  [
+                                                    "tensura_apotheosis:core/shadow",
+                                                    "tensura_apotheosis:core/fury",
+                                                    "tensura_apotheosis:dragonscale/darkness"
+                                                ]
+                                   }
                     },
                     {
                         "type":  "gateways:stack",
@@ -103,13 +112,13 @@
                     {
                         "type":  "gateways:stack",
                         "stack":  {
-                                      "count":  20,
+                                      "count":  12,
                                       "id":  "minecraft:amethyst_shard"
                                   }
                     },
                     {
                         "type":  "gateways:experience",
-                        "experience":  1200,
+                        "experience":  800,
                         "orb_size":  100
                     }
                 ],

@@ -2,7 +2,7 @@
     "type":  "apotheosis:tiered",
     "settings":  {
                      "soundtrack":  "apotheosis:soundtrack_pinnacle",
-                     "tier":  "summit",
+                     "tier":  "pinnacle",
                      "size":  "large",
                      "color":  "#FFD54F"
                  },
@@ -32,7 +32,7 @@
                       "rewards":  [
                                       {
                                           "type":  "gateways:experience",
-                                          "experience":  250,
+                                          "experience":  300,
                                           "orb_size":  60
                                       }
                                   ]
@@ -69,7 +69,7 @@
                       "rewards":  [
                                       {
                                           "type":  "gateways:experience",
-                                          "experience":  650,
+                                          "experience":  800,
                                           "orb_size":  100
                                       }
                                   ]
@@ -77,42 +77,48 @@
               ],
     "rewards":  [
                     {
-                        "type":  "apotheosis:affix_item",
-                        "rarities":  [
-                                         "apotheosis:epic",
-                                         "apotheosis:mythic"
-                                     ]
+                        "type":  "gateways:counted",
+                        "count":  5,
+                        "reward":  {
+                                       "type":  "apotheosis:affix_item",
+                                       "rarities":  [
+                                                        "apotheosis:mythic"
+                                                    ]
+                                   }
                     },
                     {
-                        "type":  "apotheosis:gem",
-                        "purities":  [
-                                         "flawless",
-                                         "perfect"
-                                     ],
-                        "gems":  [
-                                     "tensura_apotheosis:holy/core",
-                                     "tensura_apotheosis:spirit/core",
-                                     "tensura_apotheosis:core/vigil",
-                                     "tensura_apotheosis:holy/judgment"
-                                 ]
+                        "type":  "gateways:counted",
+                        "count":  10,
+                        "reward":  {
+                                       "type":  "apotheosis:gem",
+                                       "purities":  [
+                                                        "perfect"
+                                                    ],
+                                       "gems":  [
+                                                    "tensura_apotheosis:holy/core",
+                                                    "tensura_apotheosis:spirit/core",
+                                                    "tensura_apotheosis:core/vigil",
+                                                    "tensura_apotheosis:holy/judgment"
+                                                ]
+                                   }
                     },
                     {
                         "type":  "gateways:stack",
                         "stack":  {
-                                      "count":  20,
+                                      "count":  64,
                                       "id":  "apotheosis:gem_dust"
                                   }
                     },
                     {
                         "type":  "gateways:stack",
                         "stack":  {
-                                      "count":  16,
+                                      "count":  48,
                                       "id":  "minecraft:gold_ingot"
                                   }
                     },
                     {
                         "type":  "gateways:experience",
-                        "experience":  950,
+                        "experience":  1200,
                         "orb_size":  100
                     }
                 ],

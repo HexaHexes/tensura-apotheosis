@@ -21,11 +21,25 @@
                                                 }
                                             ],
                        "valid_gear_sets":  {
+                                               "ascent":  [
+                                                              "#tensura_demon_ascent"
+                                                          ],
+                                               "summit":  [
+                                                              "#tensura_demon_summit"
+                                                          ],
                                                "pinnacle":  [
                                                                 "#tensura_demon_pinnacle"
                                                             ]
                                            },
                        "weights":  {
+                                       "ascent":  {
+                                                      "quality":  0.1,
+                                                      "weight":  80
+                                                  },
+                                       "summit":  {
+                                                      "quality":  0.12,
+                                                      "weight":  60
+                                                  },
                                        "pinnacle":  {
                                                         "quality":  0.15,
                                                         "weight":  40
@@ -83,10 +97,10 @@
               },
     "success_chance":  0.01,
     "affix_data":  {
-                       "affix_chance":  0.8,
+                       "affix_chance":  0.55,
                        "rarities":  [
-                                        "apotheosis:epic",
-                                        "apotheosis:mythic"
+                                        "apotheosis:rare",
+                                        "apotheosis:epic"
                                     ]
                    }
 }

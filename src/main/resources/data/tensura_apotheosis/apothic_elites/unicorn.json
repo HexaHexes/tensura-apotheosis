@@ -21,18 +21,11 @@
                                                 }
                                             ],
                        "valid_gear_sets":  {
-                                               "summit":  [
-                                                              "#tensura_unicorn_summit"
-                                                          ],
                                                "pinnacle":  [
                                                                 "#tensura_unicorn_pinnacle"
                                                             ]
                                            },
                        "weights":  {
-                                       "summit":  {
-                                                      "quality":  0.12,
-                                                      "weight":  60
-                                                  },
                                        "pinnacle":  {
                                                         "quality":  0.15,
                                                         "weight":  40
@@ -86,7 +79,7 @@
               },
     "success_chance":  0.01,
     "affix_data":  {
-                       "affix_chance":  0.65,
+                       "affix_chance":  0.8,
                        "rarities":  [
                                         "apotheosis:epic",
                                         "apotheosis:mythic"

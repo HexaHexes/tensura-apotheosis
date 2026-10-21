@@ -77,33 +77,41 @@
               ],
     "rewards":  [
                     {
-                        "type":  "apotheosis:affix_item",
-                        "rarities":  [
-                                         "apotheosis:mythic"
-                                     ]
+                        "type":  "gateways:counted",
+                        "count":  5,
+                        "reward":  {
+                                       "type":  "apotheosis:affix_item",
+                                       "rarities":  [
+                                                        "apotheosis:mythic"
+                                                    ]
+                                   }
                     },
                     {
-                        "type":  "apotheosis:gem",
-                        "purities":  [
-                                         "perfect"
-                                     ],
-                        "gems":  [
-                                     "tensura_apotheosis:core/barrier",
-                                     "tensura_apotheosis:core/stalwart",
-                                     "tensura_apotheosis:spirit/guardian"
-                                 ]
+                        "type":  "gateways:counted",
+                        "count":  10,
+                        "reward":  {
+                                       "type":  "apotheosis:gem",
+                                       "purities":  [
+                                                        "perfect"
+                                                    ],
+                                       "gems":  [
+                                                    "tensura_apotheosis:core/barrier",
+                                                    "tensura_apotheosis:core/stalwart",
+                                                    "tensura_apotheosis:spirit/guardian"
+                                                ]
+                                   }
                     },
                     {
                         "type":  "gateways:stack",
                         "stack":  {
-                                      "count":  24,
+                                      "count":  64,
                                       "id":  "apotheosis:gem_dust"
                                   }
                     },
                     {
                         "type":  "gateways:stack",
                         "stack":  {
-                                      "count":  20,
+                                      "count":  48,
                                       "id":  "minecraft:iron_ingot"
                                   }
                     },

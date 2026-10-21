@@ -21,9 +21,6 @@
                                                 }
                                             ],
                        "valid_gear_sets":  {
-                                               "frontier":  [
-                                                                "#tensura_beast_frontier"
-                                                            ],
                                                "ascent":  [
                                                               "#tensura_beast_ascent"
                                                           ],
@@ -35,10 +32,6 @@
                                                             ]
                                            },
                        "weights":  {
-                                       "frontier":  {
-                                                        "quality":  0.1,
-                                                        "weight":  100
-                                                    },
                                        "ascent":  {
                                                       "quality":  0.1,
                                                       "weight":  80
@@ -97,10 +90,10 @@
               },
     "success_chance":  0.012,
     "affix_data":  {
-                       "affix_chance":  0.5,
+                       "affix_chance":  0.55,
                        "rarities":  [
-                                        "apotheosis:uncommon",
-                                        "apotheosis:rare"
+                                        "apotheosis:rare",
+                                        "apotheosis:epic"
                                     ]
                    }
 }

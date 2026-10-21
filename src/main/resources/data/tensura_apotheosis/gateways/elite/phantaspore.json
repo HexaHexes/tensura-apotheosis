@@ -3,7 +3,7 @@
     "settings":  {
                      "soundtrack":  "apotheosis:soundtrack_pinnacle",
                      "tier":  "haven",
-                     "size":  "large",
+                     "size":  "small",
                      "color":  "#AB47BC"
                  },
     "waves":  [
@@ -77,23 +77,31 @@
               ],
     "rewards":  [
                     {
-                        "type":  "apotheosis:affix_item",
-                        "rarities":  [
-                                         "apotheosis:common",
-                                         "apotheosis:uncommon"
-                                     ]
+                        "type":  "gateways:counted",
+                        "count":  2,
+                        "reward":  {
+                                       "type":  "apotheosis:affix_item",
+                                       "rarities":  [
+                                                        "apotheosis:common",
+                                                        "apotheosis:uncommon"
+                                                    ]
+                                   }
                     },
                     {
-                        "type":  "apotheosis:gem",
-                        "purities":  [
-                                         "cracked",
-                                         "normal"
-                                     ],
-                        "gems":  [
-                                     "tensura_apotheosis:core/mystic",
-                                     "tensura_apotheosis:core/analyst",
-                                     "tensura_apotheosis:core/magicule"
-                                 ]
+                        "type":  "gateways:counted",
+                        "count":  3,
+                        "reward":  {
+                                       "type":  "apotheosis:gem",
+                                       "purities":  [
+                                                        "cracked",
+                                                        "normal"
+                                                    ],
+                                       "gems":  [
+                                                    "tensura_apotheosis:core/mystic",
+                                                    "tensura_apotheosis:core/analyst",
+                                                    "tensura_apotheosis:core/magicule"
+                                                ]
+                                   }
                     },
                     {
                         "type":  "gateways:stack",
@@ -105,7 +113,7 @@
                     {
                         "type":  "gateways:stack",
                         "stack":  {
-                                      "count":  8,
+                                      "count":  4,
                                       "id":  "minecraft:brown_mushroom"
                                   }
                     },

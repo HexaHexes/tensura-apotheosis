@@ -53,13 +53,28 @@ themed gem pool and flavor stack per mob family) all live there too.
   enchant-chance / success-chance (inverted) from the theme table plus the mob's own
   Tensura existence stats (`data/tensura/entity_existence`: aura pool / AP, magicule
   pool / MP, spiritual health) as average-rank percentiles over the 38-mob roster,
-  then greedy-bands the mobs strongest-to-weakest into the five tiers (exact ties
-  share a band; run the generator to see the band map - never hardcode it here).
+  then bands **within spawn-dimension groups** - the hardest dimension in the mob's
+  `_spawn` biome tag (overworld/nether/hell/end; tensura tags expand from the jar,
+  vanilla nether/end biome ids classify via hardcoded sets). Groups of 5+ slice into
+  stat-ordered segments (strongest -> pinnacle, cuts snap to score-change points so
+  exact ties stay whole); groups of 2-4 space evenly across the ladder; a lone
+  dimension sits mid-ladder; a generator guard fails if any multi-mob dimension
+  collapses into one tier. Run the generator to see the band map - never hardcode it.
   Band membership is data - never hand-assign a tier. `canOpen` blocks players who
-  have not unlocked that tier. `settings.color`, the
-  gem pool, the flavor stack and all reward magnitudes come from
-  `$themeIdentity` + `$tierProfile` in the generator - never hand-tune one gateway.
-  The `elite` field must match a shipped `tensura_apotheosis:<mob>` elite.
+  have not unlocked that tier. `settings.color`, the gem pool, the flavor stack,
+  `settings.size` and every reward magnitude/count come from `$themeIdentity` +
+  `$tierProfile` - never hand-tune one gateway. Each gateway also needs its name
+  lang key: Gateways translates the id with ':' -> '.' (its own lang does
+  `gateways.basic/blaze`, Apotheosis does `apotheosis.tiered/frontier`), so the
+  generator emits `tensura_apotheosis.elite/<mob>` = "<Display> Gateway" - without
+  it the gate pearl tooltip shows the raw key. `settings.size` follows the tier
+  (small/small/medium/medium/large - the same mapping Apotheosis' tiered defaults
+  use) and is the gateway's base-texture selector: the gate pearl model picks
+  `gate_pearl_small/med/large` by the gateway's size. Rewards mirror Apotheosis'
+  tiered scaling: `gateways:counted` wraps the affix_item and gem rewards (count =
+  number of rolls) and dust/stack counts follow their 16/24/48/64 curve, all driven
+  by `$tierProfile`. The `elite` field must match a shipped
+  `tensura_apotheosis:<mob>` elite.
 - **Never add `rarities` to the herald wave's `apotheosis:affix` modifier.** Its
   AffixData codec resolves rarity values at decode time, but Gateways' registry
   reloads before Apotheosis' rarity registry binds - all 38 gateways then fail with

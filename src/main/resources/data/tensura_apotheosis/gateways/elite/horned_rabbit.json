@@ -3,7 +3,7 @@
     "settings":  {
                      "soundtrack":  "apotheosis:soundtrack_pinnacle",
                      "tier":  "ascent",
-                     "size":  "large",
+                     "size":  "medium",
                      "color":  "#8D6E63"
                  },
     "waves":  [
@@ -77,28 +77,36 @@
               ],
     "rewards":  [
                     {
-                        "type":  "apotheosis:affix_item",
-                        "rarities":  [
-                                         "apotheosis:rare",
-                                         "apotheosis:epic"
-                                     ]
+                        "type":  "gateways:counted",
+                        "count":  3,
+                        "reward":  {
+                                       "type":  "apotheosis:affix_item",
+                                       "rarities":  [
+                                                        "apotheosis:rare",
+                                                        "apotheosis:epic"
+                                                    ]
+                                   }
                     },
                     {
-                        "type":  "apotheosis:gem",
-                        "purities":  [
-                                         "flawless"
-                                     ],
-                        "gems":  [
-                                     "tensura_apotheosis:core/predator",
-                                     "tensura_apotheosis:core/vigor",
-                                     "tensura_apotheosis:core/fury",
-                                     "tensura_apotheosis:core/juggernaut"
-                                 ]
+                        "type":  "gateways:counted",
+                        "count":  5,
+                        "reward":  {
+                                       "type":  "apotheosis:gem",
+                                       "purities":  [
+                                                        "flawless"
+                                                    ],
+                                       "gems":  [
+                                                    "tensura_apotheosis:core/predator",
+                                                    "tensura_apotheosis:core/vigor",
+                                                    "tensura_apotheosis:core/fury",
+                                                    "tensura_apotheosis:core/juggernaut"
+                                                ]
+                                   }
                     },
                     {
                         "type":  "gateways:stack",
                         "stack":  {
-                                      "count":  16,
+                                      "count":  24,
                                       "id":  "apotheosis:gem_dust"
                                   }
                     },

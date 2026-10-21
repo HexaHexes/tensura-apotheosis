@@ -44,11 +44,13 @@ elite system:
   only natural spawns have a chance.
 - The 38 are banded across Apotheosis' five world tiers by their actual stats — combat
   numbers (health, damage, size, enchantment, spawn rarity) combined with each mob's
-  Tensura aura pool (AP), magicule pool (MP) and spiritual health. The tiers cut both
-  across and inside mob families: a haven band holds the low-MP lizards and insects,
-  while a family's strongest member can sit far above its siblings (Arch Daemon's
-  140,000 MP against Lesser Daemon's 8,000). A band's elite only spawns in worlds at
-  or above its tier.
+  Tensura aura pool (AP), magicule pool (MP) and spiritual health — and stratified by
+  spawn dimension: every non-overworld dweller (the underworld daemons, the nether's
+  Salamander and Phantaspore, Barghest, the end's Winged Cat) is spread across the
+  tiers instead of piling into one. The tiers cut both across and inside mob families:
+  a haven band holds the low-MP lizards and insects, while a family's strongest member
+  can sit far above its siblings (Arch Daemon's 140,000 MP against Lesser Daemon's
+  8,000). A band's elite only spawns in worlds at or above its tier.
 - Their gear rolls an increasing affix rarity ladder that tracks the tier: common and
   uncommon affixes at haven, up through rare and epic to mythic at summit and pinnacle.
 - They carry bonus health, damage, knockback resistance and size, and wear themed gear
@@ -78,9 +80,13 @@ elite system:
   a Salamander gate, spider eyes from a Spider gate, dragon's breath from a Serpent gate.
 - Each gateway runs two waves: a herald pack of the mob's lesser kin, then the elite
   itself as a full boss with boosted health and damage.
-- Rewards scale with the gateway's world tier: affix items rise from common/uncommon at
-  haven to a guaranteed mythic at pinnacle, gems from cracked to perfect purity, and gem
-  dust, flavor stacks and experience all grow with the tier. A gateway only opens once
+- Rewards scale with the gateway's world tier, counted roll by counted roll in the
+  same shape as Apotheosis' own tiered gateways: affix items go from two
+  common/uncommon rolls at haven to five guaranteed mythic rolls at pinnacle, gems
+  from three cracked/normal rolls to ten perfect ones, and gem dust (8 → 64), flavor
+  stacks and experience all grow with the tier. The gateway reads its tier too — the
+  gate pearl's texture and the ring size follow small → medium → large as the tier
+  climbs, the same mapping the default tiered gateways use. A gateway only opens once
   you have unlocked its tier — work up the built-in Apotheosis gateways to reach the
   higher bands. The gateway allows up to three failures before it collapses.
 - Requires [Gateways to Eternity](https://www.curseforge.com/minecraft/mc-mods/gateways-to-eternity);

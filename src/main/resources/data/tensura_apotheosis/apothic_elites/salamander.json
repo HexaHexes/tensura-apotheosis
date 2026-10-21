@@ -21,25 +21,11 @@
                                                 }
                                             ],
                        "valid_gear_sets":  {
-                                               "ascent":  [
-                                                              "#tensura_salamander_ascent"
-                                                          ],
-                                               "summit":  [
-                                                              "#tensura_salamander_summit"
-                                                          ],
                                                "pinnacle":  [
                                                                 "#tensura_salamander_pinnacle"
                                                             ]
                                            },
                        "weights":  {
-                                       "ascent":  {
-                                                      "quality":  0.1,
-                                                      "weight":  80
-                                                  },
-                                       "summit":  {
-                                                      "quality":  0.12,
-                                                      "weight":  60
-                                                  },
                                        "pinnacle":  {
                                                         "quality":  0.15,
                                                         "weight":  40
@@ -93,10 +79,10 @@
               },
     "success_chance":  0.012,
     "affix_data":  {
-                       "affix_chance":  0.55,
+                       "affix_chance":  0.8,
                        "rarities":  [
-                                        "apotheosis:rare",
-                                        "apotheosis:epic"
+                                        "apotheosis:epic",
+                                        "apotheosis:mythic"
                                     ]
                    }
 }

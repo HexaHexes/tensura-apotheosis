@@ -736,6 +736,33 @@ foreach ($en in $tj.Entries) {
         }
     }
 }
+# Spawn-dimension reference data: every tensura biome tag (for recursive
+# expansion) and every dimension's biome_source list (tensura:hell holds the
+# four underworld_* biomes; boss_area/labyrinth are flat the_void and list
+# nothing), so a biome id can be classified against its dimension below.
+$biomeTags = @{}
+foreach ($en in $tj.Entries) {
+    if ($en.FullName -like 'data/tensura/tags/worldgen/biome/*.json') {
+        $tagPath = $en.FullName -replace '^data/tensura/tags/worldgen/biome/', '' -replace '\.json$', ''
+        $reader = [System.IO.StreamReader]::new($en.Open())
+        $txt = $reader.ReadToEnd()
+        $reader.Dispose()
+        $biomeTags[$tagPath] = ($txt | ConvertFrom-Json).values
+    }
+}
+$tensuraBiomeDim = @{}
+foreach ($en in $tj.Entries) {
+    if ($en.FullName -like 'data/tensura/dimension/*.json') {
+        $dimLabel = [System.IO.Path]::GetFileNameWithoutExtension($en.FullName)
+        $reader = [System.IO.StreamReader]::new($en.Open())
+        $txt = $reader.ReadToEnd()
+        $reader.Dispose()
+        $j = $txt | ConvertFrom-Json
+        if ($j.generator.biome_source.biomes) {
+            foreach ($b in $j.generator.biome_source.biomes) { $tensuraBiomeDim[$b.biome] = $dimLabel }
+        }
+    }
+}
 $tj.Dispose()
 
 # mob -> theme + display name. World tiers are NOT assigned here: they are
@@ -792,7 +819,7 @@ for ($i = 0; $i -lt $tiers.Count; $i++) { $tierIndex[$tiers[$i]] = $i }
 # ---- Stat-derived world-tier banding ----------------------------------------
 # Tier bands gate elite spawns, elite affix rarities, gateway opening and
 # gateway rewards (see $tierProfile). Rather than hand-assigning mobs, score
-# every roster mob on actual stats and band by rank:
+# every roster mob on actual stats, then band within spawn-dimension groups:
 #   1. Every stat becomes an average-rank percentile over the 38-mob roster
 #      (a value shared by k mobs sits at the midpoint of its rank block).
 #      Inputs: the theme combat stats (hp, damage, scale, enchant chance,
@@ -805,9 +832,13 @@ for ($i = 0; $i -lt $tiers.Count; $i++) { $tierIndex[$tiers[$i]] = $i }
 #      arch_daemon vs lesser_daemon on the same demon stats).
 #   3. Mobs sort strongest-first with a deterministic tiebreak chain
 #      (composite, mp, aura, spiritual, hp, dmg, scale, ench, succ asc, mob).
-#   4. Greedy fill from the top: pinnacle takes the strongest mobs, haven the
-#      weakest; a new band opens before a mob would push the current one past
-#      ~n/5 mobs, so exact ties always share a band.
+#   4. Placement is stratified by spawn dimension (resolved from each mob's
+#      _spawn biome tag in the block below) so no dimension piles into a
+#      single tier: groups of 5+ are sliced into stat-ordered segments
+#      (strongest segment -> pinnacle; cuts snap to score-change points so
+#      exact ties stay whole), groups of 2-4 are spaced evenly across the
+#      ladder (weakest -> haven, strongest -> pinnacle), a lone dimension
+#      sits mid-ladder.
 
 $rawStats = foreach ($r in $roster) {
     $th = $themeByKey[$r.theme]
@@ -881,29 +912,151 @@ $orderedThemes = $scoredStats | Sort-Object `
     @{ Expression = { $_.succ };       Descending = $false },
     @{ Expression = { $_.mob };        Descending = $false }
 
-$bandTarget = $roster.Count / $tiers.Count
-$themeTier = @{}
-$bandIdx = $tiers.Count - 1
-$bandThemes = [System.Collections.Generic.List[string]]::new()
-$bandMobCount = 0
-foreach ($p in $orderedThemes) {
-    if ($bandThemes.Count -gt 0 -and ($bandMobCount + 1) -gt $bandTarget -and $bandIdx -gt 0) {
-        foreach ($k in $bandThemes) { $themeTier[$k] = $tiers[$bandIdx] }
-        $bandIdx--
-        $bandThemes.Clear()
-        $bandMobCount = 0
+# ---- Spawn dimension resolution ---------------------------------------------
+# Each mob's dimension comes from its _spawn biome tag - the hardest
+# dimension it can spawn in (overworld < nether = hell < end). Tensura tags
+# expand recursively from the jar data parsed above; vanilla nether/end
+# biome ids classify via hardcoded vanilla sets; conventional (c:) and other
+# vanilla tags classify by name.
+$mcNetherBiomes = [System.Collections.Generic.HashSet[string]]::new([string[]]@(
+    'minecraft:nether_wastes', 'minecraft:soul_sand_valley', 'minecraft:crimson_forest',
+    'minecraft:warped_forest', 'minecraft:basalt_deltas'))
+$mcEndBiomes = [System.Collections.Generic.HashSet[string]]::new([string[]]@(
+    'minecraft:the_end', 'minecraft:end_highlands', 'minecraft:end_midlands',
+    'minecraft:end_barrens', 'minecraft:small_end_islands'))
+$dimSeverity = @{ overworld = 0; nether = 1; hell = 1; end = 2 }
+
+function Get-EntryDimension([string]$entry, [int]$depth, $seen) {
+    if ($depth -gt 8) { throw "biome tag expansion too deep at '$entry'" }
+    if ($entry.StartsWith('#')) {
+        $tagPath = $entry.Substring(1)
+        if ($tagPath.StartsWith('tensura:')) {
+            $name = $tagPath.Substring(8)
+            if (-not $biomeTags.ContainsKey($name)) { throw "tensura biome tag '$tagPath' missing from jar" }
+            if (-not $seen.Add($tagPath)) { return 'overworld' }
+            $best = 'overworld'
+            foreach ($v in $biomeTags[$name]) {
+                $id = if ($v -is [string]) { $v } else { $v.id }
+                $d = Get-EntryDimension $id ($depth + 1) $seen
+                if ($dimSeverity[$d] -gt $dimSeverity[$best]) { $best = $d }
+            }
+            return $best
+        }
+        if ($tagPath -match '(^|[_/:])nether([_/:]|$)') { return 'nether' }
+        if ($tagPath -match '(^|[_/:])end([_/:]|$)') { return 'end' }
+        return 'overworld'
     }
-    $bandThemes.Add($p.mob)
-    $bandMobCount++
+    if ($mcNetherBiomes.Contains($entry)) { return 'nether' }
+    if ($mcEndBiomes.Contains($entry)) { return 'end' }
+    if ($entry.StartsWith('tensura:')) {
+        if ($tensuraBiomeDim.ContainsKey($entry)) { return $tensuraBiomeDim[$entry] }
+        return 'overworld'
+    }
+    if ($entry -match '(^|[_/:])nether([_/:]|$)') { return 'nether' }
+    if ($entry -match '(^|[_/:])end([_/:]|$)') { return 'end' }
+    return 'overworld'
 }
-if ($bandIdx -ne 0) {
-    throw "stat banding left world tier(s) above '$($tiers[$bandIdx])' empty - stats too clumped?"
+$mobDim = @{}
+foreach ($r in $roster) {
+    $tagName = $r.mob + '_spawn'
+    if (-not $biomeTags.ContainsKey($tagName)) { throw "roster $($r.mob): no $tagName biome tag in jar" }
+    $seen = [System.Collections.Generic.HashSet[string]]::new()
+    [void]$seen.Add("tensura:$tagName")
+    $best = 'overworld'
+    foreach ($v in $biomeTags[$tagName]) {
+        $entry = if ($v -is [string]) { $v } else { $v.id }
+        $d = Get-EntryDimension $entry 0 $seen
+        if ($dimSeverity[$d] -gt $dimSeverity[$best]) { $best = $d }
+    }
+    $mobDim[$r.mob] = $best
 }
-foreach ($k in $bandThemes) { $themeTier[$k] = $tiers[0] }
-foreach ($r in $roster) { $r.tier = $themeTier[$r.mob] }
-Write-Output 'tier bands (stat-derived):'
+
+# ---- Stratified banding within spawn-dimension groups -----------------------
+$groups = [ordered]@{}
+foreach ($p in $orderedThemes) {
+    $g = $mobDim[$p.mob]
+    if (-not $groups.Contains($g)) { $groups[$g] = [System.Collections.Generic.List[object]]::new() }
+    $groups[$g].Add($p)
+}
+$mobTier = @{}
+foreach ($g in $groups.Keys) {
+    $members = $groups[$g]
+    $k = $members.Count
+    if ($k -eq 1) {                                    # lone dimension: mid-ladder
+        $mobTier[$members[0].mob] = $tiers[2]
+        continue
+    }
+    if ($k -le 4) {                                    # spaced evenly across the ladder
+        for ($s = 0; $s -lt $k; $s++) {
+            $bucket = [int][math]::Round(($k - 1 - $s) * 4.0 / ($k - 1))
+            $mobTier[$members[$s].mob] = $tiers[$bucket]
+        }
+        continue
+    }
+    # k >= 5: contiguous stat-ordered segments, sizes as even as possible
+    # (extra seats on the strongest segments), cuts snapped to score-change
+    # points so exact stat ties never straddle a band boundary.
+    $base = [int][math]::Floor($k / 5.0)
+    $rem = $k % 5
+    $sizes = @()
+    for ($i = 0; $i -lt 5; $i++) {
+        $extra = if ($i -lt $rem) { 1 } else { 0 }
+        $sizes += $base + $extra
+    }
+    $nominal = @()
+    $acc = 0
+    for ($i = 0; $i -lt 4; $i++) { $acc += $sizes[$i]; $nominal += $acc }
+    $cands = [System.Collections.Generic.List[int]]::new()
+    for ($i = 1; $i -lt $k; $i++) {
+        if ($members[$i].composite -ne $members[$i - 1].composite) { $cands.Add($i) }
+    }
+    $bounds = @()
+    $prev = 0
+    for ($j = 0; $j -lt $nominal.Count; $j++) {
+        $remCuts = $nominal.Count - 1 - $j
+        $lo = $prev + 1
+        $hi = $k - 1 - $remCuts
+        $bestCut = -1
+        $bestDist = [double]::MaxValue
+        foreach ($c in $cands) {
+            if ($c -ge $lo -and $c -le $hi) {
+                $d = [math]::Abs($c - $nominal[$j])
+                if ($d -lt $bestDist) { $bestCut = $c; $bestDist = $d }
+            }
+        }
+        if ($bestCut -lt 0) { throw "no score-change cut point for band $($j + 1) of $k-mob '$g' group" }
+        $bounds += $bestCut
+        $prev = $bestCut
+    }
+    $segStarts = @(0) + $bounds
+    $segEnds = $bounds + @($k)
+    for ($seg = 0; $seg -lt 5; $seg++) {
+        for ($i = $segStarts[$seg]; $i -lt $segEnds[$seg]; $i++) {
+            $mobTier[$members[$i].mob] = $tiers[4 - $seg]   # strongest segment -> pinnacle
+        }
+    }
+}
+foreach ($r in $roster) { $r.tier = $mobTier[$r.mob] }
+# Tripwire: a dimension with 2+ mobs must span 2+ tiers (the whole point of
+# the stratification - one dimension never collapses into a single tier).
+foreach ($g in $groups.Keys) {
+    if ($groups[$g].Count -ge 2) {
+        $span = [System.Collections.Generic.HashSet[string]]::new()
+        foreach ($m in $groups[$g]) { [void]$span.Add($mobTier[$m.mob]) }
+        if ($span.Count -lt 2) {
+            throw "dimension group '$g' ($($groups[$g].Count) mobs) collapsed into a single tier - spread rule broken"
+        }
+    }
+}
+$dimOrder = @('overworld', 'nether', 'hell', 'end')
+$dimSummary = @()
+foreach ($d in $dimOrder) { if ($groups.Contains($d)) { $dimSummary += "$d=$($groups[$d].Count)" } }
+foreach ($g in $groups.Keys) { if ($dimOrder -notcontains $g) { $dimSummary += "$g=$($groups[$g].Count)" } }
+Write-Output ('spawn dimensions: ' + ($dimSummary -join ' '))
+Write-Output 'tier bands (stat + spawn dimension):'
 foreach ($t in $tiers) {
-    $mobs = @($roster | Where-Object { $_.tier -eq $t } | ForEach-Object { $_.mob })
+    $mobs = @($roster | Where-Object { $_.tier -eq $t } | ForEach-Object {
+        if ($mobDim[$_.mob] -eq 'overworld') { $_.mob } else { "$($_.mob)[$($mobDim[$_.mob])]" } })
     Write-Output ("  {0,-9} ({1,2})  {2}" -f $t, $mobs.Count, ($mobs -join ' '))
 }
 
@@ -913,13 +1066,20 @@ foreach ($t in $tiers) {
 # rarity weights per world tier (common is haven-heavy, mythic only exists
 # from summit on); summit/pinnacle elites share the {epic, mythic} pool and
 # separate on affix_chance instead, since mythic is the cap. Band MEMBERSHIP
-# is stat-derived by the block above, never hand-picked.
+# is stat-derived + spawn-dimension-stratified by the block above, never
+# hand-picked.
+# Gateway reward COUNTS and dust/stack sizes mirror Apotheosis' own tiered
+# gateways (their frontier..pinnacle: counted 3 items / 5 gems, dust
+# 16/24/48/64; pinnacle jumps to 5 items / 10 gems), anchored one step below
+# at haven. `size` mirrors their tier->size mapping (small/medium/large),
+# which is what actually varies a gateway's base texture - the gate pearl
+# model selects gate_pearl_small/med/large by the gateway's settings.size.
 $tierProfile = [ordered]@{
-    haven    = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:common', 'apotheosis:uncommon'); affixChance = 0.45; rewardRarities = @('apotheosis:common', 'apotheosis:uncommon'); purities = @('cracked', 'normal');        dust = 8;  heraldXp = 100; bossXp = 300; finalXp = 500;  stackCount = 8  }
-    frontier = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:uncommon', 'apotheosis:rare');  affixChance = 0.5;  rewardRarities = @('apotheosis:uncommon', 'apotheosis:rare');  purities = @('normal');                 dust = 12; heraldXp = 150; bossXp = 400; finalXp = 650;  stackCount = 10 }
-    ascent   = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:rare', 'apotheosis:epic');      affixChance = 0.55; rewardRarities = @('apotheosis:rare', 'apotheosis:epic');      purities = @('flawless');               dust = 16; heraldXp = 200; bossXp = 500; finalXp = 800;  stackCount = 12 }
-    summit   = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:epic', 'apotheosis:mythic');    affixChance = 0.65; rewardRarities = @('apotheosis:epic', 'apotheosis:mythic');    purities = @('flawless', 'perfect');    dust = 20; heraldXp = 250; bossXp = 650; finalXp = 950;  stackCount = 16 }
-    pinnacle = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:epic', 'apotheosis:mythic');    affixChance = 0.8;  rewardRarities = @('apotheosis:mythic');                     purities = @('perfect');                dust = 24; heraldXp = 300; bossXp = 800; finalXp = 1200; stackCount = 20 }
+    haven    = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:common', 'apotheosis:uncommon'); affixChance = 0.45; rewardRarities = @('apotheosis:common', 'apotheosis:uncommon'); purities = @('cracked', 'normal');        dust = 8;  heraldXp = 100; bossXp = 300; finalXp = 500;  stackCount = 4;  itemCount = 2; gemCount = 3;  size = 'small'  }
+    frontier = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:uncommon', 'apotheosis:rare');  affixChance = 0.5;  rewardRarities = @('apotheosis:uncommon', 'apotheosis:rare');  purities = @('normal');                 dust = 16; heraldXp = 150; bossXp = 400; finalXp = 650;  stackCount = 8;  itemCount = 3; gemCount = 5;  size = 'small'  }
+    ascent   = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:rare', 'apotheosis:epic');      affixChance = 0.55; rewardRarities = @('apotheosis:rare', 'apotheosis:epic');      purities = @('flawless');               dust = 24; heraldXp = 200; bossXp = 500; finalXp = 800;  stackCount = 12; itemCount = 3; gemCount = 5;  size = 'medium' }
+    summit   = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:epic', 'apotheosis:mythic');    affixChance = 0.65; rewardRarities = @('apotheosis:epic', 'apotheosis:mythic');    purities = @('flawless', 'perfect');    dust = 48; heraldXp = 250; bossXp = 650; finalXp = 950;  stackCount = 24; itemCount = 3; gemCount = 5;  size = 'medium' }
+    pinnacle = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:epic', 'apotheosis:mythic');    affixChance = 0.8;  rewardRarities = @('apotheosis:mythic');                     purities = @('perfect');                dust = 64; heraldXp = 300; bossXp = 800; finalXp = 1200; stackCount = 48; itemCount = 5; gemCount = 10; size = 'large'  }
 }
 
 # Theme identity: gateway boss-bar color + themed reward pool per mob family.
@@ -1116,16 +1276,27 @@ foreach ($r in $roster) {
         settings = [pscustomobject][ordered]@{
             soundtrack = 'apotheosis:soundtrack_pinnacle'
             tier       = $band
-            size       = 'large'
+            size       = $profile.size
             color      = $identity.color
         }
         waves    = @($heraldWave, $bossWave)
         rewards  = @(
-            [pscustomobject][ordered]@{ type = 'apotheosis:affix_item'; rarities = @($profile.rewardRarities) }
+            # Counted rolls mirror Apotheosis' tiered gateways: the inner
+            # reward fires `count` times, so item/gem quantity scales with
+            # tier alongside rarity and purity.
             [pscustomobject][ordered]@{
-                type     = 'apotheosis:gem'
-                purities = @($profile.purities)
-                gems     = @($identity.gems | ForEach-Object { "tensura_apotheosis:$_" })
+                type   = 'gateways:counted'
+                count  = $profile.itemCount
+                reward = [pscustomobject][ordered]@{ type = 'apotheosis:affix_item'; rarities = @($profile.rewardRarities) }
+            }
+            [pscustomobject][ordered]@{
+                type   = 'gateways:counted'
+                count  = $profile.gemCount
+                reward = [pscustomobject][ordered]@{
+                    type     = 'apotheosis:gem'
+                    purities = @($profile.purities)
+                    gems     = @($identity.gems | ForEach-Object { "tensura_apotheosis:$_" })
+                }
             }
             [pscustomobject][ordered]@{
                 type  = 'gateways:stack'
@@ -1146,6 +1317,11 @@ foreach ($r in $roster) {
     }
     Add-Gateway "elite/$($r.mob)" $gateway
     Add-GatewayRecipe "elite/$($r.mob)" "tensura_apotheosis:elite/$($r.mob)"
+    # Gateway name: Gateways translates a gateway id with ':' -> '.' exactly
+    # like its own lang (gateways.basic/blaze) and Apotheosis'
+    # (apotheosis.tiered/frontier); without this key the gate pearl tooltip
+    # and gateway name render the raw key.
+    $lang["tensura_apotheosis.elite/$($r.mob)"] = "$($r.display) Gateway"
 }
 if ($gateways.Count -ne 38) { throw "gateways = $($gateways.Count) expected 38" }
 

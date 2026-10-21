@@ -42,8 +42,12 @@ elite system:
 - Each elite appears where its base mob naturally spawns, and only in that biome (no
   dimension-wide spawns). Spawned from eggs, spawners or summons never become elites —
   only natural spawns have a chance.
-- Elites span Apotheosis' five rarity tiers (haven through pinnacle), from commons like
-  Direwolf or Giant Ant to rare pinnacle threats like Arch Daemon and Tempest Serpent.
+- The 38 are banded across Apotheosis' five world tiers — eight each at haven, frontier
+  and ascent, seven at summit and seven at pinnacle — from haven-band spawns like Giant
+  Ant and Slime to pinnacle threats like Arch Daemon, Tempest Serpent, Unicorn and
+  Pegasus. A band's elite only spawns in worlds at or above its tier.
+- Their gear rolls an increasing affix rarity ladder that tracks the tier: common and
+  uncommon affixes at haven, up through rare and epic to mythic at summit and pinnacle.
 - They carry bonus health, damage, knockback resistance and size, and wear themed gear
   drawn from their identity (daemons wield staves and grimoires, spiders wear knight-spider
   carapace, beasts carry beast-horn and blade-tiger weapons, and so on).
@@ -65,10 +69,17 @@ elite system:
 
 - Craft a gate pearl from ender pearls, diamonds and Apotheosis gem dust (one recipe per
   elite), place it on the ground, and a gateway opens.
+- Every gateway is themed to its mob: the boss bar wears the family's color (slime green
+  for a Slime gate, wasp amber for an Army Wasp gate, gold for a Unicorn gate), and the
+  clear rewards draw from that family's gem pool plus a flavor stack — blaze powder from
+  a Salamander gate, spider eyes from a Spider gate, dragon's breath from a Serpent gate.
 - Each gateway runs two waves: a herald pack of the mob's lesser kin, then the elite
   itself as a full boss with boosted health and damage.
-- Clear it for a mythic affix item, a flawless gem, gem dust and experience. The gateway
-  allows up to three failures before it collapses.
+- Rewards scale with the gateway's world tier: affix items rise from common/uncommon at
+  haven to a guaranteed mythic at pinnacle, gems from cracked to perfect purity, and gem
+  dust, flavor stacks and experience all grow with the tier. A gateway only opens once
+  you have unlocked its tier — work up the built-in Apotheosis gateways to reach the
+  higher bands. The gateway allows up to three failures before it collapses.
 - Requires [Gateways to Eternity](https://www.curseforge.com/minecraft/mc-mods/gateways-to-eternity);
   without it, everything else still works.
 

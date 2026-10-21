@@ -21,9 +21,6 @@
                                                 }
                                             ],
                        "valid_gear_sets":  {
-                                               "haven":  [
-                                                             "#tensura_insect_haven"
-                                                         ],
                                                "frontier":  [
                                                                 "#tensura_insect_frontier"
                                                             ],
@@ -38,10 +35,6 @@
                                                             ]
                                            },
                        "weights":  {
-                                       "haven":  {
-                                                     "quality":  0.1,
-                                                     "weight":  100
-                                                 },
                                        "frontier":  {
                                                         "quality":  0.1,
                                                         "weight":  100
@@ -102,5 +95,12 @@
                                              "secondary":  12
                                          }
               },
-    "success_chance":  0.014
+    "success_chance":  0.014,
+    "affix_data":  {
+                       "affix_chance":  0.5,
+                       "rarities":  [
+                                        "apotheosis:uncommon",
+                                        "apotheosis:rare"
+                                    ]
+                   }
 }

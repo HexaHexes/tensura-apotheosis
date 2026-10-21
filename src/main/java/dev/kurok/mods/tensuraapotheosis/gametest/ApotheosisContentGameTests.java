@@ -1,15 +1,21 @@
 package dev.kurok.mods.tensuraapotheosis.gametest;
 
 import dev.shadowsoffire.apotheosis.affix.AffixRegistry;
+import dev.shadowsoffire.apotheosis.compat.gateways.tiered_gate.TieredGateway;
 import dev.shadowsoffire.apotheosis.loot.LootCategory;
+import dev.shadowsoffire.apotheosis.loot.LootRarity;
 import dev.shadowsoffire.apotheosis.mobs.registries.EliteRegistry;
+import dev.shadowsoffire.apotheosis.mobs.types.Elite;
 import dev.shadowsoffire.apotheosis.socket.gem.Gem;
 import dev.shadowsoffire.apotheosis.socket.gem.GemItem;
 import dev.shadowsoffire.apotheosis.socket.gem.GemRegistry;
 import dev.shadowsoffire.apotheosis.socket.gem.Purity;
+import dev.shadowsoffire.apotheosis.tiers.WorldTier;
+import dev.shadowsoffire.gateways.gate.Gateway;
 import dev.shadowsoffire.gateways.gate.GatewayRegistry;
 import dev.shadowsoffire.placebo.systems.gear.GearSetRegistry;
 import io.github.manasmods.tensura.item.weapon.TwoHandedSwordItem;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -43,11 +49,17 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
  *   <li>Every gem JSON under {@code data/tensura_apotheosis/gems/} must resolve
  *       in {@link GemRegistry} and produce a stack of Apotheosis' shared gem item.</li>
  *   <li>Every elite boss JSON under {@code data/tensura_apotheosis/apothic_elites/}
- *       must resolve in {@link EliteRegistry}. These are the 38 Tensura elite
- *       variants; a biome or stats parse failure would silently drop one.</li>
+ *       must resolve in {@link EliteRegistry}, carry the tier band's affix
+ *       rarities (the rising elite rarity ladder), and keep its spawn weights
+ *       a contiguous suffix of the haven..pinnacle ladder - full gating means
+ *       a band's elite never weighs in below its tier.</li>
  *   <li>Every gear set JSON under {@code data/tensura_apotheosis/gear_sets/} must
  *       resolve in {@link GearSetRegistry}. Track A sets join Apotheosis' vanilla
  *       tier pools; Track B sets are scoped to the Tensura elites via tags.</li>
+ *   <li>Every gateway JSON under {@code data/tensura_apotheosis/gateways/} must
+ *       resolve in Gateways' registry as a tiered gateway, the 38 must span all
+ *       five world tiers, and boss-bar colors must be theme-varied (the uniform
+ *       single-color design is what this guards against).</li>
  * </ol>
  */
 @GameTestHolder("tensura_apotheosis")
@@ -156,7 +168,7 @@ public class ApotheosisContentGameTests {
         helper.succeed();
     }
 
-    /** Every shipped elite JSON must parse into Apotheosis' elite registry. */
+    /** Every shipped elite JSON must parse, expose a tier band and gate its spawns. */
     @GameTest(template = "empty")
     public static void allElitesLoad(GameTestHelper helper) {
         Set<ResourceLocation> expected = expectedIds(helper, "apothic_elites");
@@ -164,10 +176,43 @@ public class ApotheosisContentGameTests {
             throw new GameTestAssertException(
                     "found " + expected.size() + " elite data files expected " + EXPECTED_ELITES);
         }
+        WorldTier[] ladder = WorldTier.values();
+        Set<Set<LootRarity>> distinctBands = new HashSet<>();
         for (ResourceLocation id : expected) {
-            if (EliteRegistry.INSTANCE.getValue(id) == null) {
+            Elite elite = EliteRegistry.INSTANCE.getValue(id);
+            if (elite == null) {
                 throw new GameTestAssertException("elite " + id + " not in EliteRegistry (parse failure?)");
             }
+            // Rising rarity ladder: every elite must carry affix rarities from
+            // the tier profile, and the roster must actually differ across bands.
+            if (elite.afxData().rarities().isEmpty()) {
+                throw new GameTestAssertException("elite " + id + " has no affix rarities (affix_data missing?)");
+            }
+            distinctBands.add(elite.afxData().rarities());
+            // Full gating: spawn weights must be a contiguous suffix of the
+            // haven..pinnacle ladder - a band's elite never weighs in below
+            // its tier (that would spawn mythic-affix elites in haven worlds).
+            Set<WorldTier> present = elite.weights().weights().keySet();
+            if (present.isEmpty()) {
+                throw new GameTestAssertException("elite " + id + " has no spawn weights at any world tier");
+            }
+            int first = Integer.MAX_VALUE;
+            for (int i = 0; i < ladder.length; i++) {
+                if (present.contains(ladder[i])) {
+                    first = Math.min(first, i);
+                }
+            }
+            for (int i = 0; i < ladder.length; i++) {
+                if (present.contains(ladder[i]) != (i >= first)) {
+                    throw new GameTestAssertException(
+                            "elite " + id + " spawn weights are not a contiguous tier suffix: " + present);
+                }
+            }
+        }
+        if (distinctBands.size() < 3) {
+            throw new GameTestAssertException(
+                    "elite rarity ladder collapsed: only " + distinctBands.size()
+                            + " distinct rarity bands across the roster");
         }
         helper.succeed();
     }
@@ -188,7 +233,7 @@ public class ApotheosisContentGameTests {
         helper.succeed();
     }
 
-    /** Every shipped gateway JSON must parse into Gateways' gateway registry. */
+    /** Every shipped gateway JSON must parse, span all tiers and vary by theme. */
     @GameTest(template = "empty")
     public static void allGatewaysLoad(GameTestHelper helper) {
         Set<ResourceLocation> expected = expectedIds(helper, "gateways");
@@ -196,10 +241,27 @@ public class ApotheosisContentGameTests {
             throw new GameTestAssertException(
                     "found " + expected.size() + " gateway data files expected " + EXPECTED_GATEWAYS);
         }
+        Set<WorldTier> tiers = EnumSet.noneOf(WorldTier.class);
+        Set<String> colors = new HashSet<>();
         for (ResourceLocation id : expected) {
-            if (GatewayRegistry.INSTANCE.getValue(id) == null) {
+            Gateway gateway = GatewayRegistry.INSTANCE.getValue(id);
+            if (gateway == null) {
                 throw new GameTestAssertException("gateway " + id + " not in GatewayRegistry (parse failure?)");
             }
+            if (!(gateway instanceof TieredGateway tiered)) {
+                throw new GameTestAssertException("gateway " + id + " is not apotheosis:tiered");
+            }
+            tiers.add(tiered.settings().tier());
+            colors.add(tiered.color().serialize());
+        }
+        if (tiers.size() != WorldTier.values().length) {
+            throw new GameTestAssertException(
+                    "gateways cover " + tiers.size() + " world tiers expected all " + WorldTier.values().length
+                            + " - tier distribution regressed (" + tiers + ")");
+        }
+        if (colors.size() < 10) {
+            throw new GameTestAssertException(
+                    "only " + colors.size() + " distinct gateway colors - mob theming lost?");
         }
         helper.succeed();
     }

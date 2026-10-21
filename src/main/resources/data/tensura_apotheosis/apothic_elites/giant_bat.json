@@ -102,5 +102,12 @@
                                              "secondary":  12
                                          }
               },
-    "success_chance":  0.012
+    "success_chance":  0.012,
+    "affix_data":  {
+                       "affix_chance":  0.45,
+                       "rarities":  [
+                                        "apotheosis:common",
+                                        "apotheosis:uncommon"
+                                    ]
+                   }
 }

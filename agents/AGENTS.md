@@ -21,7 +21,9 @@ gear sets, elites, gateways, gateway recipes, lang and models. **Textures are ne
 generated**: the original 14 gem PNGs are fixed art, and every newer gem reuses an
 existing Apotheosis gem texture as a placeholder until hand-drawn art lands (the 5th
 `Add-Gem` argument). **Value tuning happens in the generator, not by hand-editing
-JSON** - regenerate after any change.
+JSON** - regenerate after any change. The world-tier banding (roster `tier`),
+`$tierProfile` (elite + reward rarity ladder) and `$themeIdentity` (gateway color,
+themed gem pool and flavor stack per mob family) all live there too.
 
 **Gotchas (all caught by the gametest; do not regress them)**
 - Affix `min`/`max` ranges decode as **step functions** with an implicit step of `0.01`;
@@ -46,9 +48,26 @@ JSON** - regenerate after any change.
 - Every elite mob must have a `#tensura:<mob>_spawn` biome tag; the elite's
   `constraints.biomes` is that literal tag (so it inherits Tensura's exact natural-spawn
   logic, no blanket dimensions).
-- Elite gateways use `apotheosis:tiered` with `settings.tier = "haven"` - the default
-  active World Tier, so every gateway opens from the start (`tier` is a `WorldTier`
-  enum id). Their `elite` field must match a shipped `tensura_apotheosis:<mob>` elite.
+- Elite gateways use `apotheosis:tiered`; each mob's gateway sits at its hand-tuned
+  world tier (roster `tier`, distributed 8/8/8/7/7 across haven..pinnacle) and
+  `canOpen` blocks players who have not unlocked that tier. `settings.color`, the
+  gem pool, the flavor stack and all reward magnitudes come from
+  `$themeIdentity` + `$tierProfile` in the generator - never hand-tune one gateway.
+  The `elite` field must match a shipped `tensura_apotheosis:<mob>` elite.
+- **Never add `rarities` to the herald wave's `apotheosis:affix` modifier.** Its
+  AffixData codec resolves rarity values at decode time, but Gateways' registry
+  reloads before Apotheosis' rarity registry binds - all 38 gateways then fail with
+  "unbound value: apotheosis:common". Omitting the field falls back to Apotheosis'
+  world-tier-weighted rarity random, which is tier-aware for free. Static bands
+  belong only in elite `affix_data` and the `affix_item` reward (lazy holders,
+  proven safe). See the note at the gateway loop.
+- Elite banding is a **contiguous suffix** of the tier ladder: `weights` and
+  `valid_gear_sets` list only the elite's tier and above (craig.json-style key
+  omission - missing tiers weigh zero), and `affix_data.rarities` +
+  `affix_chance` come from `$tierProfile`. `allElitesLoad` asserts the suffix
+  shape and a non-collapsed ladder; `allGatewaysLoad` asserts all 5 tiers are
+  covered and at least 10 distinct boss-bar colors (the regression both guards
+  is the old uniform `#B02E26`, mythic-everywhere design).
 
 ---
 

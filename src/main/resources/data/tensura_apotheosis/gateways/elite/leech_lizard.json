@@ -4,7 +4,7 @@
                      "soundtrack":  "apotheosis:soundtrack_pinnacle",
                      "tier":  "haven",
                      "size":  "large",
-                     "color":  "#B02E26"
+                     "color":  "#AED581"
                  },
     "waves":  [
                   {
@@ -32,7 +32,7 @@
                       "rewards":  [
                                       {
                                           "type":  "gateways:experience",
-                                          "experience":  150,
+                                          "experience":  100,
                                           "orb_size":  60
                                       }
                                   ]
@@ -69,7 +69,7 @@
                       "rewards":  [
                                       {
                                           "type":  "gateways:experience",
-                                          "experience":  500,
+                                          "experience":  300,
                                           "orb_size":  100
                                       }
                                   ]
@@ -79,25 +79,39 @@
                     {
                         "type":  "apotheosis:affix_item",
                         "rarities":  [
-                                         "apotheosis:mythic"
+                                         "apotheosis:common",
+                                         "apotheosis:uncommon"
                                      ]
                     },
                     {
                         "type":  "apotheosis:gem",
                         "purities":  [
-                                         "flawless"
-                                     ]
+                                         "cracked",
+                                         "normal"
+                                     ],
+                        "gems":  [
+                                     "tensura_apotheosis:core/earthen",
+                                     "tensura_apotheosis:core/predator",
+                                     "tensura_apotheosis:core/vigor"
+                                 ]
                     },
                     {
                         "type":  "gateways:stack",
                         "stack":  {
-                                      "count":  24,
+                                      "count":  8,
                                       "id":  "apotheosis:gem_dust"
                                   }
                     },
                     {
+                        "type":  "gateways:stack",
+                        "stack":  {
+                                      "count":  8,
+                                      "id":  "minecraft:turtle_scute"
+                                  }
+                    },
+                    {
                         "type":  "gateways:experience",
-                        "experience":  1000,
+                        "experience":  500,
                         "orb_size":  100
                     }
                 ],

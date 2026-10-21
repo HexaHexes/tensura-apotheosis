@@ -21,15 +21,6 @@
                                                 }
                                             ],
                        "valid_gear_sets":  {
-                                               "haven":  [
-                                                             "#tensura_salamander_haven"
-                                                         ],
-                                               "frontier":  [
-                                                                "#tensura_salamander_frontier"
-                                                            ],
-                                               "ascent":  [
-                                                              "#tensura_salamander_ascent"
-                                                          ],
                                                "summit":  [
                                                               "#tensura_salamander_summit"
                                                           ],
@@ -38,18 +29,6 @@
                                                             ]
                                            },
                        "weights":  {
-                                       "haven":  {
-                                                     "quality":  0.1,
-                                                     "weight":  100
-                                                 },
-                                       "frontier":  {
-                                                        "quality":  0.1,
-                                                        "weight":  100
-                                                    },
-                                       "ascent":  {
-                                                      "quality":  0.1,
-                                                      "weight":  80
-                                                  },
                                        "summit":  {
                                                       "quality":  0.12,
                                                       "weight":  60
@@ -105,5 +84,12 @@
                                              "secondary":  12
                                          }
               },
-    "success_chance":  0.012
+    "success_chance":  0.012,
+    "affix_data":  {
+                       "affix_chance":  0.65,
+                       "rarities":  [
+                                        "apotheosis:epic",
+                                        "apotheosis:mythic"
+                                    ]
+                   }
 }

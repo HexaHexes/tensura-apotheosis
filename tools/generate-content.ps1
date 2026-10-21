@@ -705,48 +705,107 @@ foreach ($en in $tj.Entries) {
 }
 $tj.Dispose()
 
-# mob -> theme + display name
+# mob -> theme + display name + hand-tuned world tier (haven..pinnacle).
+# Tier bands gate elite spawns, elite affix rarities, gateway opening and
+# gateway rewards - see $tierProfile below. Bands are lore-tuned within
+# themes too (lesser_daemon is ascent, arch_daemon is pinnacle). Distribution:
+# 8 haven / 8 frontier / 8 ascent / 7 summit / 7 pinnacle.
 $roster = @(
-    @{ mob='arch_daemon';       theme='demon';      display='Arch Daemon' }
-    @{ mob='greater_daemon';    theme='demon';      display='Greater Daemon' }
-    @{ mob='lesser_daemon';     theme='demon';      display='Lesser Daemon' }
-    @{ mob='salamander';        theme='salamander'; display='Salamander' }
-    @{ mob='basilisk';          theme='scaled';     display='Basilisk' }
-    @{ mob='dragon_peacock';    theme='scaled';     display='Dragon Peacock' }
-    @{ mob='feathered_serpent'; theme='scaled';     display='Feathered Serpent' }
-    @{ mob='tempest_serpent';   theme='scaled';     display='Tempest Serpent' }
-    @{ mob='leech_lizard';      theme='lizard';     display='Leech Lizard' }
-    @{ mob='hover_lizard';      theme='hover';      display='Hover Lizard' }
-    @{ mob='black_spider';      theme='spider';     display='Black Spider' }
-    @{ mob='knight_spider';     theme='spider';     display='Knight Spider' }
-    @{ mob='army_wasp';         theme='insect';     display='Army Wasp' }
-    @{ mob='giant_ant';         theme='insect';     display='Giant Ant' }
-    @{ mob='evil_centipede';    theme='insect';     display='Evil Centipede' }
-    @{ mob='hell_caterpillar';  theme='insect';     display='Hell Caterpillar' }
-    @{ mob='hell_moth';         theme='insect';     display='Hell Moth' }
-    @{ mob='barghest';          theme='beast';      display='Barghest' }
-    @{ mob='beast_gnome';       theme='beast';      display='Beast Gnome' }
-    @{ mob='direwolf';          theme='beast';      display='Direwolf' }
-    @{ mob='blade_tiger';       theme='beast';      display='Blade Tiger' }
-    @{ mob='giant_bat';         theme='beast';      display='Giant Bat' }
-    @{ mob='giant_bear';        theme='beast';      display='Giant Bear' }
-    @{ mob='horned_bear';       theme='beast';      display='Horned Bear' }
-    @{ mob='horned_rabbit';     theme='beast';      display='Horned Rabbit' }
-    @{ mob='hound_dog';         theme='beast';      display='Hound Dog' }
-    @{ mob='one_eyed_owl';      theme='beast';      display='One Eyed Owl' }
-    @{ mob='winged_cat';        theme='beast';      display='Winged Cat' }
-    @{ mob='giant_cod';         theme='aquatic';    display='Giant Cod' }
-    @{ mob='giant_salmon';      theme='aquatic';    display='Giant Salmon' }
-    @{ mob='landfish';          theme='aquatic';    display='Landfish' }
-    @{ mob='spear_toro';        theme='aquatic';    display='Spear Toro' }
-    @{ mob='armorsaurus';       theme='armorsaurus';display='Armorsaurus' }
-    @{ mob='slime';             theme='slime';      display='Slime' }
-    @{ mob='phantaspore';       theme='spore';      display='Phantaspore' }
-    @{ mob='orc';               theme='orc';        display='Orc' }
-    @{ mob='pegasus';           theme='unicorn';    display='Pegasus' }
-    @{ mob='unicorn';           theme='unicorn';    display='Unicorn' }
+    @{ mob='arch_daemon';       theme='demon';      display='Arch Daemon';       tier='pinnacle' }
+    @{ mob='greater_daemon';    theme='demon';      display='Greater Daemon';    tier='pinnacle' }
+    @{ mob='lesser_daemon';     theme='demon';      display='Lesser Daemon';     tier='ascent'   }
+    @{ mob='salamander';        theme='salamander'; display='Salamander';        tier='summit'   }
+    @{ mob='basilisk';          theme='scaled';     display='Basilisk';          tier='summit'   }
+    @{ mob='dragon_peacock';    theme='scaled';     display='Dragon Peacock';    tier='pinnacle' }
+    @{ mob='feathered_serpent'; theme='scaled';     display='Feathered Serpent'; tier='summit'   }
+    @{ mob='tempest_serpent';   theme='scaled';     display='Tempest Serpent';   tier='pinnacle' }
+    @{ mob='leech_lizard';      theme='lizard';     display='Leech Lizard';      tier='haven'    }
+    @{ mob='hover_lizard';      theme='hover';      display='Hover Lizard';      tier='frontier' }
+    @{ mob='black_spider';      theme='spider';     display='Black Spider';      tier='haven'    }
+    @{ mob='knight_spider';     theme='spider';     display='Knight Spider';     tier='ascent'   }
+    @{ mob='army_wasp';         theme='insect';     display='Army Wasp';         tier='frontier' }
+    @{ mob='giant_ant';         theme='insect';     display='Giant Ant';         tier='haven'    }
+    @{ mob='evil_centipede';    theme='insect';     display='Evil Centipede';    tier='frontier' }
+    @{ mob='hell_caterpillar';  theme='insect';     display='Hell Caterpillar';  tier='ascent'   }
+    @{ mob='hell_moth';         theme='insect';     display='Hell Moth';         tier='summit'   }
+    @{ mob='barghest';          theme='beast';      display='Barghest';          tier='summit'   }
+    @{ mob='beast_gnome';       theme='beast';      display='Beast Gnome';       tier='frontier' }
+    @{ mob='direwolf';          theme='beast';      display='Direwolf';          tier='ascent'   }
+    @{ mob='blade_tiger';       theme='beast';      display='Blade Tiger';       tier='summit'   }
+    @{ mob='giant_bat';         theme='beast';      display='Giant Bat';         tier='haven'    }
+    @{ mob='giant_bear';        theme='beast';      display='Giant Bear';        tier='ascent'   }
+    @{ mob='horned_bear';       theme='beast';      display='Horned Bear';       tier='ascent'   }
+    @{ mob='horned_rabbit';     theme='beast';      display='Horned Rabbit';     tier='haven'    }
+    @{ mob='hound_dog';         theme='beast';      display='Hound Dog';         tier='frontier' }
+    @{ mob='one_eyed_owl';      theme='beast';      display='One Eyed Owl';      tier='frontier' }
+    @{ mob='winged_cat';        theme='beast';      display='Winged Cat';        tier='frontier' }
+    @{ mob='giant_cod';         theme='aquatic';    display='Giant Cod';         tier='haven'    }
+    @{ mob='giant_salmon';      theme='aquatic';    display='Giant Salmon';      tier='haven'    }
+    @{ mob='landfish';          theme='aquatic';    display='Landfish';          tier='frontier' }
+    @{ mob='spear_toro';        theme='aquatic';    display='Spear Toro';        tier='ascent'   }
+    @{ mob='armorsaurus';       theme='armorsaurus';display='Armorsaurus';       tier='pinnacle' }
+    @{ mob='slime';             theme='slime';      display='Slime';             tier='haven'    }
+    @{ mob='phantaspore';       theme='spore';      display='Phantaspore';       tier='ascent'   }
+    @{ mob='orc';               theme='orc';        display='Orc';               tier='summit'   }
+    @{ mob='pegasus';           theme='unicorn';    display='Pegasus';           tier='pinnacle' }
+    @{ mob='unicorn';           theme='unicorn';    display='Unicorn';           tier='pinnacle' }
 )
 if ($roster.Count -ne 38) { throw "roster is $($roster.Count) expected 38" }
+
+$tierIndex = @{}
+for ($i = 0; $i -lt $tiers.Count; $i++) { $tierIndex[$tiers[$i]] = $i }
+
+# World-tier profiles: one table drives BOTH the elite affix ladder and the
+# gateway reward ladder, so gear rarity and gem quality rise together (the
+# "rewards scale with tier" contract). Elite bands follow Apotheosis' own
+# rarity weights per world tier (common is haven-heavy, mythic only exists
+# from summit on); summit/pinnacle elites share the {epic, mythic} pool and
+# separate on affix_chance instead, since mythic is the cap.
+$tierProfile = [ordered]@{
+    haven    = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:common', 'apotheosis:uncommon'); affixChance = 0.45; rewardRarities = @('apotheosis:common', 'apotheosis:uncommon'); purities = @('cracked', 'normal');        dust = 8;  heraldXp = 100; bossXp = 300; finalXp = 500;  stackCount = 8  }
+    frontier = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:uncommon', 'apotheosis:rare');  affixChance = 0.5;  rewardRarities = @('apotheosis:uncommon', 'apotheosis:rare');  purities = @('normal');                 dust = 12; heraldXp = 150; bossXp = 400; finalXp = 650;  stackCount = 10 }
+    ascent   = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:rare', 'apotheosis:epic');      affixChance = 0.55; rewardRarities = @('apotheosis:rare', 'apotheosis:epic');      purities = @('flawless');               dust = 16; heraldXp = 200; bossXp = 500; finalXp = 800;  stackCount = 12 }
+    summit   = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:epic', 'apotheosis:mythic');    affixChance = 0.65; rewardRarities = @('apotheosis:epic', 'apotheosis:mythic');    purities = @('flawless', 'perfect');    dust = 20; heraldXp = 250; bossXp = 650; finalXp = 950;  stackCount = 16 }
+    pinnacle = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:epic', 'apotheosis:mythic');    affixChance = 0.8;  rewardRarities = @('apotheosis:mythic');                     purities = @('perfect');                dust = 24; heraldXp = 300; bossXp = 800; finalXp = 1200; stackCount = 20 }
+}
+
+# Theme identity: gateway boss-bar color + themed reward pool per mob family.
+# Gems are ids of THIS mod's gems (tensura_apotheosis:<family>/<name>); stacks
+# are vanilla flavor items that read as the mob.
+$themeIdentity = @{
+    demon       = @{ color = '#6A1B9A'; gems = @('core/shadow', 'core/fury', 'dragonscale/darkness');                    stack = 'minecraft:amethyst_shard' }
+    salamander  = @{ color = '#E64A19'; gems = @('dragonscale/flame', 'core/vigor', 'core/fury');                        stack = 'minecraft:blaze_powder' }
+    scaled      = @{ color = '#558B2F'; gems = @('dragonscale/flame', 'dragonscale/earth', 'dragonscale/wind', 'core/juggernaut'); stack = 'minecraft:dragon_breath' }
+    lizard      = @{ color = '#AED581'; gems = @('core/earthen', 'core/predator', 'core/vigor');                         stack = 'minecraft:turtle_scute' }
+    hover       = @{ color = '#4DD0E1'; gems = @('dragonscale/wind', 'core/sprinter', 'core/swift');                     stack = 'minecraft:feather' }
+    spider      = @{ color = '#616161'; gems = @('core/shadow', 'core/predator', 'core/executioner');                    stack = 'minecraft:spider_eye' }
+    insect      = @{ color = '#F9A825'; gems = @('core/swift', 'core/precision', 'core/predator');                       stack = 'minecraft:honeycomb' }
+    beast       = @{ color = '#8D6E63'; gems = @('core/predator', 'core/vigor', 'core/fury', 'core/juggernaut');         stack = 'minecraft:bone' }
+    aquatic     = @{ color = '#039BE5'; gems = @('core/swift', 'core/striker', 'dragonscale/storm');                     stack = 'minecraft:prismarine_crystals' }
+    armorsaurus = @{ color = '#546E7A'; gems = @('core/barrier', 'core/stalwart', 'spirit/guardian');                    stack = 'minecraft:iron_ingot' }
+    slime       = @{ color = '#7CB342'; gems = @('core/vigor', 'core/magicule', 'core/mystic');                          stack = 'minecraft:slime_ball' }
+    spore       = @{ color = '#AB47BC'; gems = @('core/mystic', 'core/analyst', 'core/magicule');                        stack = 'minecraft:brown_mushroom' }
+    orc         = @{ color = '#C62828'; gems = @('core/juggernaut', 'core/brawler', 'core/fury');                         stack = 'minecraft:golden_carrot' }
+    unicorn     = @{ color = '#FFD54F'; gems = @('holy/core', 'spirit/core', 'core/vigil', 'holy/judgment');            stack = 'minecraft:gold_ingot' }
+}
+
+# Guards: every roster mob must land on a profiled tier and a themed family,
+# themed gems must be gems this mod actually emits, and all 5 bands must be
+# in use (a band falling out would strand its tier's progression).
+$gemRels = [System.Collections.Generic.HashSet[string]]::new()
+foreach ($g in $gems) { [void]$gemRels.Add($g.rel) }
+$bandsUsed = [System.Collections.Generic.HashSet[string]]::new()
+foreach ($r in $roster) {
+    [void]$bandsUsed.Add($r.tier)
+    if (-not $tierProfile.Contains($r.tier)) { throw "roster $($r.mob): unknown tier '$($r.tier)'" }
+    if (-not $themeIdentity.ContainsKey($r.theme)) { throw "roster $($r.mob): no theme identity for '$($r.theme)'" }
+}
+if ($bandsUsed.Count -ne 5) { throw "gateway tiers in use: $($bandsUsed.Count) expected 5" }
+foreach ($t in $themeIdentity.Keys) {
+    foreach ($g in $themeIdentity[$t].gems) {
+        if (-not $gemRels.Contains($g)) { throw "theme $t references missing gem '$g'" }
+    }
+}
 
 $weights = [pscustomobject][ordered]@{
     haven     = [pscustomobject]@{ quality = 0.1;  weight = 100 }
@@ -763,8 +822,19 @@ foreach ($r in $roster) {
         throw "no #tensura:$($r.mob)_spawn biome tag - cannot derive spawn biomes"
     }
     $th = $themeByKey[$r.theme]
+    $band = $r.tier
+    $profile = $tierProfile[$band]
+    # Full gating: this elite only exists at world tiers at/above its band -
+    # spawn weights and gear pools become a contiguous suffix of the tier
+    # ladder (omitted tiers weight zero, craig.json-style).
     $vg = [ordered]@{}
-    foreach ($t in $tiers) { $vg[$t] = @("#tensura_$($r.theme)_$t") }
+    $wb = [ordered]@{}
+    foreach ($t in $tiers) {
+        if ($tierIndex[$t] -ge $tierIndex[$band]) {
+            $vg[$t] = @("#tensura_$($r.theme)_$t")
+            $wb[$t] = $weights.$t
+        }
+    }
 
     $attr = [System.Collections.Generic.List[object]]::new()
     $attr.Add([pscustomobject][ordered]@{ attribute='minecraft:generic.max_health'; operation='add_value'; value=(Range $th.hp[0] $th.hp[1]) })
@@ -788,7 +858,7 @@ foreach ($r in $roster) {
                 type = 'apotheosis:spawn_type'
                 spawn_types = @('spawn_egg', 'spawner', 'mob_summoned') } })
         valid_gear_sets   = $vg
-        weights           = $weights
+        weights           = $wb
     }
     $elite = [ordered]@{
         type           = 'apotheosis:elite'
@@ -796,6 +866,13 @@ foreach ($r in $roster) {
         entities       = "tensura:$($r.mob)"
         stats          = $stats
         success_chance = $th.success
+        # Elite rarity ladder: the rarities this elite's own gear affixes roll,
+        # taken from the shared tier profile - haven-band elites wear
+        # common/uncommon affixes, summit/pinnacle elites reach epic/mythic.
+        affix_data     = [pscustomobject][ordered]@{
+            affix_chance = $profile.affixChance
+            rarities     = @($profile.eliteRarities)
+        }
     }
     Add-Elite $r.mob $r.mob $r.display ([pscustomobject]$elite)
 }
@@ -805,9 +882,18 @@ foreach ($r in $roster) {
 # ======================================================================
 # One summonable boss gateway per Tensura elite: a herald wave of the mob's
 # lesser kin, then the elite itself via Apotheosis' apotheosis:elite wave
-# entity. Tier is haven - the default active World Tier - so every gateway
-# opens from the start of the pack. Recipes are uniform: summoning a boss
-# costs ender pearls, diamonds and a pinch of gem dust.
+# entity. Each gateway sits at its mob's world tier (canOpen enforces the
+# player's unlocked tier), wears the mob family's boss-bar color, and pays
+# out of the shared tier profile scaled against a themed gem/stack pool -
+# recipes stay uniform: ender pearls, diamonds and a pinch of gem dust.
+# NOTE on the herald affix modifier: do NOT add a rarities list here. Its
+# AffixData codec resolves rarity values at DECODE time, and Gateways'
+# registry reloads before Apotheosis' rarity registry binds (all 38 files
+# fail with "unbound value: apotheosis:common"). The omitted field falls
+# back to LootRarity.random with default weights - Apotheosis' own
+# world-tier rarity weights - which is tier-aware for free. The static band
+# only belongs in elite affix_data and the affix_item reward, whose codecs
+# hold lazy DynamicHolders.
 $gateways  = @()   # @{ rel; json }
 $gwRecipes = @()   # @{ rel; gateway }
 function Add-Gateway([string]$rel, $json) {
@@ -818,6 +904,9 @@ function Add-GatewayRecipe([string]$rel, [string]$gateway) {
 }
 
 foreach ($r in $roster) {
+    $band = $r.tier
+    $profile = $tierProfile[$band]
+    $identity = $themeIdentity[$r.theme]
     $heraldWave = [pscustomobject][ordered]@{
         max_wave_time = 2400
         setup_time    = 150
@@ -838,7 +927,7 @@ foreach ($r in $roster) {
                 })
         })
         rewards       = @([pscustomobject][ordered]@{
-            type = 'gateways:experience'; experience = 150; orb_size = 60 })
+            type = 'gateways:experience'; experience = $profile.heraldXp; orb_size = 60 })
     }
     $bossWave = [pscustomobject][ordered]@{
         max_wave_time = 4800
@@ -867,25 +956,33 @@ foreach ($r in $roster) {
             elite          = "tensura_apotheosis:$($r.mob)"
         })
         rewards       = @([pscustomobject][ordered]@{
-            type = 'gateways:experience'; experience = 500; orb_size = 100 })
+            type = 'gateways:experience'; experience = $profile.bossXp; orb_size = 100 })
     }
     $gateway = [pscustomobject][ordered]@{
         type     = 'apotheosis:tiered'
         settings = [pscustomobject][ordered]@{
             soundtrack = 'apotheosis:soundtrack_pinnacle'
-            tier       = 'haven'
+            tier       = $band
             size       = 'large'
-            color      = '#B02E26'
+            color      = $identity.color
         }
         waves    = @($heraldWave, $bossWave)
         rewards  = @(
-            [pscustomobject][ordered]@{ type = 'apotheosis:affix_item'; rarities = @('apotheosis:mythic') }
-            [pscustomobject][ordered]@{ type = 'apotheosis:gem'; purities = @('flawless') }
+            [pscustomobject][ordered]@{ type = 'apotheosis:affix_item'; rarities = @($profile.rewardRarities) }
+            [pscustomobject][ordered]@{
+                type     = 'apotheosis:gem'
+                purities = @($profile.purities)
+                gems     = @($identity.gems | ForEach-Object { "tensura_apotheosis:$_" })
+            }
             [pscustomobject][ordered]@{
                 type  = 'gateways:stack'
-                stack = [pscustomobject][ordered]@{ count = 24; id = 'apotheosis:gem_dust' }
+                stack = [pscustomobject][ordered]@{ count = $profile.dust; id = 'apotheosis:gem_dust' }
             }
-            [pscustomobject][ordered]@{ type = 'gateways:experience'; experience = 1000; orb_size = 100 }
+            [pscustomobject][ordered]@{
+                type  = 'gateways:stack'
+                stack = [pscustomobject][ordered]@{ count = $profile.stackCount; id = $identity.stack }
+            }
+            [pscustomobject][ordered]@{ type = 'gateways:experience'; experience = $profile.finalXp; orb_size = 100 }
         )
         rules    = [pscustomobject][ordered]@{
             leash_range            = 48.0

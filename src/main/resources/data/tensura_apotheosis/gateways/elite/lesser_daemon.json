@@ -2,9 +2,9 @@
     "type":  "apotheosis:tiered",
     "settings":  {
                      "soundtrack":  "apotheosis:soundtrack_pinnacle",
-                     "tier":  "haven",
+                     "tier":  "ascent",
                      "size":  "large",
-                     "color":  "#B02E26"
+                     "color":  "#6A1B9A"
                  },
     "waves":  [
                   {
@@ -32,7 +32,7 @@
                       "rewards":  [
                                       {
                                           "type":  "gateways:experience",
-                                          "experience":  150,
+                                          "experience":  200,
                                           "orb_size":  60
                                       }
                                   ]
@@ -79,25 +79,38 @@
                     {
                         "type":  "apotheosis:affix_item",
                         "rarities":  [
-                                         "apotheosis:mythic"
+                                         "apotheosis:rare",
+                                         "apotheosis:epic"
                                      ]
                     },
                     {
                         "type":  "apotheosis:gem",
                         "purities":  [
                                          "flawless"
-                                     ]
+                                     ],
+                        "gems":  [
+                                     "tensura_apotheosis:core/shadow",
+                                     "tensura_apotheosis:core/fury",
+                                     "tensura_apotheosis:dragonscale/darkness"
+                                 ]
                     },
                     {
                         "type":  "gateways:stack",
                         "stack":  {
-                                      "count":  24,
+                                      "count":  16,
                                       "id":  "apotheosis:gem_dust"
                                   }
                     },
                     {
+                        "type":  "gateways:stack",
+                        "stack":  {
+                                      "count":  12,
+                                      "id":  "minecraft:amethyst_shard"
+                                  }
+                    },
+                    {
                         "type":  "gateways:experience",
-                        "experience":  1000,
+                        "experience":  800,
                         "orb_size":  100
                     }
                 ],

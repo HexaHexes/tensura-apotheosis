@@ -21,39 +21,11 @@
                                                 }
                                             ],
                        "valid_gear_sets":  {
-                                               "haven":  [
-                                                             "#tensura_scaled_haven"
-                                                         ],
-                                               "frontier":  [
-                                                                "#tensura_scaled_frontier"
-                                                            ],
-                                               "ascent":  [
-                                                              "#tensura_scaled_ascent"
-                                                          ],
-                                               "summit":  [
-                                                              "#tensura_scaled_summit"
-                                                          ],
                                                "pinnacle":  [
                                                                 "#tensura_scaled_pinnacle"
                                                             ]
                                            },
                        "weights":  {
-                                       "haven":  {
-                                                     "quality":  0.1,
-                                                     "weight":  100
-                                                 },
-                                       "frontier":  {
-                                                        "quality":  0.1,
-                                                        "weight":  100
-                                                    },
-                                       "ascent":  {
-                                                      "quality":  0.1,
-                                                      "weight":  80
-                                                  },
-                                       "summit":  {
-                                                      "quality":  0.12,
-                                                      "weight":  60
-                                                  },
                                        "pinnacle":  {
                                                         "quality":  0.15,
                                                         "weight":  40
@@ -105,5 +77,12 @@
                                              "secondary":  12
                                          }
               },
-    "success_chance":  0.01
+    "success_chance":  0.01,
+    "affix_data":  {
+                       "affix_chance":  0.8,
+                       "rarities":  [
+                                        "apotheosis:epic",
+                                        "apotheosis:mythic"
+                                    ]
+                   }
 }

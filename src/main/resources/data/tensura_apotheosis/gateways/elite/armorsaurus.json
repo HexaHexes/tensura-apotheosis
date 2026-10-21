@@ -2,9 +2,9 @@
     "type":  "apotheosis:tiered",
     "settings":  {
                      "soundtrack":  "apotheosis:soundtrack_pinnacle",
-                     "tier":  "haven",
+                     "tier":  "pinnacle",
                      "size":  "large",
-                     "color":  "#B02E26"
+                     "color":  "#546E7A"
                  },
     "waves":  [
                   {
@@ -32,7 +32,7 @@
                       "rewards":  [
                                       {
                                           "type":  "gateways:experience",
-                                          "experience":  150,
+                                          "experience":  300,
                                           "orb_size":  60
                                       }
                                   ]
@@ -69,7 +69,7 @@
                       "rewards":  [
                                       {
                                           "type":  "gateways:experience",
-                                          "experience":  500,
+                                          "experience":  800,
                                           "orb_size":  100
                                       }
                                   ]
@@ -85,8 +85,13 @@
                     {
                         "type":  "apotheosis:gem",
                         "purities":  [
-                                         "flawless"
-                                     ]
+                                         "perfect"
+                                     ],
+                        "gems":  [
+                                     "tensura_apotheosis:core/barrier",
+                                     "tensura_apotheosis:core/stalwart",
+                                     "tensura_apotheosis:spirit/guardian"
+                                 ]
                     },
                     {
                         "type":  "gateways:stack",
@@ -96,8 +101,15 @@
                                   }
                     },
                     {
+                        "type":  "gateways:stack",
+                        "stack":  {
+                                      "count":  20,
+                                      "id":  "minecraft:iron_ingot"
+                                  }
+                    },
+                    {
                         "type":  "gateways:experience",
-                        "experience":  1000,
+                        "experience":  1200,
                         "orb_size":  100
                     }
                 ],

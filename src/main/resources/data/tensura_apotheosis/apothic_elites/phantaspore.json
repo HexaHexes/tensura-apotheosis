@@ -56,7 +56,11 @@
                                                         "quality":  0.15,
                                                         "weight":  40
                                                     }
-                                   }
+                                   },
+                       "bonus_loot":  [
+                                          "tensura_apotheosis:bonus/haven",
+                                          "tensura_apotheosis:bonus/spore"
+                                      ]
                    },
     "entities":  "tensura:phantaspore",
     "stats":  {

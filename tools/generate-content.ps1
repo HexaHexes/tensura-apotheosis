@@ -814,6 +814,11 @@ $roster = @(
     @{ mob='unicorn';           theme='unicorn';    display='Unicorn' }
 )
 if ($roster.Count -ne 38) { throw "roster is $($roster.Count) expected 38" }
+# Registry ids of every roster mob - mount/escort guards below require that
+# referenced entities are real members of the shipped roster (a wrong id
+# would fail the elite decode in-game, so we catch it at generate time).
+$rosterIds = [System.Collections.Generic.HashSet[string]]::new(
+    [string[]]@($roster | ForEach-Object { "tensura:$($_.mob)" }))
 
 $tierIndex = @{}
 for ($i = 0; $i -lt $tiers.Count; $i++) { $tierIndex[$tiers[$i]] = $i }
@@ -1092,13 +1097,16 @@ foreach ($t in $tiers) {
 # tensura:max_aura and tensura:max_magicule, so AP/MP pools grow from +50%
 # at haven to +500% at pinnacle. Adjacent tiers never overlap (haven HP
 # caps at 45, frontier starts at 50) - that is the contract the gametest's
-# monotone-ladder guard enforces.
+# monotone-ladder guard enforces. bonusDust/bonusGemWeight/
+# bonusDiamondWeight feed the per-tier elite BONUS LOOT table (kill-time
+# extras run through Apotheosis' BonusLootTables): a gem-dust pile, a shot
+# at a random gem and a rare diamond, all ramping with the tier.
 $tierProfile = [ordered]@{
-    haven    = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:common', 'apotheosis:uncommon'); affixChance = 0.45; rewardRarities = @('apotheosis:common', 'apotheosis:uncommon'); purities = @('cracked', 'normal');        dust = 8;  heraldXp = 100; bossXp = 300; finalXp = 500;  stackCount = 4;  itemCount = 2; gemCount = 3;  size = 'small';  soundtrack = 'minecraft:music_disc.cat';           recipeDiamonds = 1; recipeDust = 1; eliteHp = @(30, 45);   eliteDmg = @(0.4, 0.6);  eliteKb = 0.3; eliteScale = @(0.4, 0.7); eliteEnch = 0.25; eliteEnchLvl = @(10, 6);  elitePoolMult = 0.5 }
-    frontier = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:uncommon', 'apotheosis:rare');  affixChance = 0.5;  rewardRarities = @('apotheosis:uncommon', 'apotheosis:rare');  purities = @('normal');                 dust = 16; heraldXp = 150; bossXp = 400; finalXp = 650;  stackCount = 8;  itemCount = 3; gemCount = 5;  size = 'small';  soundtrack = 'apotheosis:music_disc_shimmer';       recipeDiamonds = 2; recipeDust = 2; eliteHp = @(50, 80);   eliteDmg = @(0.7, 1.0);  eliteKb = 0.5; eliteScale = @(0.6, 0.9); eliteEnch = 0.35; eliteEnchLvl = @(18, 11); elitePoolMult = 1.0 }
-    ascent   = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:rare', 'apotheosis:epic');      affixChance = 0.55; rewardRarities = @('apotheosis:rare', 'apotheosis:epic');      purities = @('flawless');               dust = 24; heraldXp = 200; bossXp = 500; finalXp = 800;  stackCount = 12; itemCount = 3; gemCount = 5;  size = 'medium'; soundtrack = 'apotheosis:music_disc_flash';         recipeDiamonds = 2; recipeDust = 3; eliteHp = @(85, 120);  eliteDmg = @(1.1, 1.5);  eliteKb = 0.7; eliteScale = @(0.8, 1.1); eliteEnch = 0.5;  eliteEnchLvl = @(28, 17); elitePoolMult = 2.0 }
-    summit   = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:epic', 'apotheosis:mythic');    affixChance = 0.65; rewardRarities = @('apotheosis:epic', 'apotheosis:mythic');    purities = @('flawless', 'perfect');    dust = 48; heraldXp = 250; bossXp = 650; finalXp = 950;  stackCount = 24; itemCount = 3; gemCount = 5;  size = 'medium'; soundtrack = 'apotheosis:soundtrack_summit';        recipeDiamonds = 3; recipeDust = 3; eliteHp = @(130, 170); eliteDmg = @(1.6, 2.2);  eliteKb = 0.9; eliteScale = @(1.0, 1.4); eliteEnch = 0.65; eliteEnchLvl = @(40, 24); elitePoolMult = 3.0 }
-    pinnacle = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:epic', 'apotheosis:mythic');    affixChance = 0.8;  rewardRarities = @('apotheosis:mythic');                     purities = @('perfect');                dust = 64; heraldXp = 300; bossXp = 800; finalXp = 1200; stackCount = 48; itemCount = 5; gemCount = 10; size = 'large';  soundtrack = 'apotheosis:soundtrack_pinnacle';     recipeDiamonds = 4; recipeDust = 3; eliteHp = @(180, 260); eliteDmg = @(2.5, 3.5);  eliteKb = 1.0; eliteScale = @(1.2, 1.6); eliteEnch = 0.85; eliteEnchLvl = @(60, 36); elitePoolMult = 5.0; chaseGateway = 'endless/horde' }
+    haven    = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:common', 'apotheosis:uncommon'); affixChance = 0.45; rewardRarities = @('apotheosis:common', 'apotheosis:uncommon'); purities = @('cracked', 'normal');        dust = 8;  heraldXp = 100; bossXp = 300; finalXp = 500;  stackCount = 4;  itemCount = 2; gemCount = 3;  size = 'small';  soundtrack = 'minecraft:music_disc.cat';           recipeDiamonds = 1; recipeDust = 1; eliteHp = @(30, 45);   eliteDmg = @(0.4, 0.6);  eliteKb = 0.3; eliteScale = @(0.4, 0.7); eliteEnch = 0.25; eliteEnchLvl = @(10, 6);  elitePoolMult = 0.5; bonusDust = @(2, 3);   bonusGemWeight = 5;  bonusDiamondWeight = 0 }
+    frontier = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:uncommon', 'apotheosis:rare');  affixChance = 0.5;  rewardRarities = @('apotheosis:uncommon', 'apotheosis:rare');  purities = @('normal');                 dust = 16; heraldXp = 150; bossXp = 400; finalXp = 650;  stackCount = 8;  itemCount = 3; gemCount = 5;  size = 'small';  soundtrack = 'apotheosis:music_disc_shimmer';       recipeDiamonds = 2; recipeDust = 2; eliteHp = @(50, 80);   eliteDmg = @(0.7, 1.0);  eliteKb = 0.5; eliteScale = @(0.6, 0.9); eliteEnch = 0.35; eliteEnchLvl = @(18, 11); elitePoolMult = 1.0; bonusDust = @(3, 5);   bonusGemWeight = 10; bonusDiamondWeight = 5 }
+    ascent   = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:rare', 'apotheosis:epic');      affixChance = 0.55; rewardRarities = @('apotheosis:rare', 'apotheosis:epic');      purities = @('flawless');               dust = 24; heraldXp = 200; bossXp = 500; finalXp = 800;  stackCount = 12; itemCount = 3; gemCount = 5;  size = 'medium'; soundtrack = 'apotheosis:music_disc_flash';         recipeDiamonds = 2; recipeDust = 3; eliteHp = @(85, 120);  eliteDmg = @(1.1, 1.5);  eliteKb = 0.7; eliteScale = @(0.8, 1.1); eliteEnch = 0.5;  eliteEnchLvl = @(28, 17); elitePoolMult = 2.0; bonusDust = @(4, 8);   bonusGemWeight = 15; bonusDiamondWeight = 8 }
+    summit   = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:epic', 'apotheosis:mythic');    affixChance = 0.65; rewardRarities = @('apotheosis:epic', 'apotheosis:mythic');    purities = @('flawless', 'perfect');    dust = 48; heraldXp = 250; bossXp = 650; finalXp = 950;  stackCount = 24; itemCount = 3; gemCount = 5;  size = 'medium'; soundtrack = 'apotheosis:soundtrack_summit';        recipeDiamonds = 3; recipeDust = 3; eliteHp = @(130, 170); eliteDmg = @(1.6, 2.2);  eliteKb = 0.9; eliteScale = @(1.0, 1.4); eliteEnch = 0.65; eliteEnchLvl = @(40, 24); elitePoolMult = 3.0; bonusDust = @(6, 12);  bonusGemWeight = 20; bonusDiamondWeight = 12 }
+    pinnacle = [pscustomobject][ordered]@{ eliteRarities = @('apotheosis:epic', 'apotheosis:mythic');    affixChance = 0.8;  rewardRarities = @('apotheosis:mythic');                     purities = @('perfect');                dust = 64; heraldXp = 300; bossXp = 800; finalXp = 1200; stackCount = 48; itemCount = 5; gemCount = 10; size = 'large';  soundtrack = 'apotheosis:soundtrack_pinnacle';     recipeDiamonds = 4; recipeDust = 3; eliteHp = @(180, 260); eliteDmg = @(2.5, 3.5);  eliteKb = 1.0; eliteScale = @(1.2, 1.6); eliteEnch = 0.85; eliteEnchLvl = @(60, 36); elitePoolMult = 5.0; bonusDust = @(8, 16);  bonusGemWeight = 30; bonusDiamondWeight = 18; chaseGateway = 'endless/horde' }
 }
 
 # Theme identity: gateway boss-bar color + themed reward pool per mob family.
@@ -1148,6 +1156,93 @@ $weights = [pscustomobject][ordered]@{
 }
 $validGear = [ordered]@{}
 foreach ($t in $tiers) { $validGear[$t] = @() }  # filled per elite
+
+# ---- Elite flavor: bonus loot, mounts, escorts ---------------------------
+# BONUS LOOT (Apotheosis' BonusLootTables - extra kill drops rolled on top
+# of the base mob's own table): every elite rolls BOTH its band's tier table
+# (gem dust pile, random-gem shot, rare diamond - all ramping with tier) and
+# its family's theme table (the flavor stack from $themeIdentity, plus a
+# verified Tensura drop where one fits). Tables ship under
+# data/tensura_apotheosis/loot_table/bonus/ and the gametest asserts every
+# referenced table exists and is non-empty.
+# MOUNTS: a curated few - Apotheosis creates the mount entity at transform
+# time and the elite startRiding()s it (mount must be a real Tensura entity;
+# a wrong id fails the elite decode, so the gametest catches it free).
+# ESCORTS: supporting_entities spawn at elite-relative offsets; only the
+# daemon court gets kin so natural spawns stay uncluttered.
+$eliteMounts = [ordered]@{
+    orc             = 'tensura:armorsaurus'
+    beast_gnome     = 'tensura:hound_dog'
+    hell_caterpillar = 'tensura:hell_moth'
+}
+$eliteEscorts = [ordered]@{
+    greater_daemon = @(
+        [pscustomobject][ordered]@{ entity = 'tensura:lesser_daemon'; x = 0.0;  y = 0.0; z = -1.5 })
+    arch_daemon = @(
+        [pscustomobject][ordered]@{ entity = 'tensura:lesser_daemon'; x = -1.5; y = 0.0; z = -1.0 }
+        [pscustomobject][ordered]@{ entity = 'tensura:lesser_daemon'; x = 1.5;  y = 0.0; z = -1.0 })
+}
+# Family-flavored Tensura extras per theme (verified ids from Tensura's own
+# entity loot tables); themes not listed ship the flavor stack alone.
+$familyExtras = [ordered]@{
+    salamander = @(
+        [pscustomobject][ordered]@{ name = 'tensura:fire_elemental_shard'; weight = 15 }
+        [pscustomobject][ordered]@{ name = 'tensura:elemental_essence';    weight = 8 })
+}
+
+$bonusTables = @()   # @{ rel; json }
+function Add-BonusLoot([string]$rel, $json) {
+    $script:bonusTables += @{ rel = $rel; json = $json }
+}
+# Tier core table: pool 1 is dust-or-gem (dust weight 70, gem from the
+# profile, empty the rest), pool 2 is the rare diamond (skipped at haven).
+foreach ($t in $tiers) {
+    $p = $tierProfile[$t]
+    $pool1 = @(
+        [pscustomobject][ordered]@{
+            type = 'minecraft:item'; name = 'apotheosis:gem_dust'; weight = 70
+            functions = @([pscustomobject][ordered]@{
+                function = 'minecraft:set_count'
+                count = [pscustomobject]@{ min = $p.bonusDust[0]; max = $p.bonusDust[1] } })
+        }
+        [pscustomobject][ordered]@{ type = 'apotheosis:random_gem'; quality = 1; weight = $p.bonusGemWeight }
+        [pscustomobject][ordered]@{ type = 'minecraft:empty'; weight = [Math]::Max(10, 30 - $p.bonusGemWeight) }
+    )
+    $pools = @([pscustomobject][ordered]@{ rolls = 1.0; bonus_rolls = 0.0; entries = $pool1 })
+    if ($p.bonusDiamondWeight -gt 0) {
+        $pools += [pscustomobject][ordered]@{
+            rolls = 1.0; bonus_rolls = 0.0
+            entries = @(
+                [pscustomobject][ordered]@{ type = 'minecraft:item'; name = 'minecraft:diamond'; weight = $p.bonusDiamondWeight
+                    functions = @([pscustomobject][ordered]@{ function = 'minecraft:set_count'
+                        count = [pscustomobject]@{ min = 1; max = [Math]::Max(1, [int]($p.bonusDiamondWeight / 6)) } }) }
+                [pscustomobject][ordered]@{ type = 'minecraft:empty'; weight = 100 - $p.bonusDiamondWeight })
+        }
+    }
+    Add-BonusLoot "bonus/$t" ([pscustomobject][ordered]@{
+        type = 'minecraft:entity'; pools = $pools; random_sequence = "tensura_apotheosis:bonus/$t" })
+}
+# Family theme table: the flavor stack (1-3) plus optional Tensura extras.
+foreach ($thKey in $themeIdentity.Keys) {
+    $id = $themeIdentity[$thKey]
+    $entries = [System.Collections.Generic.List[object]]::new()
+    $entries.Add([pscustomobject][ordered]@{
+        type = 'minecraft:item'; name = $id.stack; weight = 60
+        functions = @([pscustomobject][ordered]@{ function = 'minecraft:set_count'
+            count = [pscustomobject]@{ min = 1; max = 3 } }) })
+    foreach ($ex in $familyExtras[$thKey]) {
+        [void]$entries.Add([pscustomobject][ordered]@{
+            type = 'minecraft:item'; name = $ex.name; weight = $ex.weight })
+    }
+    $entries.Add([pscustomobject][ordered]@{ type = 'minecraft:empty'; weight = 40 })
+    Add-BonusLoot "bonus/$thKey" ([pscustomobject][ordered]@{
+        type = 'minecraft:entity'
+        pools = @([pscustomobject][ordered]@{ rolls = 1.0; bonus_rolls = 0.0; entries = @($entries) })
+        random_sequence = "tensura_apotheosis:bonus/$thKey" })
+}
+if ($bonusTables.Count -ne ($tiers.Count + $themeIdentity.Count)) {
+    throw "bonus loot tables = $($bonusTables.Count) expected $($tiers.Count + $themeIdentity.Count)"
+}
 
 foreach ($r in $roster) {
     if (-not $spawnTags.Contains($r.mob)) {
@@ -1200,6 +1295,28 @@ foreach ($r in $roster) {
                 spawn_types = @('spawn_egg') } })
         valid_gear_sets   = $vg
         weights           = $wb
+        # Kill-time extras rolled through Apotheosis' BonusLootTables on top
+        # of the base mob's own drops: the band's tier table (scaling core:
+        # gem dust, random-gem shot, rare diamond) and the family's theme
+        # table (flavor stack + verified Tensura extras). Both ship under
+        # loot_table/bonus/ and the gametest asserts every reference resolves
+        # to a non-empty table.
+        bonus_loot        = @("tensura_apotheosis:bonus/$band", "tensura_apotheosis:bonus/$($r.theme)")
+    }
+    if ($eliteMounts.Contains($r.mob)) {
+        $mountMob = $eliteMounts[$r.mob]
+        if (-not $rosterIds.Contains($mountMob)) {
+            throw "mount $mountMob for elite $($r.mob) is not a roster mob"
+        }
+        $basic['mount'] = [pscustomobject][ordered]@{ entity = $mountMob }
+    }
+    if ($eliteEscorts.Contains($r.mob)) {
+        foreach ($e in $eliteEscorts[$r.mob]) {
+            if (-not $rosterIds.Contains($e.entity)) {
+                throw "escort $($e.entity) for elite $($r.mob) is not a roster mob"
+            }
+        }
+        $basic['supporting_entities'] = @($eliteEscorts[$r.mob])
     }
     $elite = [ordered]@{
         type           = 'apotheosis:elite'
@@ -1506,6 +1623,9 @@ foreach ($gw in $gateways) {
 foreach ($np in $namePoolFiles) {
     WriteJsonFile (Join-Path $data ("elite_names\" + ($np.rel -replace '/', '\') + '.json')) $np.json
 }
+foreach ($bt in $bonusTables) {
+    WriteJsonFile (Join-Path $data ("loot_table\" + ($bt.rel -replace '/', '\') + '.json')) $bt.json
+}
 foreach ($rc in $gwRecipes) {
     # One shape per cost tier (E=ender pearl, D=diamond, G=gem dust): pearls
     # stay fixed at 2 while diamonds and dust ramp with the gateway's world
@@ -1547,4 +1667,5 @@ New-Item -ItemType Directory -Path (Join-Path $assets 'lang') -Force | Out-Null
 "gateways written:  $($gateways.Count)"
 "gateway recipes:   $($gwRecipes.Count)"
 "name pools:        $($namePoolFiles.Count) mobs, $($seenNames.Count) names"
+"bonus loot tables: $($bonusTables.Count) ($($tiers.Count) tier + $($themeIdentity.Count) family)"
 "lang keys:         $($lang.Count)"

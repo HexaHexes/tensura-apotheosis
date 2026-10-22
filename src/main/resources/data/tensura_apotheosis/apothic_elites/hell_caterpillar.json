@@ -56,7 +56,14 @@
                                                         "quality":  0.15,
                                                         "weight":  40
                                                     }
-                                   }
+                                   },
+                       "bonus_loot":  [
+                                          "tensura_apotheosis:bonus/haven",
+                                          "tensura_apotheosis:bonus/insect"
+                                      ],
+                       "mount":  {
+                                     "entity":  "tensura:hell_moth"
+                                 }
                    },
     "entities":  "tensura:hell_caterpillar",
     "stats":  {

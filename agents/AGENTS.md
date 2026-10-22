@@ -14,13 +14,13 @@ be themed per mob) plus the in-repo gametest harness. Public APIs only.
 - Optional: Gateways to Eternity (`gateways`) - the elite gateways and their recipes only
   load when it is present (recipes carry a `mod_loaded` condition).
 
-**Test:** `./gradlew runGametest` - 7 tests (`twoHandedWeaponsCategorizeAsMelee`,
-`allAffixesLoad`, `allGemsLoad`, `allElitesLoad`, `eliteNamePoolsLoad`,
-`allGearSetsLoad`, `allGatewaysLoad`).
-`expectedTests = 7`.
+**Test:** `./gradlew runGametest` - 8 tests (`twoHandedWeaponsCategorizeAsMelee`,
+`allAffixesLoad`, `allGemsLoad`, `allElitesLoad`, `eliteBonusLootLoads`,
+`eliteNamePoolsLoad`, `allGearSetsLoad`, `allGatewaysLoad`).
+`expectedTests = 8`.
 
 **Single source of truth:** `tools/generate-content.ps1` produces all affixes, gems,
-gear sets, elites, gateways, gateway recipes, lang and models. **Textures are never
+gear sets, elites, elite bonus loot tables, gateways, gateway recipes, lang and models. **Textures are never
 generated**: the original 14 gem PNGs are fixed art, and every newer gem reuses an
 existing Apotheosis gem texture as a placeholder until hand-drawn art lands (the 5th
 `Add-Gem` argument). **Value tuning happens in the generator, not by hand-editing
@@ -60,6 +60,13 @@ themed gem pool and flavor stack per mob family) all live there too.
 - Elite `spawn_conditions` exclude `spawn_egg` **only** - the same pattern Apotheosis'
   own elites use; biome constraints, tier weights and `success_chance` all run through
   Apotheosis' native spawn pipeline (`ApothMobEvents`).
+- Elite bonus loot lives in `data/tensura_apotheosis/loot_table/bonus/` - **singular**
+  `loot_table` (the 1.21 datapack layout, not `loot_tables`). Each elite references two
+  tables through `basicData.bonus_loot`: a world-tier table (gem dust, diamonds and an
+  `apotheosis:random_gem` roll, scaled by the `$tierProfile.bonus*` weights) and a
+  family table whose extra entries must carry an explicit `type: minecraft:item`.
+  `eliteBonusLootLoads` asserts all 38 elites reference exactly 2 of the 19 tables and
+  that every referenced file ships pools.
 - Elite name pools ship from `tools/name-pools.json` (40-50 fantasy names per mob,
   globally unique - the generator asserts both) into
   `data/tensura_apotheosis/elite_names/<mob>.json`. The `EliteNamePools` runtime

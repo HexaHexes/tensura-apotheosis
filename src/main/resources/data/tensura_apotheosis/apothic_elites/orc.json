@@ -28,7 +28,14 @@
                                                         "quality":  0.15,
                                                         "weight":  40
                                                     }
-                                   }
+                                   },
+                       "bonus_loot":  [
+                                          "tensura_apotheosis:bonus/pinnacle",
+                                          "tensura_apotheosis:bonus/orc"
+                                      ],
+                       "mount":  {
+                                     "entity":  "tensura:armorsaurus"
+                                 }
                    },
     "entities":  "tensura:orc",
     "stats":  {

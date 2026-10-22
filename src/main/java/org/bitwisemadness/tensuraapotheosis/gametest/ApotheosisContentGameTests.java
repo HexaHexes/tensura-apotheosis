@@ -1,6 +1,6 @@
-package dev.kurok.mods.tensuraapotheosis.gametest;
+package org.bitwisemadness.tensuraapotheosis.gametest;
 
-import dev.kurok.mods.tensuraapotheosis.EliteNamePools;
+import org.bitwisemadness.tensuraapotheosis.EliteNamePools;
 import dev.shadowsoffire.apotheosis.affix.AffixRegistry;
 import dev.shadowsoffire.apotheosis.compat.gateways.tiered_gate.TieredGateway;
 import dev.shadowsoffire.apotheosis.loot.LootCategory;

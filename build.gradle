@@ -4,7 +4,7 @@ plugins {
 }
 
 version = mod_version
-group = 'dev.kurok.mods'
+group = 'org.bitwisemadness'
 
 base {
     archivesName = 'tensura-apotheosis'

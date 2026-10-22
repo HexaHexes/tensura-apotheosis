@@ -1,4 +1,4 @@
-package dev.kurok.mods.tensuraapotheosis;
+package org.bitwisemadness.tensuraapotheosis;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

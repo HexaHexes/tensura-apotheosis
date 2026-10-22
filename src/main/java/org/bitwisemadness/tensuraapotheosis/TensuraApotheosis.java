@@ -1,4 +1,4 @@
-package dev.kurok.mods.tensuraapotheosis;
+package org.bitwisemadness.tensuraapotheosis;
 
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;

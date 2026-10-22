@@ -70,7 +70,9 @@ themed gem pool and flavor stack per mob family) all live there too.
 - Elite name pools ship from `tools/name-pools.json` (40-50 fantasy names per mob,
   globally unique - the generator asserts both) into
   `data/tensura_apotheosis/elite_names/<mob>.json`. The `EliteNamePools` runtime
-  reloads them and draws one name per elite spawn (disk loads keep their saved name).
+  reloads them and draws one name per elite spawn (disk loads keep their saved name);
+  the drawn name is tinted with the elite's top rarity color (`LootRarity.color()`),
+  falling back to plain text when the rarity set is missing.
   `eliteNamePoolsLoad` asserts every elite has at least 40 loaded names.
 - Elite gateways use `apotheosis:tiered`; each mob's gateway sits at a world tier
   computed from actual stats: the generator scores hp / damage / scale /

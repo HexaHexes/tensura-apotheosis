@@ -56,7 +56,8 @@ elite system:
 - Every spawn rolls a fresh identity: each elite draws a random full name from its own
   themed pool of 40-50 names ("Zarnakzul the Shadowarch", "Planeshifter Nabrkael") -
   fantasy name pools per mob family, wired as our own mirror of Apotheosis' name
-  generation, which is global-config only and can't be themed per mob.
+  generation, which is global-config only and can't be themed per mob. The name is
+  tinted with the band's top rarity color.
 - Their combat bonuses scale strictly with their tier: bonus health (+30 at haven up
   to +260 at pinnacle), damage (+40% up to +350%), knockback resistance, size,
   enchantment level - and a big Tensura spin, an AP/MP pool bonus that multiplies the

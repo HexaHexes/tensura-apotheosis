@@ -3,9 +3,13 @@ package org.bitwisemadness.tensuraapotheosis;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import dev.shadowsoffire.apotheosis.loot.LootRarity;
+import dev.shadowsoffire.apotheosis.mobs.registries.EliteRegistry;
 import dev.shadowsoffire.apotheosis.mobs.types.Elite;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,7 +102,18 @@ public final class EliteNamePools {
             if (pool.isEmpty()) {
                 continue;
             }
-            mob.setCustomName(Component.literal(pool.get(mob.getRandom().nextInt(pool.size()))));
+            String name = pool.get(mob.getRandom().nextInt(pool.size()));
+            // Rarity tint: the band's top rarity colors the drawn name (the
+            // same cue Apotheosis uses for affixed gear); elites whose rarity
+            // set cannot be resolved fall back to the plain name.
+            Component label = Component.literal(name);
+            Elite elite = EliteRegistry.INSTANCE.getValue(p.id());
+            if (elite != null && !elite.afxData().rarities().isEmpty()) {
+                LootRarity top =
+                        Collections.max(elite.afxData().rarities(), Comparator.comparingInt(LootRarity::sortIndex));
+                label = Component.literal(name).withStyle(style -> style.withColor(top.color()));
+            }
+            mob.setCustomName(label);
             mob.setCustomNameVisible(true);
         }
     }

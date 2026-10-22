@@ -49,7 +49,11 @@
                                                         "quality":  0.15,
                                                         "weight":  40
                                                     }
-                                   }
+                                   },
+                       "bonus_loot":  [
+                                          "tensura_apotheosis:bonus/frontier",
+                                          "tensura_apotheosis:bonus/insect"
+                                      ]
                    },
     "entities":  "tensura:army_wasp",
     "stats":  {

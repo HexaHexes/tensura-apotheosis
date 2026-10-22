@@ -66,6 +66,15 @@ elite system:
   spiders wear knight-spider carapace, beasts carry beast-horn and blade-tiger
   weapons, and so on).
 - On a player kill the elite's held weapon always drops, so the loot is real.
+- Elite kills also pay out bonus loot scaled to the world's tier - gem dust,
+  diamonds and Apotheosis gems that improve as the world tier climbs - plus
+  family flavor drops: salamanders leave blaze powder, daemons shed infernal
+  and draconic materials, and each mob family has its own table.
+- A few elites ride into battle: the orc general mounts an armorsaurus, the
+  beast gnome rides a hound dog, and the hell caterpillar takes to the air on
+  a hell moth.
+- Daemon elites bring company: arch daemons are trailed by two lesser daemons
+  and greater daemons by one.
 
 **80 gear sets** — Tensura equipment wired into Apotheosis' boss gear:
 

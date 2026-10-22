@@ -28,7 +28,25 @@
                                                         "quality":  0.15,
                                                         "weight":  40
                                                     }
-                                   }
+                                   },
+                       "bonus_loot":  [
+                                          "tensura_apotheosis:bonus/pinnacle",
+                                          "tensura_apotheosis:bonus/demon"
+                                      ],
+                       "supporting_entities":  [
+                                                   {
+                                                       "entity":  "tensura:lesser_daemon",
+                                                       "x":  -1.5,
+                                                       "y":  0,
+                                                       "z":  -1
+                                                   },
+                                                   {
+                                                       "entity":  "tensura:lesser_daemon",
+                                                       "x":  1.5,
+                                                       "y":  0,
+                                                       "z":  -1
+                                                   }
+                                               ]
                    },
     "entities":  "tensura:arch_daemon",
     "stats":  {

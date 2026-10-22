@@ -1,6 +1,8 @@
 package org.bitwisemadness.tensuraapotheosis.gametest;
 
 import org.bitwisemadness.tensuraapotheosis.EliteNamePools;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import dev.shadowsoffire.apotheosis.affix.AffixRegistry;
 import dev.shadowsoffire.apotheosis.compat.gateways.tiered_gate.TieredGateway;
 import dev.shadowsoffire.apotheosis.loot.LootCategory;
@@ -17,6 +19,7 @@ import dev.shadowsoffire.gateways.gate.GatewayRegistry;
 import dev.shadowsoffire.placebo.json.RandomAttributeModifier;
 import dev.shadowsoffire.placebo.systems.gear.GearSetRegistry;
 import io.github.manasmods.tensura.item.weapon.TwoHandedSwordItem;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -28,12 +31,14 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
@@ -85,6 +90,7 @@ public class ApotheosisContentGameTests {
     private static final int EXPECTED_AFFIXES = 55;
     private static final int EXPECTED_GEMS = 37;
     private static final int EXPECTED_ELITES = 38;
+    private static final int EXPECTED_BONUS_TABLES = 19;
     private static final int EXPECTED_GEARSETS = 80;
     private static final int EXPECTED_GATEWAYS = 39; // 38 tiered + 1 endless chase
     private static final int MIN_NAME_POOL = 40;
@@ -286,6 +292,63 @@ public class ApotheosisContentGameTests {
                 throw new GameTestAssertException("elite AP/MP pool ladder overlaps between " + ladder[t - 1]
                         + " (" + poolMax[t - 1] + ") and " + ladder[t] + " (" + poolMin[t] + ")");
             }
+        }
+        helper.succeed();
+    }
+
+    /**
+     * Every elite must roll bonus loot on death: a world-tier table that
+     * scales its dust and gem rewards with the world tier, plus a family
+     * table carrying the theme's flavor drops. A dangling id or an empty
+     * table silently strips the kill rewards the rest of the kit is built
+     * around.
+     */
+    @GameTest(template = "empty")
+    public static void eliteBonusLootLoads(GameTestHelper helper) {
+        Set<ResourceLocation> expected = expectedIds(helper, "apothic_elites");
+        if (expected.size() != EXPECTED_ELITES) {
+            throw new GameTestAssertException(
+                    "found " + expected.size() + " elite data files expected " + EXPECTED_ELITES);
+        }
+        Set<ResourceLocation> referenced = new HashSet<>();
+        ResourceManager rm = helper.getLevel().getServer().getResourceManager();
+        for (ResourceLocation id : expected) {
+            Elite elite = EliteRegistry.INSTANCE.getValue(id);
+            if (elite == null) {
+                throw new GameTestAssertException("elite " + id + " not in EliteRegistry (parse failure?)");
+            }
+            List<ResourceKey<LootTable>> tables = elite.basicData().bonusLoot().tables();
+            if (tables.size() != 2) {
+                throw new GameTestAssertException("elite " + id + " has " + tables.size()
+                        + " bonus_loot tables expected 2 (world-tier + family)");
+            }
+            for (ResourceKey<LootTable> key : tables) {
+                referenced.add(key.location());
+                LootTable table = helper.getLevel().getServer().reloadableRegistries().getLootTable(key);
+                if (table == LootTable.EMPTY) {
+                    throw new GameTestAssertException("elite " + id + " references missing loot table " + key.location());
+                }
+                // LootTable exposes no public pool accessor in 1.21.1, so the
+                // emptiness check reads the source JSON's pools array instead.
+                ResourceLocation fileId = ResourceLocation.fromNamespaceAndPath(
+                        key.location().getNamespace(), "loot_table/" + key.location().getPath() + ".json");
+                Resource res = rm.getResource(fileId).orElse(null);
+                if (res == null) {
+                    throw new GameTestAssertException("bonus loot table file missing: " + fileId);
+                }
+                try (var reader = res.openAsReader()) {
+                    JsonObject root = JsonParser.parseReader(reader).getAsJsonObject();
+                    if (!root.has("pools") || root.getAsJsonArray("pools").isEmpty()) {
+                        throw new GameTestAssertException("bonus loot table " + key.location() + " has no pools");
+                    }
+                } catch (IOException ex) {
+                    throw new GameTestAssertException("cannot read bonus loot table " + fileId + ": " + ex.getMessage());
+                }
+            }
+        }
+        if (referenced.size() != EXPECTED_BONUS_TABLES) {
+            throw new GameTestAssertException("elites reference " + referenced.size()
+                    + " distinct bonus loot tables expected " + EXPECTED_BONUS_TABLES);
         }
         helper.succeed();
     }

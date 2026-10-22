@@ -42,7 +42,19 @@
                                                         "quality":  0.15,
                                                         "weight":  40
                                                     }
-                                   }
+                                   },
+                       "bonus_loot":  [
+                                          "tensura_apotheosis:bonus/ascent",
+                                          "tensura_apotheosis:bonus/demon"
+                                      ],
+                       "supporting_entities":  [
+                                                   {
+                                                       "entity":  "tensura:lesser_daemon",
+                                                       "x":  0,
+                                                       "y":  0,
+                                                       "z":  -1.5
+                                                   }
+                                               ]
                    },
     "entities":  "tensura:greater_daemon",
     "stats":  {

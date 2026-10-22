@@ -28,7 +28,11 @@
                                                         "quality":  0.15,
                                                         "weight":  40
                                                     }
-                                   }
+                                   },
+                       "bonus_loot":  [
+                                          "tensura_apotheosis:bonus/pinnacle",
+                                          "tensura_apotheosis:bonus/unicorn"
+                                      ]
                    },
     "entities":  "tensura:unicorn",
     "stats":  {

@@ -35,7 +35,11 @@
                                                         "quality":  0.15,
                                                         "weight":  40
                                                     }
-                                   }
+                                   },
+                       "bonus_loot":  [
+                                          "tensura_apotheosis:bonus/summit",
+                                          "tensura_apotheosis:bonus/beast"
+                                      ]
                    },
     "entities":  "tensura:giant_bear",
     "stats":  {

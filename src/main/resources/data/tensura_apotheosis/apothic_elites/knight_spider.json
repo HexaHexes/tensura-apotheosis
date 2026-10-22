@@ -42,7 +42,11 @@
                                                         "quality":  0.15,
                                                         "weight":  40
                                                     }
-                                   }
+                                   },
+                       "bonus_loot":  [
+                                          "tensura_apotheosis:bonus/ascent",
+                                          "tensura_apotheosis:bonus/spider"
+                                      ]
                    },
     "entities":  "tensura:knight_spider",
     "stats":  {

@@ -162,8 +162,16 @@ Before starting any new development in this repo:
 - JDK 21 (`JAVA_HOME` -> JDK 21); the toolchain targets Java 21.
 - The Gradle wrapper is committed. `./gradlew build` compiles, `./gradlew runGametest`
   (or `runGameTestServer`) runs the GameTest server.
-- `libs/` (compile-only) and `testmods/` (runtime closure) are **gitignored** staging
-  folders. Never commit third-party jars.
+- **Dependencies resolve through Maven, never local folders.** Compile-only mods use
+  CurseMaven coordinates (`curse.maven:<slug>-<projectId>:<fileId>`, repository
+  `https://cursemaven.com`); Modrinth-exclusive mods use the official Modrinth maven
+  (`maven.modrinth:<project-slug>:<version>`, repository
+  `https://api.modrinth.com/maven`). Runtime mod closures for GameTest runs live in the
+  `gametestMods` Gradle configuration, synced into `run/mods` by `prepareGametestMods`.
+  Gitignored `libs/` and `testmods/` staging folders are retired: CI must resolve every
+  dependency from a clean checkout. Pin the exact version the repo was verified
+  against; bump pins deliberately, never implicitly. The manascore core jar nests its
+  `manascore-*` modules under `META-INF/jars/` - stage only the core.
 - On `run/` file-lock errors, kill any stale `java` process and retry.
 
 ## PowerShell quirks (this org is developed on Windows)

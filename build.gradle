@@ -36,20 +36,52 @@ neoForge {
     }
 }
 
+configurations {
+    // Runtime closure for the gametest run: staged into run/mods below.
+    gametestMods
+}
+
+repositories {
+    maven {
+        name = 'CurseMaven'
+        url = 'https://cursemaven.com'
+    }
+}
+
 dependencies {
     // Compile-only against Apotheosis (AffixRegistry / GemRegistry / LootCategory),
     // Placebo (DynamicRegistry query API) and Tensura (TwoHandedSwordItem) for the
     // gametest assertions. The shipped mod is pure data - no runtime code paths
-    // touch these classes outside gametests. See libs/ and testmods/ (gitignored).
-    compileOnly fileTree(dir: 'libs', include: ['*.jar'])
+    // touch these classes outside gametests. Coordinates are CurseMaven
+    // (curse.maven:<slug>-<projectId>:<fileId>) so a clean checkout resolves
+    // every jar - never gitignored libs/ or testmods/ folders.
+    compileOnly 'curse.maven:apotheosis-313970:8826922' // Apotheosis-1.21.1-8.8.0 (pinned)
+    compileOnly 'curse.maven:apothic-attributes-898963:9006294' // ApothicAttributes-1.21.1-2.11.0
+    compileOnly 'curse.maven:gateways-to-eternity-417802:6926284' // GatewaysToEternity-1.21.1-5.1.0
+    compileOnly 'curse.maven:placebo-283644:9153039' // Placebo-1.21.1-9.9.4
+    compileOnly 'curse.maven:tensura-reincarnated-643695:8793360' // tensura-neoforge-2.0.1.3
+
+    gametestMods 'curse.maven:apotheosis-313970:8826922' // pinned
+    gametestMods 'curse.maven:apothic-attributes-898963:9006294'
+    gametestMods 'curse.maven:architectury-419699:8492726'
+    gametestMods 'curse.maven:cloth-config-348521:5729127'
+    gametestMods 'curse.maven:gateways-to-eternity-417802:6926284'
+    gametestMods 'curse.maven:geckolib-388172:8893490'
+    // The core jar nests every manascore-* module under META-INF/jars; FML's
+    // nested-jar loader installs them at runtime, so only the core is staged.
+    gametestMods 'curse.maven:manascore-619025:8022425'
+    gametestMods 'curse.maven:placebo-283644:9153039'
+    gametestMods 'curse.maven:smartbrainlib-661293:7055149'
+    gametestMods 'curse.maven:tensura-reincarnated-643695:8793360'
+    gametestMods 'curse.maven:terrablender-940057:6054947'
 }
 
 // --- gametest harness -------------------------------------------------------
 
-// Stage the pack's dependency mod jars into the run's production-style mods/
-// folder, where FML's mods-folder locator finds them exactly like in the pack.
+// Stage the gametest mod closure into the run's production-style mods/ folder,
+// where FML's mods-folder locator finds them exactly like in the pack.
 tasks.register('prepareGametestMods', Sync) {
-    from 'testmods'
+    from configurations.gametestMods
     into 'run/mods'
 }
 

@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'maven-publish'
     id 'net.neoforged.moddev' version '2.0.148'
 }
 
@@ -117,5 +118,41 @@ tasks.matching { it.name == 'runGametest' }.configureEach {
             throw new GradleException("GameTest failed: ${problems.join('; ')} - see ${log}")
         }
         logger.lifecycle("GameTest OK: all ${expectedTests} tests passed")
+    }
+}
+
+// --- Publishing -------------------------------------------------------------
+
+// Every repo in the org publishes its artifact to the org's GitHub Packages
+// Maven registry for alpha, beta and stable releases (see agents/AGENTS.md):
+// release.yml cuts the GitHub release, publish.yml runs on "release published"
+// and drives this block. Credentials come from the workflow token in CI; a
+// local publish can supply gpr.user / gpr.key in ~/.gradle/gradle.properties.
+// This repo's gradle.properties predates the mod_* property set, so the pom
+// values are literals here.
+publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            from components.java
+            artifactId = 'tensura_apotheosis'
+            pom {
+                name = 'Tensura Apotheosis'
+                licenses {
+                    license {
+                        name = 'GNU Lesser General Public License v2.1'
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = 'GitHubPackages'
+            url = uri('https://maven.pkg.github.com/HexaHexes/tensura-apotheosis')
+            credentials {
+                username = System.getenv('GITHUB_ACTOR') ?: project.findProperty('gpr.user')
+                password = System.getenv('GITHUB_TOKEN') ?: project.findProperty('gpr.key')
+            }
+        }
     }
 }

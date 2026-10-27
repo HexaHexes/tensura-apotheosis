@@ -1,144 +1,40 @@
-# Agent rules and conventions — Tensura Apotheosis
+# Agent rules and conventions
 
-**Repo:** `HexaHexes/tensura-apotheosis` · **Mod ID:** `tensura_apotheosis` · **Branch:** `master`
-**Platform:** Minecraft 1.21.1 / NeoForge 21.1.259 / JDK 21 · **Jar:** `build/libs/tensura-apotheosis-<version>.jar`
+Org-wide rules for every HexaHexes mod repo. This file is maintained in the
+[`neoforge-mod-template`](https://github.com/HexaHexes/neoforge-mod-template)
+repo and pulled into each repo **verbatim** - never hand-edit it here. Rule
+changes are made in the template first (own branch + squash PR), then the file
+is pulled into this repo as its own PR.
 
-Tensura-themed affixes, socket gems, elite bosses and gear sets for Apotheosis 8.8,
-delivered as **datapack data** (Placebo dynamic registries) - no mixins. The Java side
-holds one small runtime (`EliteNamePools`: draws a themed name per elite spawn from
-per-mob pool data - Apotheosis' own name generation is global-config only and cannot
-be themed per mob) plus the in-repo gametest harness. Public APIs only.
-
-**Dependencies**
-- Required: Apotheosis (`apotheosis`), Apothic Attributes (`apothic_attributes`), Tensura (`tensura`).
-- Optional: Gateways to Eternity (`gateways`) - the elite gateways and their recipes only
-  load when it is present (recipes carry a `mod_loaded` condition).
-
-**Test:** `./gradlew runGametest` - 8 tests (`twoHandedWeaponsCategorizeAsMelee`,
-`allAffixesLoad`, `allGemsLoad`, `allElitesLoad`, `eliteBonusLootLoads`,
-`eliteNamePoolsLoad`, `allGearSetsLoad`, `allGatewaysLoad`).
-`expectedTests = 8`.
-
-**Single source of truth:** `tools/generate-content.ps1` produces all affixes, gems,
-gear sets, elites, elite bonus loot tables, gateways, gateway recipes, lang and models. **Textures are never
-generated**: the original 14 gem PNGs are fixed art, and every newer gem reuses an
-existing Apotheosis gem texture as a placeholder until hand-drawn art lands (the 5th
-`Add-Gem` argument). **Value tuning happens in the generator, not by hand-editing
-JSON** - regenerate after any change. The world-tier banding (roster `tier`),
-`$tierProfile` (elite + reward rarity ladder) and `$themeIdentity` (gateway color,
-themed gem pool and flavor stack per mob family) all live there too.
-
-**Gotchas (all caught by the gametest; do not regress them)**
-- Affix `min`/`max` ranges decode as **step functions** with an implicit step of `0.01`;
-  `(max - min)` must be a multiple of that step. Mob-effect `duration`/`amplifier`
-  objects accept an explicit `step`.
-- Every `tensura:` attribute id must exist in Tensura's registry — there is **no**
-  `tensura:lightning_resistance` (storm dragonscale uses `space_resistance`). Verify
-  new ids against `TensuraAttributes` before shipping.
-- Within one gem, the bonuses' `gem_class` category sets must be **disjoint** or
-  Apotheosis rejects the whole file.
-- Gem stacks reuse Apotheosis' shared `apotheosis:gem` item. Gem **models** resolve
-  through Apotheosis' hardcoded namespace, so model JSONs ship under
-  `assets/apotheosis/models/item/gems/`, while textures and lang stay in this mod's own
-  `assets/tensura_apotheosis/`.
-- Client cosmetics (gem textures) cannot be proven headless — the user checks in-game.
-- Gear sets require a top-level `weight` (the codec rejects the file without it);
-  `quality` is optional (vanilla sets omit it).
-- Elite `stats.effects` and any `tensura:`/`minecraft:` effect id must exist in the
-  game's registry — there is **no** `minecraft:poison_resistance` (the spider and spore
-  themes use `night_vision`/`regeneration`). An invalid effect id fails the whole elite
-  parse, so verify ids before shipping.
-- Every elite mob must have a `#tensura:<mob>_spawn` biome tag; the elite's
-  `constraints.biomes` is that literal tag (so it inherits Tensura's exact natural-spawn
-  logic, no blanket dimensions).
-- Elite combat stats come from the tier-scaled elite ladder (`$tierProfile.elite*`
-  fields), not the theme table - the theme table only scores banding and keeps
-  `effects`/`success_chance`. HP, damage, knockback, scale, enchant chance/levels and
-  the AP/MP `add_multiplied_total` bonuses on `tensura:max_aura`/`tensura:max_magicule`
-  (+50% at haven up to +500% at pinnacle) rise strictly by tier, and **adjacent tiers
-  must never overlap** - `allElitesLoad`'s monotone guard fails otherwise.
-- Elite `spawn_conditions` exclude `spawn_egg` **only** - the same pattern Apotheosis'
-  own elites use; biome constraints, tier weights and `success_chance` all run through
-  Apotheosis' native spawn pipeline (`ApothMobEvents`).
-- Elite bonus loot lives in `data/tensura_apotheosis/loot_table/bonus/` - **singular**
-  `loot_table` (the 1.21 datapack layout, not `loot_tables`). Each elite references two
-  tables through `basicData.bonus_loot`: a world-tier table (gem dust, diamonds and an
-  `apotheosis:random_gem` roll, scaled by the `$tierProfile.bonus*` weights) and a
-  family table whose extra entries must carry an explicit `type: minecraft:item`.
-  `eliteBonusLootLoads` asserts all 38 elites reference exactly 2 of the 19 tables and
-  that every referenced file ships pools.
-- Elite name pools ship from `tools/name-pools.json` (40-50 fantasy names per mob,
-  globally unique - the generator asserts both) into
-  `data/tensura_apotheosis/elite_names/<mob>.json`. The `EliteNamePools` runtime
-  reloads them and draws one name per elite spawn (disk loads keep their saved name);
-  the drawn name is tinted with the elite's top rarity color (`LootRarity.color()`),
-  falling back to plain text when the rarity set is missing.
-  `eliteNamePoolsLoad` asserts every elite has at least 40 loaded names.
-- Elite gateways use `apotheosis:tiered`; each mob's gateway sits at a world tier
-  computed from actual stats: the generator scores hp / damage / scale /
-  enchant-chance / success-chance (inverted) from the theme table plus the mob's own
-  Tensura existence stats (`data/tensura/entity_existence`: aura pool / AP, magicule
-  pool / MP, spiritual health) as average-rank percentiles over the 38-mob roster,
-  then bands **within spawn-dimension groups** - the hardest dimension in the mob's
-  `_spawn` biome tag (overworld/nether/hell/end; tensura tags expand from the jar,
-  vanilla nether/end biome ids classify via hardcoded sets). Groups of 5+ slice into
-  stat-ordered segments (strongest -> pinnacle, cuts snap to score-change points so
-  exact ties stay whole); groups of 2-4 space evenly across the ladder; a lone
-  dimension sits mid-ladder; a generator guard fails if any multi-mob dimension
-  collapses into one tier. Run the generator to see the band map - never hardcode it.
-  Band membership is data - never hand-assign a tier. `canOpen` blocks players who
-  have not unlocked that tier. `settings.color`, the gem pool, the flavor stack,
-  `settings.size` and every reward magnitude/count come from `$themeIdentity` +
-  `$tierProfile` - never hand-tune one gateway. Each gateway also needs its name
-  lang key: Gateways translates the id with ':' -> '.' (its own lang does
-  `gateways.basic/blaze`, Apotheosis does `apotheosis.tiered/frontier`), so the
-  generator emits `tensura_apotheosis.elite/<mob>` = "<Display> Gateway" - without
-  it the gate pearl tooltip shows the raw key. `settings.size` follows the tier
-  (small/small/medium/medium/large - the same mapping Apotheosis' tiered defaults
-  use) and is the gateway's base-texture selector: the gate pearl model picks
-  `gate_pearl_small/med/large` by the gateway's size. Rewards mirror Apotheosis'
-  tiered scaling: `gateways:counted` wraps the affix_item and gem rewards (count =
-  number of rolls) and dust/stack counts follow their 16/24/48/64 curve, all driven
-  by `$tierProfile` - so are `settings.soundtrack` (frontier..pinnacle reuse
-  Apotheosis' four tier discs; haven uses `minecraft:music_disc.cat` - vanilla
-  disc sound events register with dotted paths) and the recipe cost
-  (`recipeDiamonds`/`recipeDust`, pearls fixed at 2; a 3x3 grid holds 9 items,
-  so an unknown count pair throws at generation). The pinnacle row's
-  `chaseGateway` field names a bonus gate pearl added to every pinnacle
-  gateway's rewards: currently `endless/horde`, a mixed-horde
-  `gateways:endless` survival gateway emitted as a special entry after the
-  roster loop (base_wave + after_every_n_waves modifiers escalating
-  fodder -> bruisers -> daemons with stacked health scaling; gold color
-  outside the family palette, reward-only - no recipe). The gametest counts
-  39 gateways: 38 tiered + the endless chase one. The `elite` field must
-  match a shipped `tensura_apotheosis:<mob>` elite.
-- **Never add `rarities` to the herald wave's `apotheosis:affix` modifier.** Its
-  AffixData codec resolves rarity values at decode time, but Gateways' registry
-  reloads before Apotheosis' rarity registry binds - all 38 gateways then fail with
-  "unbound value: apotheosis:common". Omitting the field falls back to Apotheosis'
-  world-tier-weighted rarity random, which is tier-aware for free. Static bands
-  belong only in elite `affix_data` and the `affix_item` reward (lazy holders,
-  proven safe). See the note at the gateway loop.
-- Elite banding is a **contiguous suffix** of the tier ladder: `weights` and
-  `valid_gear_sets` list only the elite's tier and above (craig.json-style key
-  omission - missing tiers weigh zero), and `affix_data.rarities` +
-  `affix_chance` come from `$tierProfile`. `allElitesLoad` asserts the suffix
-  shape and a non-collapsed ladder; `allGatewaysLoad` asserts all 5 tiers are
-  covered and at least 10 distinct boss-bar colors (the regression both guards
-  is the old uniform `#B02E26`, mythic-everywhere design).
+Repo-specific rules - identity, description, dependencies, test commands,
+gotchas and sanctioned exceptions - live in [`agents/REPO.md`](REPO.md), the
+only agent-rules file edited inside a repo.
 
 ---
 
-## Branch sync (do this first)
+## Before you start (do this first)
 
 Before starting any new development in this repo:
 
-1. `git status` — confirm what uncommitted work exists. Never disturb or sweep it.
-2. `git pull --ff-only` — sync with the remote. A fast-forward is the normal case,
-   because we push straight to the shared branch.
-3. If the pull would **not** fast-forward (the branch has diverged), or if it would
+1. **Open issues for the work.** Every piece of work begins as an issue - or
+   several, for complex tasks - detailing what needs to be done; the PR
+   references them. No tracking issue, no work.
+2. **Check rule freshness.** Compare this repo's `agents/AGENTS.md` against the
+   template's and reconcile any drift before touching code - rules changed in
+   the template must have been pulled here first.
+3. `git status` — confirm what uncommitted work exists. Never disturb or sweep it.
+4. `git pull --ff-only` — sync with the remote. A fast-forward is the normal case,
+   because history on the default branch is never rewritten.
+5. If the pull would **not** fast-forward (the branch has diverged), or if it would
    collide with local uncommitted work, **stop and ask** rather than merging, rebasing
    or stashing on your own.
+
+**Remote:** `github.com/HexaHexes/<name>` (default branch `main`). Direct pushes to
+the default branch are blocked by branch rulesets - land changes through a PR. Push
+anything only after checks are green and the user has given the go.
+
+**Pulling rule updates:** when the template's `agents/AGENTS.md` changes, pull the
+file into this repo verbatim as its own PR - never re-type or patch it by hand.
 
 ## Scope doctrine
 
@@ -149,29 +45,43 @@ Before starting any new development in this repo:
 
 ## Verification
 
-- Verify with the in-repo GameTest run (`./gradlew runGametest`, or `runGameTestServer`).
-  Repos without GameTests verify with `./gradlew build`. Never verify against a live
-  CurseForge instance.
+- Verify with the in-repo GameTest run (`./gradlew runGameTestServer`). Repos without
+  GameTests verify with `./gradlew build`. Never verify against a live CurseForge
+  instance.
 - Keep `expectedTests` in `build.gradle` in sync with the `@GameTest` methods.
 - **Client-render features cannot be proven headless.** The honest scope is
   "build green + the user's in-game check" - say so rather than overclaiming.
 
-
 ## Build environment
 
 - JDK 21 (`JAVA_HOME` -> JDK 21); the toolchain targets Java 21.
-- The Gradle wrapper is committed. `./gradlew build` compiles, `./gradlew runGametest`
-  (or `runGameTestServer`) runs the GameTest server.
+- The Gradle wrapper is committed. `./gradlew build` compiles,
+  `./gradlew runGameTestServer` runs the GameTest server.
 - **Dependencies resolve through Maven, never local folders.** Compile-only mods use
   CurseMaven coordinates (`curse.maven:<slug>-<projectId>:<fileId>`, repository
   `https://cursemaven.com`); Modrinth-exclusive mods use the official Modrinth maven
   (`maven.modrinth:<project-slug>:<version>`, repository
-  `https://api.modrinth.com/maven`). Runtime mod closures for GameTest runs live in the
-  `gametestMods` Gradle configuration, synced into `run/mods` by `prepareGametestMods`.
-  Gitignored `libs/` and `testmods/` staging folders are retired: CI must resolve every
+  `https://api.modrinth.com/maven`). Runtime mod closures for GameTest runs live in a
+  dedicated Gradle configuration synced into the run's `mods/` folder. Gitignored
+  `libs/` and `testmods/` staging folders are retired: CI must resolve every
   dependency from a clean checkout. Pin the exact version the repo was verified
-  against; bump pins deliberately, never implicitly. The manascore core jar nests its
-  `manascore-*` modules under `META-INF/jars/` - stage only the core.
+  against; bump pins deliberately, never implicitly.
+- **Org-owned libraries publish to GitHub Packages** (`https://maven.pkg.github.com/HexaHexes/<repo>`,
+  e.g. `infinite-dungeon-api`) and follow the same rule - never fall back to a
+  gitignored local jar. Watch three things here:
+  - **Reads always require auth, and GitHub answers 404 (not 401) when it is missing**,
+    so an unauthenticated consumer fails with a message that looks like a mistyped
+    artifact coordinate rather than a credential problem.
+  - **The workflow `GITHUB_TOKEN` can publish a package owned by its own repo but
+    cannot read a package owned by a different repository.** Consumers use the org
+    secret `PACKAGE_READ_TOKEN` (classic token, `read:packages`). Declare the
+    repository in `build.gradle` with credentials reading `System.getenv('GITHUB_ACTOR')`
+    / `System.getenv('GITHUB_TOKEN')`, falling back to the `gpr.user` / `gpr.key`
+    Gradle properties for local builds.
+  - Inject the secret **scoped to the Gradle step only**
+    (`env: GITHUB_TOKEN: ${{ secrets.PACKAGE_READ_TOKEN }}`), never at job level -
+    job-level injection silently changes what `actions/checkout` and any `gh` CLI
+    step authenticates as.
 - On `run/` file-lock errors, kill any stale `java` process and retry.
 
 ## PowerShell quirks (this org is developed on Windows)
@@ -180,18 +90,30 @@ Before starting any new development in this repo:
   `hash..hash  branch -> branch` line, not the absence of red text.
 - `New-Object Type(args)` breaks on arithmetic — use `::new()` or a parenthesized
   argument.
+- **Never write files with `Set-Content -Encoding UTF8`** — PowerShell 5.1 writes a
+  UTF-8 BOM that breaks Gradle's parser and YAML. Use
+  `[System.IO.File]::WriteAllText($path, $text)` (no BOM). Re-check for BOMs after
+  any script-written edit.
+- **A fresh `git init` on Windows records new files as `100644`** — the executable bit
+  is invisible to git there, so a committed `gradlew` reaches CI as non-executable and
+  every job dies with `./gradlew: Permission denied` before Gradle starts. Before a
+  repo's first commit, run `git update-index --chmod=+x gradlew` and confirm with
+  `git ls-files -s gradlew` (expect `100755`).
+- There are no repo-owned `.ps1` scripts any more. One-off inspection commands are
+  fine; anything that *generates shipped content* belongs in the build, not in a
+  script.
 
 ## Git & release
 
 - Remote is SSH: `git@github.com:HexaHexes/<name>.git`.
-- Push only after tests are green **and** the user has given the go.
+- Push only after checks are green **and** the user has given the go.
 - Never sweep the user's uncommitted work into a commit — commit only what is intended.
 - Commit subjects: concise, imperative.
-- **Version bump on finish:** always bump the version when a new feature or bugfix
-  is finished.
+- **Version bump on finish:** always bump `mod_version` in `gradle.properties`
+  when a new feature or bugfix is finished.
 - **One feature or bugfix per branch:** develop each on its own feature branch and
-  merge it into main/master through a pull request with a **squash merge**. The PR
-  body must detail the work done, following `.github/pull_request_template.md`.
+  merge it into the default branch through a pull request with a **squash merge**.
+  The PR body must detail the work done, following `.github/pull_request_template.md`.
 
 ## House style
 
@@ -199,38 +121,50 @@ Before starting any new development in this repo:
 - **No emojis, ever.** Prohibited in all code, docs, configs, and commit messages.
 - READMEs are **player-facing only**: pitch, mechanics in plain terms, in-game usage,
   required/optional dependencies, credits, license. No build internals, no class names.
+- **AI disclosure in every README.** Every `README.md` ends with the org's
+  AI-assistance disclosure as its final section, in the canonical wording -
+  identical in every repo, no variants:
+
+  ```markdown
+  ## AI disclosure
+
+  Parts of this project were written with the assistance of AI coding tools.
+  AI-assisted code, data and documentation ship only after human review by the
+  maintainers.
+  ```
 - All repos are **LGPL v2.1**, copyright Bitwise Madness. `NOTICE` / attribution files
   are mandatory and must never be deleted.
 - Deploy to the Tensura RPG instance **only** when the user asks.
 
 ## Naming
 
+- **Repo and folder:** lowercase, hyphenated (e.g. `tensura-colony-gear`).
+- **`mod_id`:** lowercase with underscores (e.g. `tensura_colony_gear`). Minecraft
+  requires `[a-z][a-z0-9_]{1,63}`.
+- **Jar / `archivesName`:** follows `mod_id` by default.
 - **Java base package:** `org.bitwisemadness.<project-name>` - repo name lowercased,
   separators stripped (e.g. `ds-tensura-fix` -> `org.bitwisemadness.dstensurafix`).
   The Maven `group` in `build.gradle` matches (`org.bitwisemadness`).
 - Keep repo name, folder name, `mod_id`, and the Java package aligned; the rename
-  checklist in the template's `README.md` walks the whole set.
-- **The template (`neoforge-mod-template`) is canonical for org-wide rules.** When a
-  rule is added or changed in any repo's `agents/AGENTS.md`, mirror the change into
-  the template so new repos inherit it.
+  checklist in `README.md` walks the whole set.
+- **This template is canonical for org-wide rules.** Rules change here first;
+  consuming repos never hand-edit their `agents/AGENTS.md` - they pull the file
+  verbatim (see Before you start).
 
 ## CI & release model
 
-- `ci.yml` currently enforces the **version-bump guard only**: a beta or stable bump must
-  change the version file and nothing else; an `-alpha` bump may bundle work; a PR labelled
-  `breaking` forces the next clean bump to raise the major or minor version.
-- **Build and GameTest jobs are deferred.** Some dependencies (ManasCore's jar-in-jar
-  sub-modules, plus a few pack mods) are not resolvable from a clean checkout via
-  CurseMaven alone, so compiling in CI would fail every run. They land once a jar-fetch
-  step exists. Until then, run `./gradlew build` and the GameTest task locally before
-  pushing.
-- `release.yml` is **not yet enabled for the gradle mod repos** - it needs a CI-built jar
-  to attach. The datapack repo is the exception: its "build" is a zip, so it has a working
-  `release.yml` that tags and publishes on a version bump.
+- `ci.yml` runs three checks that back the branch protection rulesets: **junit**
+  (build + the JUnit suite, asserted non-vacuous), **gametest** (`runGameTestServer`,
+  graded on the `All N required tests passed` log line - the exit code is not a
+  reliable signal) and **version-bump** (a beta or stable bump must change the
+  version file and nothing else; an `-alpha` bump may bundle work; a PR labelled
+  `breaking` forces the next clean bump to raise the major or minor version).
+- **Branch protection:** the default branch is guarded by two repository rulesets -
+  `protect-main` (PR-only, squash merge only, strict `junit`/`gametest`/`version-bump`
+  status checks, no force-pushes, no branch deletion) and
+  `require-review-from-write-access` (one approving review; the listed org owners
+  bypass). Direct pushes to the default branch are rejected by GitHub.
 - `version-bump.yml` opens an isolated version-bump PR (only the version file changes).
-- CurseForge publishing (`curseforge.yml`) is **deferred** until a mod has a CurseForge
+- CurseForge publishing (`curseforge.yml`) is **deferred** until the mod has a CurseForge
   listing and the `CURSEFORGE_PROJECT_ID` / `CURSEFORGE_API_KEY` secrets. Do not add it
   speculatively.
-- Where a release workflow exists, alpha/nightly publishing is opt-in via the
-  `ALPHA_RELEASES` repo variable and is **off** by default.
-

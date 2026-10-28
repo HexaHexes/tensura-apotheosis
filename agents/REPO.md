@@ -161,3 +161,10 @@ themed gem pool and flavor stack per mob family) all live there too.
   single source of truth is `tools/generate-content.ps1`. That conflict is
   deliberate to preserve here until the generator is ported into a Gradle task:
   the generator stays authoritative, and porting it is a separate decision.
+- `release.yml` cuts the GitHub release for `v<mod_version>` on a push to
+  `master` (this repo''s default branch), and `publish.yml` publishes the Maven
+  artifact to the org''s GitHub Packages registry when that release is
+  published - pre-releases only when the repo variable `ALPHA_RELEASES` is true.
+- The release workflow''s jar path uses this repo''s hyphenated `archivesName`
+  (`tensura-apotheosis`), not the `mod_id` the template derives it from - keep
+  that local edit if the file is ever re-copied from the template.

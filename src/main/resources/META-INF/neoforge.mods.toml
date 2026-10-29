@@ -21,6 +21,11 @@ pure datapack data (Placebo dynamic registries) - no mixins, no gameplay code.
   and lang stay in this mod's own namespace.
 '''
 
+[modproperties.tensura_apotheosis]
+# Optional: background texture for this mod's Configured config screen (see the
+# In-game config editing section of README.md). Any existing texture works.
+configuredBackground = "minecraft:textures/block/stone.png"
+
 [[dependencies.tensura_apotheosis]]
 modId = "neoforge"
 type = "required"

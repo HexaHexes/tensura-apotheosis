@@ -7,6 +7,19 @@ plugins {
 }
 
 version = mod_version
+
+// Wire the mod_version property from gradle.properties into the shipped
+// neoforge.mods.toml so the in-game/reported version can never drift from
+// releases again (issue #14). The template does the same via
+// generateModMetadata from src/main/templates; this repo predates the full
+// mod_* property set, so the expand is scoped to the one property that
+// exists. The toml carries no other dollar tokens.
+processResources {
+    filesMatching("META-INF/neoforge.mods.toml") {
+        expand mod_version: mod_version
+    }
+}
+
 group = 'org.bitwisemadness'
 
 base {

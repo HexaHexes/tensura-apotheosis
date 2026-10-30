@@ -19,7 +19,7 @@ import net.neoforged.neoforge.event.AddReloadListenerEvent;
  * cannot be themed per mob. Public APIs only; no mixins.
  */
 @Mod(TensuraApotheosis.MOD_ID)
-public class TensuraApotheosis {
+public final class TensuraApotheosis {
 
     public static final String MOD_ID = "tensura_apotheosis";
 

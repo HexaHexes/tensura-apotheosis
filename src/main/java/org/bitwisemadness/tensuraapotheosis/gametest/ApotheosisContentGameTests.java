@@ -1,6 +1,5 @@
 package org.bitwisemadness.tensuraapotheosis.gametest;
 
-import org.bitwisemadness.tensuraapotheosis.EliteNamePools;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dev.shadowsoffire.apotheosis.affix.AffixRegistry;
@@ -41,6 +40,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
+import org.bitwisemadness.tensuraapotheosis.EliteNamePools;
 
 /**
  * Content verification for Tensura Apotheosis. The mod is almost entirely

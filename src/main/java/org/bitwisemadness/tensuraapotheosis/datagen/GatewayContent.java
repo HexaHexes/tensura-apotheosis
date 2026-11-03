@@ -2,7 +2,6 @@ package org.bitwisemadness.tensuraapotheosis.datagen;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,13 +31,11 @@ public final class GatewayContent {
      */
     public static Map<String, JsonObject> files(Map<String, String> tiersByMob) {
         Map<String, JsonObject> files = new LinkedHashMap<>();
-        List<Map.Entry<String, Integer>> recipes = new ArrayList<>();
         for (RosterMob roster : ApotheosisTables.ROSTER) {
             String band = tiersByMob.get(roster.mob());
             TierProfile profile = ApotheosisTables.TIER_PROFILES.get(band);
             files.put("data/tensura_apotheosis/gateways/elite/" + roster.mob() + ".json",
                     gatewayJson(roster, band, profile));
-            recipes.add(Map.entry(roster.mob(), 0));
             files.put("data/tensura_apotheosis/recipe/gateways/elite/" + roster.mob() + ".json",
                     recipeJson(roster, profile));
         }

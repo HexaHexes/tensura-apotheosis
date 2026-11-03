@@ -1,0 +1,59 @@
+{
+    "type": "minecraft:entity",
+    "pools": [
+        {
+            "bonus_rolls": 0.0,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "functions": [
+                        {
+                            "count": {
+                                "min": 8,
+                                "max": 16
+                            },
+                            "function": "minecraft:set_count"
+                        }
+                    ],
+                    "name": "apotheosis:gem_dust",
+                    "weight": 70
+                },
+                {
+                    "type": "apotheosis:random_gem",
+                    "quality": 1,
+                    "weight": 30
+                },
+                {
+                    "type": "minecraft:empty",
+                    "weight": 10
+                }
+            ],
+            "rolls": 1.0
+        },
+        {
+            "bonus_rolls": 0.0,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "functions": [
+                        {
+                            "count": {
+                                "min": 1,
+                                "max": 3
+                            },
+                            "function": "minecraft:set_count"
+                        }
+                    ],
+                    "name": "minecraft:diamond",
+                    "weight": 18
+                },
+                {
+                    "type": "minecraft:empty",
+                    "weight": 82
+                }
+            ],
+            "rolls": 1.0
+        }
+    ],
+    "random_sequence": "tensura_apotheosis:bonus/pinnacle"
+}

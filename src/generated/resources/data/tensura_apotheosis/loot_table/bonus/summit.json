@@ -1,0 +1,59 @@
+{
+    "type": "minecraft:entity",
+    "pools": [
+        {
+            "bonus_rolls": 0.0,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "functions": [
+                        {
+                            "count": {
+                                "min": 6,
+                                "max": 12
+                            },
+                            "function": "minecraft:set_count"
+                        }
+                    ],
+                    "name": "apotheosis:gem_dust",
+                    "weight": 70
+                },
+                {
+                    "type": "apotheosis:random_gem",
+                    "quality": 1,
+                    "weight": 20
+                },
+                {
+                    "type": "minecraft:empty",
+                    "weight": 10
+                }
+            ],
+            "rolls": 1.0
+        },
+        {
+            "bonus_rolls": 0.0,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "functions": [
+                        {
+                            "count": {
+                                "min": 1,
+                                "max": 2
+                            },
+                            "function": "minecraft:set_count"
+                        }
+                    ],
+                    "name": "minecraft:diamond",
+                    "weight": 12
+                },
+                {
+                    "type": "minecraft:empty",
+                    "weight": 88
+                }
+            ],
+            "rolls": 1.0
+        }
+    ],
+    "random_sequence": "tensura_apotheosis:bonus/summit"
+}

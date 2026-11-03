@@ -1,0 +1,141 @@
+{
+    "type": "apotheosis:tiered",
+    "settings": {
+        "soundtrack": "apotheosis:soundtrack_pinnacle",
+        "tier": "pinnacle",
+        "size": "large",
+        "color": "#FFD54F"
+    },
+    "waves": [
+        {
+            "max_wave_time": 2400,
+            "setup_time": 150,
+            "entities": [
+                {
+                    "type": "gateways:standard",
+                    "count": 3,
+                    "entity": "tensura:pegasus",
+                    "modifiers": [
+                        {
+                            "type": "gateways:attribute",
+                            "attribute": "minecraft:generic.max_health",
+                            "operation": "add_multiplied_total",
+                            "value": 0.5
+                        },
+                        {
+                            "type": "apotheosis:affix",
+                            "affix_chance": 0.5
+                        }
+                    ]
+                }
+            ],
+            "rewards": [
+                {
+                    "type": "gateways:experience",
+                    "experience": 300,
+                    "orb_size": 60
+                }
+            ]
+        },
+        {
+            "max_wave_time": 4800,
+            "setup_time": 200,
+            "entities": [
+                {
+                    "type": "apotheosis:elite",
+                    "base_entity": {
+                        "type": "gateways:standard",
+                        "entity": "tensura:pegasus",
+                        "finalize_spawn": false,
+                        "modifiers": [
+                            {
+                                "type": "gateways:attribute",
+                                "attribute": "minecraft:generic.max_health",
+                                "operation": "add_multiplied_total",
+                                "value": 1.0
+                            },
+                            {
+                                "type": "gateways:attribute",
+                                "attribute": "minecraft:generic.attack_damage",
+                                "operation": "add_multiplied_total",
+                                "value": 0.25
+                            }
+                        ]
+                    },
+                    "desc": "elite.tensura_apotheosis.pegasus",
+                    "elite": "tensura_apotheosis:pegasus"
+                }
+            ],
+            "rewards": [
+                {
+                    "type": "gateways:experience",
+                    "experience": 800,
+                    "orb_size": 100
+                }
+            ]
+        }
+    ],
+    "rewards": [
+        {
+            "type": "gateways:counted",
+            "count": 5,
+            "reward": {
+                "type": "apotheosis:affix_item",
+                "rarities": [
+                    "apotheosis:mythic"
+                ]
+            }
+        },
+        {
+            "type": "gateways:counted",
+            "count": 10,
+            "reward": {
+                "type": "apotheosis:gem",
+                "gems": [
+                    "tensura_apotheosis:holy/core",
+                    "tensura_apotheosis:spirit/core",
+                    "tensura_apotheosis:core/vigil",
+                    "tensura_apotheosis:holy/judgment"
+                ],
+                "purities": [
+                    "perfect"
+                ]
+            }
+        },
+        {
+            "type": "gateways:stack",
+            "stack": {
+                "count": 64,
+                "id": "apotheosis:gem_dust"
+            }
+        },
+        {
+            "type": "gateways:stack",
+            "stack": {
+                "count": 48,
+                "id": "minecraft:gold_ingot"
+            }
+        },
+        {
+            "type": "gateways:experience",
+            "experience": 1200,
+            "orb_size": 100
+        },
+        {
+            "type": "gateways:stack",
+            "stack": {
+                "components": {
+                    "gateways:gateway": "tensura_apotheosis:endless/horde"
+                },
+                "count": 1,
+                "id": "gateways:gate_pearl"
+            }
+        }
+    ],
+    "rules": {
+        "leash_range": 48.0,
+        "lives": 3,
+        "requires_nearby_player": true,
+        "spawn_range": 24.0
+    }
+}

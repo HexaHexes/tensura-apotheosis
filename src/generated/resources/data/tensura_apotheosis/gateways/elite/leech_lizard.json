@@ -1,0 +1,132 @@
+{
+    "type": "apotheosis:tiered",
+    "settings": {
+        "soundtrack": "minecraft:music_disc.cat",
+        "tier": "haven",
+        "size": "small",
+        "color": "#AED581"
+    },
+    "waves": [
+        {
+            "max_wave_time": 2400,
+            "setup_time": 150,
+            "entities": [
+                {
+                    "type": "gateways:standard",
+                    "count": 3,
+                    "entity": "tensura:leech_lizard",
+                    "modifiers": [
+                        {
+                            "type": "gateways:attribute",
+                            "attribute": "minecraft:generic.max_health",
+                            "operation": "add_multiplied_total",
+                            "value": 0.5
+                        },
+                        {
+                            "type": "apotheosis:affix",
+                            "affix_chance": 0.5
+                        }
+                    ]
+                }
+            ],
+            "rewards": [
+                {
+                    "type": "gateways:experience",
+                    "experience": 100,
+                    "orb_size": 60
+                }
+            ]
+        },
+        {
+            "max_wave_time": 4800,
+            "setup_time": 200,
+            "entities": [
+                {
+                    "type": "apotheosis:elite",
+                    "base_entity": {
+                        "type": "gateways:standard",
+                        "entity": "tensura:leech_lizard",
+                        "finalize_spawn": false,
+                        "modifiers": [
+                            {
+                                "type": "gateways:attribute",
+                                "attribute": "minecraft:generic.max_health",
+                                "operation": "add_multiplied_total",
+                                "value": 1.0
+                            },
+                            {
+                                "type": "gateways:attribute",
+                                "attribute": "minecraft:generic.attack_damage",
+                                "operation": "add_multiplied_total",
+                                "value": 0.25
+                            }
+                        ]
+                    },
+                    "desc": "elite.tensura_apotheosis.leech_lizard",
+                    "elite": "tensura_apotheosis:leech_lizard"
+                }
+            ],
+            "rewards": [
+                {
+                    "type": "gateways:experience",
+                    "experience": 300,
+                    "orb_size": 100
+                }
+            ]
+        }
+    ],
+    "rewards": [
+        {
+            "type": "gateways:counted",
+            "count": 2,
+            "reward": {
+                "type": "apotheosis:affix_item",
+                "rarities": [
+                    "apotheosis:common",
+                    "apotheosis:uncommon"
+                ]
+            }
+        },
+        {
+            "type": "gateways:counted",
+            "count": 3,
+            "reward": {
+                "type": "apotheosis:gem",
+                "gems": [
+                    "tensura_apotheosis:core/earthen",
+                    "tensura_apotheosis:core/predator",
+                    "tensura_apotheosis:core/vigor"
+                ],
+                "purities": [
+                    "cracked",
+                    "normal"
+                ]
+            }
+        },
+        {
+            "type": "gateways:stack",
+            "stack": {
+                "count": 8,
+                "id": "apotheosis:gem_dust"
+            }
+        },
+        {
+            "type": "gateways:stack",
+            "stack": {
+                "count": 4,
+                "id": "minecraft:turtle_scute"
+            }
+        },
+        {
+            "type": "gateways:experience",
+            "experience": 500,
+            "orb_size": 100
+        }
+    ],
+    "rules": {
+        "leash_range": 48.0,
+        "lives": 3,
+        "requires_nearby_player": true,
+        "spawn_range": 24.0
+    }
+}

@@ -1,0 +1,100 @@
+{
+    "type": "apotheosis:elite",
+    "affix_data": {
+        "affix_chance": 0.8,
+        "rarities": [
+            "apotheosis:epic",
+            "apotheosis:mythic"
+        ]
+    },
+    "basic_data": {
+        "bonus_loot": [
+            "tensura_apotheosis:bonus/pinnacle",
+            "tensura_apotheosis:bonus/armorsaurus"
+        ],
+        "constraints": {
+            "biomes": "#tensura:armorsaurus_spawn"
+        },
+        "name": {
+            "translate": "elite.tensura_apotheosis.armorsaurus"
+        },
+        "spawn_conditions": [
+            {
+                "type": "apotheosis:not",
+                "spawn_condition": {
+                    "type": "apotheosis:spawn_type",
+                    "spawn_types": [
+                        "spawn_egg"
+                    ]
+                }
+            }
+        ],
+        "valid_gear_sets": {
+            "pinnacle": [
+                "#tensura_armorsaurus_pinnacle"
+            ]
+        },
+        "weights": {
+            "pinnacle": {
+                "quality": 0.15,
+                "weight": 40
+            }
+        }
+    },
+    "entities": "tensura:armorsaurus",
+    "stats": {
+        "attribute_modifiers": [
+            {
+                "attribute": "minecraft:generic.max_health",
+                "operation": "add_value",
+                "value": {
+                    "min": 180,
+                    "max": 260
+                }
+            },
+            {
+                "attribute": "minecraft:generic.attack_damage",
+                "operation": "add_multiplied_total",
+                "value": {
+                    "min": 2.5,
+                    "max": 3.5
+                }
+            },
+            {
+                "attribute": "minecraft:generic.knockback_resistance",
+                "operation": "add_value",
+                "value": 1
+            },
+            {
+                "attribute": "minecraft:generic.scale",
+                "operation": "add_value",
+                "value": {
+                    "min": 1.2,
+                    "max": 1.6
+                }
+            },
+            {
+                "attribute": "tensura:max_aura",
+                "operation": "add_multiplied_total",
+                "value": 5
+            },
+            {
+                "attribute": "tensura:max_magicule",
+                "operation": "add_multiplied_total",
+                "value": 5
+            }
+        ],
+        "effects": [
+            {
+                "amplifier": 0,
+                "effect": "minecraft:fire_resistance"
+            }
+        ],
+        "enchant_chance": 0.85,
+        "enchantment_levels": {
+            "primary": 60,
+            "secondary": 36
+        }
+    },
+    "success_chance": 0.008
+}

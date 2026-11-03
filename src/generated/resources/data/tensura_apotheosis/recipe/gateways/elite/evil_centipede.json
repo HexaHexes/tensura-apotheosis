@@ -1,0 +1,34 @@
+{
+    "neoforge:conditions": [
+        {
+            "type": "neoforge:mod_loaded",
+            "modid": "gateways"
+        }
+    ],
+    "type": "minecraft:crafting_shaped",
+    "category": "misc",
+    "group": "tensura_apotheosis",
+    "key": {
+        "D": {
+            "item": "minecraft:diamond"
+        },
+        "E": {
+            "tag": "c:ender_pearls"
+        },
+        "G": {
+            "item": "apotheosis:gem_dust"
+        }
+    },
+    "pattern": [
+        "E E",
+        "D G",
+        "G D"
+    ],
+    "result": {
+        "components": {
+            "gateways:gateway": "tensura_apotheosis:elite/evil_centipede"
+        },
+        "count": 1,
+        "id": "gateways:gate_pearl"
+    }
+}

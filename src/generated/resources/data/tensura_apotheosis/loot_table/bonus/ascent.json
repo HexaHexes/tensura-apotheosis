@@ -1,0 +1,59 @@
+{
+    "type": "minecraft:entity",
+    "pools": [
+        {
+            "bonus_rolls": 0.0,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "functions": [
+                        {
+                            "count": {
+                                "min": 4,
+                                "max": 8
+                            },
+                            "function": "minecraft:set_count"
+                        }
+                    ],
+                    "name": "apotheosis:gem_dust",
+                    "weight": 70
+                },
+                {
+                    "type": "apotheosis:random_gem",
+                    "quality": 1,
+                    "weight": 15
+                },
+                {
+                    "type": "minecraft:empty",
+                    "weight": 15
+                }
+            ],
+            "rolls": 1.0
+        },
+        {
+            "bonus_rolls": 0.0,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "functions": [
+                        {
+                            "count": {
+                                "min": 1,
+                                "max": 1
+                            },
+                            "function": "minecraft:set_count"
+                        }
+                    ],
+                    "name": "minecraft:diamond",
+                    "weight": 8
+                },
+                {
+                    "type": "minecraft:empty",
+                    "weight": 92
+                }
+            ],
+            "rolls": 1.0
+        }
+    ],
+    "random_sequence": "tensura_apotheosis:bonus/ascent"
+}

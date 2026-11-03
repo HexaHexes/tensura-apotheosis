@@ -1,0 +1,118 @@
+{
+    "type": "apotheosis:elite",
+    "affix_data": {
+        "affix_chance": 0.8,
+        "rarities": [
+            "apotheosis:epic",
+            "apotheosis:mythic"
+        ]
+    },
+    "basic_data": {
+        "bonus_loot": [
+            "tensura_apotheosis:bonus/pinnacle",
+            "tensura_apotheosis:bonus/demon"
+        ],
+        "constraints": {
+            "biomes": "#tensura:arch_daemon_spawn"
+        },
+        "name": {
+            "translate": "elite.tensura_apotheosis.arch_daemon"
+        },
+        "spawn_conditions": [
+            {
+                "type": "apotheosis:not",
+                "spawn_condition": {
+                    "type": "apotheosis:spawn_type",
+                    "spawn_types": [
+                        "spawn_egg"
+                    ]
+                }
+            }
+        ],
+        "supporting_entities": [
+            {
+                "entity": "tensura:lesser_daemon",
+                "x": -1.5,
+                "y": 0.0,
+                "z": -1.0
+            },
+            {
+                "entity": "tensura:lesser_daemon",
+                "x": 1.5,
+                "y": 0.0,
+                "z": -1.0
+            }
+        ],
+        "valid_gear_sets": {
+            "pinnacle": [
+                "#tensura_demon_pinnacle"
+            ]
+        },
+        "weights": {
+            "pinnacle": {
+                "quality": 0.15,
+                "weight": 40
+            }
+        }
+    },
+    "entities": "tensura:arch_daemon",
+    "stats": {
+        "attribute_modifiers": [
+            {
+                "attribute": "minecraft:generic.max_health",
+                "operation": "add_value",
+                "value": {
+                    "min": 180,
+                    "max": 260
+                }
+            },
+            {
+                "attribute": "minecraft:generic.attack_damage",
+                "operation": "add_multiplied_total",
+                "value": {
+                    "min": 2.5,
+                    "max": 3.5
+                }
+            },
+            {
+                "attribute": "minecraft:generic.knockback_resistance",
+                "operation": "add_value",
+                "value": 1
+            },
+            {
+                "attribute": "minecraft:generic.scale",
+                "operation": "add_value",
+                "value": {
+                    "min": 1.2,
+                    "max": 1.6
+                }
+            },
+            {
+                "attribute": "tensura:max_aura",
+                "operation": "add_multiplied_total",
+                "value": 5
+            },
+            {
+                "attribute": "tensura:max_magicule",
+                "operation": "add_multiplied_total",
+                "value": 5
+            }
+        ],
+        "effects": [
+            {
+                "amplifier": 0,
+                "effect": "minecraft:fire_resistance"
+            },
+            {
+                "amplifier": 0,
+                "effect": "minecraft:night_vision"
+            }
+        ],
+        "enchant_chance": 0.85,
+        "enchantment_levels": {
+            "primary": 60,
+            "secondary": 36
+        }
+    },
+    "success_chance": 0.01
+}

@@ -1,0 +1,30 @@
+{
+    "type": "minecraft:entity",
+    "pools": [
+        {
+            "bonus_rolls": 0.0,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "functions": [
+                        {
+                            "count": {
+                                "min": 1,
+                                "max": 3
+                            },
+                            "function": "minecraft:set_count"
+                        }
+                    ],
+                    "name": "minecraft:amethyst_shard",
+                    "weight": 60
+                },
+                {
+                    "type": "minecraft:empty",
+                    "weight": 40
+                }
+            ],
+            "rolls": 1.0
+        }
+    ],
+    "random_sequence": "tensura_apotheosis:bonus/demon"
+}

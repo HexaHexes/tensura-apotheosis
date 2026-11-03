@@ -1,0 +1,35 @@
+{
+    "type": "minecraft:entity",
+    "pools": [
+        {
+            "bonus_rolls": 0.0,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "functions": [
+                        {
+                            "count": {
+                                "min": 2,
+                                "max": 3
+                            },
+                            "function": "minecraft:set_count"
+                        }
+                    ],
+                    "name": "apotheosis:gem_dust",
+                    "weight": 70
+                },
+                {
+                    "type": "apotheosis:random_gem",
+                    "quality": 1,
+                    "weight": 5
+                },
+                {
+                    "type": "minecraft:empty",
+                    "weight": 25
+                }
+            ],
+            "rolls": 1.0
+        }
+    ],
+    "random_sequence": "tensura_apotheosis:bonus/haven"
+}

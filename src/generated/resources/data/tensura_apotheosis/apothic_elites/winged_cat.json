@@ -1,0 +1,102 @@
+{
+    "type": "apotheosis:elite",
+    "affix_data": {
+        "affix_chance": 0.65,
+        "rarities": [
+            "apotheosis:epic",
+            "apotheosis:mythic"
+        ]
+    },
+    "basic_data": {
+        "bonus_loot": [
+            "tensura_apotheosis:bonus/summit",
+            "tensura_apotheosis:bonus/beast"
+        ],
+        "constraints": {
+            "biomes": "#tensura:winged_cat_spawn"
+        },
+        "name": {
+            "translate": "elite.tensura_apotheosis.winged_cat"
+        },
+        "spawn_conditions": [
+            {
+                "type": "apotheosis:not",
+                "spawn_condition": {
+                    "type": "apotheosis:spawn_type",
+                    "spawn_types": [
+                        "spawn_egg"
+                    ]
+                }
+            }
+        ],
+        "valid_gear_sets": {
+            "summit": [
+                "#tensura_beast_summit"
+            ],
+            "pinnacle": [
+                "#tensura_beast_pinnacle"
+            ]
+        },
+        "weights": {
+            "summit": {
+                "quality": 0.12,
+                "weight": 60
+            },
+            "pinnacle": {
+                "quality": 0.15,
+                "weight": 40
+            }
+        }
+    },
+    "entities": "tensura:winged_cat",
+    "stats": {
+        "attribute_modifiers": [
+            {
+                "attribute": "minecraft:generic.max_health",
+                "operation": "add_value",
+                "value": {
+                    "min": 130,
+                    "max": 170
+                }
+            },
+            {
+                "attribute": "minecraft:generic.attack_damage",
+                "operation": "add_multiplied_total",
+                "value": {
+                    "min": 1.6,
+                    "max": 2.2
+                }
+            },
+            {
+                "attribute": "minecraft:generic.knockback_resistance",
+                "operation": "add_value",
+                "value": 0.9
+            },
+            {
+                "attribute": "minecraft:generic.scale",
+                "operation": "add_value",
+                "value": {
+                    "min": 1,
+                    "max": 1.4
+                }
+            },
+            {
+                "attribute": "tensura:max_aura",
+                "operation": "add_multiplied_total",
+                "value": 3
+            },
+            {
+                "attribute": "tensura:max_magicule",
+                "operation": "add_multiplied_total",
+                "value": 3
+            }
+        ],
+        "effects": [],
+        "enchant_chance": 0.65,
+        "enchantment_levels": {
+            "primary": 40,
+            "secondary": 24
+        }
+    },
+    "success_chance": 0.012
+}

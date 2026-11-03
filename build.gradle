@@ -44,6 +44,19 @@ neoForge {
             systemProperty 'neoforge.gameTestServer', 'true'
             systemProperty 'neoforge.enabledGameTestNamespaces', 'tensura_apotheosis'
         }
+
+        // Regenerates src/generated/resources - the Apotheosis content datapack
+        // (affixes, gems, gear sets, elites, gateways, bonus loot) plus the gem
+        // models and lang file, replacing tools/generate-content.ps1. The full
+        // dependency stack is staged first, and the Tensura jar inside run/mods
+        // is an INPUT: the elite banding reads its entity-existence and
+        // biome-tag data exactly like the retired generator read libs/.
+        data {
+            data()
+            programArguments.addAll '--mod', mod_id, '--all',
+                    '--output', file('src/generated/resources').absolutePath,
+                    '--existing', file('src/main/resources').absolutePath
+        }
     }
 
     mods {
@@ -52,6 +65,12 @@ neoForge {
         }
     }
 }
+
+// The generated content is committed and packaged as part of the mod's
+// resources: datagen owns data/** and the generated assets (gem models, lang),
+// the hand-authored originals and tools/generate-content.ps1 are deleted
+// (issue #29), and the drift gate keeps this tree fresh.
+sourceSets.main.resources.srcDir 'src/generated/resources'
 
 configurations {
     // Runtime closure for the gametest run: staged into run/mods below.
@@ -102,9 +121,18 @@ tasks.register('prepareGametestMods', Sync) {
     into 'run/mods'
 }
 
-tasks.matching { it.name == 'runGametest' }.configureEach {
+// Both the GameTest run and the data run boot FML against the run/ directory,
+// so both need the dependency stack staged first. For the data run the staged
+// Tensura jar is also an INPUT: the elite banding reads its entity-existence
+// and biome-tag data (the retired PowerShell generator read the same file out
+// of gitignored libs/).
+tasks.matching { it.name == 'runGametest' || it.name == 'runData' }.configureEach {
     dependsOn 'prepareGametestMods'
+}
 
+// Grade the GameTest run on the log summary, not the exit code; this must NOT
+// attach to runData, which shares no log contract with the GameTest server.
+tasks.matching { it.name == 'runGametest' }.configureEach {
     // GameTestServer prints "All N required tests passed :)" or "N required
     // tests failed :(" when the run finishes; grade that so the Gradle build
     // is green/red on its own (crashes fail via the java exit code anyway).

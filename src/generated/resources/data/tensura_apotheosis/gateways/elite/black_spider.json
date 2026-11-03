@@ -1,0 +1,131 @@
+{
+    "type": "apotheosis:tiered",
+    "settings": {
+        "soundtrack": "apotheosis:music_disc_flash",
+        "tier": "ascent",
+        "size": "medium",
+        "color": "#616161"
+    },
+    "waves": [
+        {
+            "max_wave_time": 2400,
+            "setup_time": 150,
+            "entities": [
+                {
+                    "type": "gateways:standard",
+                    "count": 3,
+                    "entity": "tensura:black_spider",
+                    "modifiers": [
+                        {
+                            "type": "gateways:attribute",
+                            "attribute": "minecraft:generic.max_health",
+                            "operation": "add_multiplied_total",
+                            "value": 0.5
+                        },
+                        {
+                            "type": "apotheosis:affix",
+                            "affix_chance": 0.5
+                        }
+                    ]
+                }
+            ],
+            "rewards": [
+                {
+                    "type": "gateways:experience",
+                    "experience": 200,
+                    "orb_size": 60
+                }
+            ]
+        },
+        {
+            "max_wave_time": 4800,
+            "setup_time": 200,
+            "entities": [
+                {
+                    "type": "apotheosis:elite",
+                    "base_entity": {
+                        "type": "gateways:standard",
+                        "entity": "tensura:black_spider",
+                        "finalize_spawn": false,
+                        "modifiers": [
+                            {
+                                "type": "gateways:attribute",
+                                "attribute": "minecraft:generic.max_health",
+                                "operation": "add_multiplied_total",
+                                "value": 1.0
+                            },
+                            {
+                                "type": "gateways:attribute",
+                                "attribute": "minecraft:generic.attack_damage",
+                                "operation": "add_multiplied_total",
+                                "value": 0.25
+                            }
+                        ]
+                    },
+                    "desc": "elite.tensura_apotheosis.black_spider",
+                    "elite": "tensura_apotheosis:black_spider"
+                }
+            ],
+            "rewards": [
+                {
+                    "type": "gateways:experience",
+                    "experience": 500,
+                    "orb_size": 100
+                }
+            ]
+        }
+    ],
+    "rewards": [
+        {
+            "type": "gateways:counted",
+            "count": 3,
+            "reward": {
+                "type": "apotheosis:affix_item",
+                "rarities": [
+                    "apotheosis:rare",
+                    "apotheosis:epic"
+                ]
+            }
+        },
+        {
+            "type": "gateways:counted",
+            "count": 5,
+            "reward": {
+                "type": "apotheosis:gem",
+                "gems": [
+                    "tensura_apotheosis:core/shadow",
+                    "tensura_apotheosis:core/predator",
+                    "tensura_apotheosis:core/executioner"
+                ],
+                "purities": [
+                    "flawless"
+                ]
+            }
+        },
+        {
+            "type": "gateways:stack",
+            "stack": {
+                "count": 24,
+                "id": "apotheosis:gem_dust"
+            }
+        },
+        {
+            "type": "gateways:stack",
+            "stack": {
+                "count": 12,
+                "id": "minecraft:spider_eye"
+            }
+        },
+        {
+            "type": "gateways:experience",
+            "experience": 800,
+            "orb_size": 100
+        }
+    ],
+    "rules": {
+        "leash_range": 48.0,
+        "lives": 3,
+        "requires_nearby_player": true,
+        "spawn_range": 24.0
+    }
+}

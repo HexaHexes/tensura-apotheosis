@@ -1,0 +1,109 @@
+{
+    "type": "apotheosis:elite",
+    "affix_data": {
+        "affix_chance": 0.55,
+        "rarities": [
+            "apotheosis:rare",
+            "apotheosis:epic"
+        ]
+    },
+    "basic_data": {
+        "bonus_loot": [
+            "tensura_apotheosis:bonus/ascent",
+            "tensura_apotheosis:bonus/beast"
+        ],
+        "constraints": {
+            "biomes": "#tensura:horned_rabbit_spawn"
+        },
+        "name": {
+            "translate": "elite.tensura_apotheosis.horned_rabbit"
+        },
+        "spawn_conditions": [
+            {
+                "type": "apotheosis:not",
+                "spawn_condition": {
+                    "type": "apotheosis:spawn_type",
+                    "spawn_types": [
+                        "spawn_egg"
+                    ]
+                }
+            }
+        ],
+        "valid_gear_sets": {
+            "ascent": [
+                "#tensura_beast_ascent"
+            ],
+            "summit": [
+                "#tensura_beast_summit"
+            ],
+            "pinnacle": [
+                "#tensura_beast_pinnacle"
+            ]
+        },
+        "weights": {
+            "ascent": {
+                "quality": 0.1,
+                "weight": 80
+            },
+            "summit": {
+                "quality": 0.12,
+                "weight": 60
+            },
+            "pinnacle": {
+                "quality": 0.15,
+                "weight": 40
+            }
+        }
+    },
+    "entities": "tensura:horned_rabbit",
+    "stats": {
+        "attribute_modifiers": [
+            {
+                "attribute": "minecraft:generic.max_health",
+                "operation": "add_value",
+                "value": {
+                    "min": 85,
+                    "max": 120
+                }
+            },
+            {
+                "attribute": "minecraft:generic.attack_damage",
+                "operation": "add_multiplied_total",
+                "value": {
+                    "min": 1.1,
+                    "max": 1.5
+                }
+            },
+            {
+                "attribute": "minecraft:generic.knockback_resistance",
+                "operation": "add_value",
+                "value": 0.7
+            },
+            {
+                "attribute": "minecraft:generic.scale",
+                "operation": "add_value",
+                "value": {
+                    "min": 0.8,
+                    "max": 1.1
+                }
+            },
+            {
+                "attribute": "tensura:max_aura",
+                "operation": "add_multiplied_total",
+                "value": 2
+            },
+            {
+                "attribute": "tensura:max_magicule",
+                "operation": "add_multiplied_total",
+                "value": 2
+            }
+        ],
+        "effects": [],
+        "enchant_chance": 0.5,
+        "enchantment_levels": {
+            "primary": 28,
+            "secondary": 17
+        }
+    },
+    "success_chance": 0.012
+}

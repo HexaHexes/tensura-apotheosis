@@ -1,0 +1,123 @@
+{
+    "type": "apotheosis:elite",
+    "affix_data": {
+        "affix_chance": 0.45,
+        "rarities": [
+            "apotheosis:common",
+            "apotheosis:uncommon"
+        ]
+    },
+    "basic_data": {
+        "bonus_loot": [
+            "tensura_apotheosis:bonus/haven",
+            "tensura_apotheosis:bonus/hover"
+        ],
+        "constraints": {
+            "biomes": "#tensura:hover_lizard_spawn"
+        },
+        "name": {
+            "translate": "elite.tensura_apotheosis.hover_lizard"
+        },
+        "spawn_conditions": [
+            {
+                "type": "apotheosis:not",
+                "spawn_condition": {
+                    "type": "apotheosis:spawn_type",
+                    "spawn_types": [
+                        "spawn_egg"
+                    ]
+                }
+            }
+        ],
+        "valid_gear_sets": {
+            "haven": [
+                "#tensura_hover_haven"
+            ],
+            "frontier": [
+                "#tensura_hover_frontier"
+            ],
+            "ascent": [
+                "#tensura_hover_ascent"
+            ],
+            "summit": [
+                "#tensura_hover_summit"
+            ],
+            "pinnacle": [
+                "#tensura_hover_pinnacle"
+            ]
+        },
+        "weights": {
+            "haven": {
+                "quality": 0.1,
+                "weight": 100
+            },
+            "frontier": {
+                "quality": 0.1,
+                "weight": 100
+            },
+            "ascent": {
+                "quality": 0.1,
+                "weight": 80
+            },
+            "summit": {
+                "quality": 0.12,
+                "weight": 60
+            },
+            "pinnacle": {
+                "quality": 0.15,
+                "weight": 40
+            }
+        }
+    },
+    "entities": "tensura:hover_lizard",
+    "stats": {
+        "attribute_modifiers": [
+            {
+                "attribute": "minecraft:generic.max_health",
+                "operation": "add_value",
+                "value": {
+                    "min": 30,
+                    "max": 45
+                }
+            },
+            {
+                "attribute": "minecraft:generic.attack_damage",
+                "operation": "add_multiplied_total",
+                "value": {
+                    "min": 0.4,
+                    "max": 0.6
+                }
+            },
+            {
+                "attribute": "minecraft:generic.knockback_resistance",
+                "operation": "add_value",
+                "value": 0.3
+            },
+            {
+                "attribute": "minecraft:generic.scale",
+                "operation": "add_value",
+                "value": {
+                    "min": 0.4,
+                    "max": 0.7
+                }
+            },
+            {
+                "attribute": "tensura:max_aura",
+                "operation": "add_multiplied_total",
+                "value": 0.5
+            },
+            {
+                "attribute": "tensura:max_magicule",
+                "operation": "add_multiplied_total",
+                "value": 0.5
+            }
+        ],
+        "effects": [],
+        "enchant_chance": 0.25,
+        "enchantment_levels": {
+            "primary": 10,
+            "secondary": 6
+        }
+    },
+    "success_chance": 0.015
+}

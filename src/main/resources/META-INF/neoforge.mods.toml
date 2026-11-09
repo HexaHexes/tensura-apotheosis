@@ -60,3 +60,13 @@ type = "required"
 versionRange = "[2.0,)"
 ordering = "AFTER"
 side = "BOTH"
+
+# Gateways to Eternity - optional: the datapack ships elite gateway content
+# behind neoforge:mod_loaded gateways conditions, so absence simply drops
+# those files and the rest of the pack loads.
+[[dependencies.tensura_apotheosis]]
+modId = "gateways"
+type = "optional"
+versionRange = "[5.1.0,)"
+ordering = "AFTER"
+side = "BOTH"
